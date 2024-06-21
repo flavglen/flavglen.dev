@@ -7,10 +7,10 @@ export const About  = () => {
                         <div className="md:col-span-2 md:order-1 col-auto order-2">
                             <h1 className="text-4xl font-bold text-center text-blue-700 mt-8 transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 hover:text-indigo-500 duration-300">&lt;Glen Flavian Pais /&gt;</h1>
                             <p className="text-lg mt-3">
-                                Hello, I'm <span className="font-bold">Glen</span>, A frontend and node developer with a passion for crafting beautiful and 
-                                responsive web interfaces. I've spent 9+ working on a variety of web projects, from single-page 
+                                Hello, I&apos;m <span className="font-bold">Glen</span>, A frontend and node developer with a passion for crafting beautiful and 
+                                responsive web interfaces. I&apos;ve spent 9+ working on a variety of web projects, from single-page 
                                 applications to complex e-commerce websites. I specialize in Angular, React, Typescript, Vue Js, 
-                                Node js, HTML, CSS, Next Js . I'm always looking for new ways to improve my coding skills and stay up-to-date with the latest web development trends. Additionally, I have expertise in serverless architecture and cloud computing, 
+                                Node js, HTML, CSS, Next Js . I&apos;m always looking for new ways to improve my coding skills and stay up-to-date with the latest web development trends. Additionally, I have expertise in serverless architecture and cloud computing, 
                                 leveraging the power of AWS to build scalable and reliable web applications
                             </p>
 
