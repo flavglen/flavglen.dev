@@ -22,14 +22,6 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.className} flex flex-col h-screen`}>
           <MainHeader />
-          <About />
-
-          <div className="text-center text-md">
-            UNDER CONSTRUCTION , visit <a target="_blank" href="https://flavglen.github.io">https://flavglen.github.io</a> 
-          </div>
-          
-          {/* <Featured />
-          <Footer/> */}
         </body>
     </html>
   );
