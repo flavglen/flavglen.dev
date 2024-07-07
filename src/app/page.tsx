@@ -15,7 +15,6 @@ import { Calendar } from "@/components/ui/calendar"
 import {  useState } from "react";
 import {  db } from "@/lib/firebase";
 import { addDoc, collection, doc, setDoc } from "firebase/firestore";
-import { SessionProvider } from "next-auth/react";
 import useAuth from "@/lib/hooks/useAuth";
 
 interface IFormData {
@@ -54,7 +53,6 @@ export default function Home() {
   }
 
   return (
-    <SessionProvider>
     <main className="flex min-h-screen flex-col items-center justify-between">
       <Card className="w-full">
         <CardHeader>
@@ -115,6 +113,5 @@ export default function Home() {
         </CardFooter>
       </Card>
     </main>
-    </SessionProvider>
   );
 }
