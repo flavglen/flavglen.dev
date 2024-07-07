@@ -9,6 +9,7 @@ import {
     NavigationMenuTrigger,
     navigationMenuTriggerStyle
   } from "@/components/ui/navigation-menu"
+import LoginButton from "./login"
 
 export const TopMenu = () => {
     return (
@@ -25,6 +26,10 @@ export const TopMenu = () => {
                 </NavigationMenuItem>
                 <NavigationMenuItem className="font-bold">
                     Blog
+                </NavigationMenuItem>
+
+                 <NavigationMenuItem>
+                    <LoginButton />
                 </NavigationMenuItem>
             </NavigationMenuList>
         </NavigationMenu>
