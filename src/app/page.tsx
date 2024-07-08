@@ -16,22 +16,24 @@ import {  useState } from "react";
 import {  db } from "@/lib/firebase";
 import { addDoc, collection, doc, setDoc } from "firebase/firestore";
 import useAuth from "@/lib/hooks/useAuth";
+import { Toaster } from "@/components/ui/toaster"
+import { useToast } from "@/components/ui/use-toast";
 
 interface IFormData {
   expenseName: string;
-  expenseAmount: number;
+  expenseAmount: number |  string;
   expenseDate: string
 }
 
 export default function Home() {
-  const{user} = useAuth()
-  console.log('AUTH', user)
+  const{user} = useAuth();
+  const { toast } = useToast()
+
   const [formData, setFormData] = useState<IFormData>({ 
-    expenseAmount: 0,
+    expenseAmount: '',
     expenseDate: '',
     expenseName: ''
   });
-
 
   const updateFormData = (newData: Partial<IFormData>) => {
     setFormData((prevFormData) => ({
@@ -40,14 +42,35 @@ export default function Home() {
     }));
   };
 
-
   const SaveData = async () => {
     try {
       const colRef = collection(db, "expense");
-      // Set the document with the data
-      const docRef = await addDoc(colRef, formData);
+      const formDataCopy = {...formData};
+
+      if(!formDataCopy.expenseDate) formDataCopy.expenseDate = new Date().toISOString()
+
+      const docRef = await addDoc(colRef, formDataCopy);
       console.log("Document written with ID: ", docRef.id);
+      toast({
+        title: "Success",
+        description: "Expense has been saved",
+        variant: "default",
+        className: 'bg-green-300'
+      })
+
+      setFormData({ 
+        expenseAmount: 0,
+        expenseDate: '',
+        expenseName: ''
+      })
+      
     } catch (e) {
+      toast({
+        title: "Failed",
+        description: "Failed to add expense",
+        variant: "destructive",
+      })
+
       console.error("Error adding document: ", e);
     }
   }
@@ -59,7 +82,7 @@ export default function Home() {
           <CardTitle>Add Expense</CardTitle>
         </CardHeader>
         <CardContent>
-          <ToggleGroup type="single" className="flex flex-wrap" onValueChange={(e) =>  updateFormData( {expenseName: e})}>
+          <ToggleGroup type="single" className="flex flex-wrap" value={formData.expenseName} onValueChange={(e) =>  updateFormData( {expenseName: e})}>
           <ToggleGroupItem value="nofrills" aria-label="Toggle bold">
             No Frills
           </ToggleGroupItem>
@@ -98,7 +121,7 @@ export default function Home() {
           </ToggleGroupItem>
         </ToggleGroup>
 
-        <Input  type="number" min={1} onChange={ (e) =>  updateFormData ({ expenseAmount: +e.target.value}) }/>
+        <Input  type="number" min={1}  value={formData.expenseAmount || ''} onChange={ (e) =>  updateFormData ({ expenseAmount: +e.target.value}) }/>
 
         <Calendar
             mode="single"
@@ -112,6 +135,7 @@ export default function Home() {
           <Button onClick={SaveData}>Save</Button>
         </CardFooter>
       </Card>
+      
     </main>
   );
 }
