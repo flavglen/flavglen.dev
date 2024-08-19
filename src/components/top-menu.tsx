@@ -2,32 +2,26 @@
 
 import {
     NavigationMenu,
-    NavigationMenuContent,
     NavigationMenuItem,
-    NavigationMenuLink,
     NavigationMenuList,
-    NavigationMenuTrigger,
-    navigationMenuTriggerStyle
   } from "@/components/ui/navigation-menu"
 import LoginButton from "./login"
+import Link from "next/link"
 
 export const TopMenu = () => {
     return (
         <NavigationMenu className="text-black mr-5">
             <NavigationMenuList className="gap-8">
                 <NavigationMenuItem className="font-bold">
-                    Home
+                    <Link href="/" passHref>
+                        Home
+                    </Link>
                 </NavigationMenuItem>
-                <NavigationMenuItem className="font-bold">
-                    Timeline
+                <NavigationMenuItem className="font-bold" >
+                    <Link href="/view-expense" passHref>
+                    View Expense
+                    </Link>
                 </NavigationMenuItem>
-                <NavigationMenuItem className="font-bold">
-                    Projects
-                </NavigationMenuItem>
-                <NavigationMenuItem className="font-bold">
-                    Blog
-                </NavigationMenuItem>
-
                  <NavigationMenuItem>
                     <LoginButton />
                 </NavigationMenuItem>

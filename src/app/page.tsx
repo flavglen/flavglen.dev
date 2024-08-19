@@ -108,16 +108,46 @@ export default function Home() {
             Jian Hing
           </ToggleGroupItem>
 
-          <ToggleGroupItem value="jianhing" aria-label="Toggle underline">
+          <ToggleGroupItem value="condorent" aria-label="Toggle underline">
             Condo Rent
           </ToggleGroupItem>
 
-          <ToggleGroupItem value="jianhing" aria-label="Toggle underline">
+          <ToggleGroupItem value="parking" aria-label="Toggle underline">
             Car parking
           </ToggleGroupItem>
 
-          <ToggleGroupItem value="jianhing" aria-label="Toggle underline">
+          <ToggleGroupItem value="fuel" aria-label="Toggle underline">
             Fuel
+          </ToggleGroupItem>
+
+          <ToggleGroupItem value="costco" aria-label="Toggle underline">
+            Costco
+          </ToggleGroupItem>
+          
+          <ToggleGroupItem value="ubereats" aria-label="Toggle underline">
+            Uber Eats
+          </ToggleGroupItem>
+
+          <ToggleGroupItem value="restaurant" aria-label="Toggle underline">
+            Restaurant
+          </ToggleGroupItem>
+
+          <ToggleGroupItem value="airbnb" aria-label="Toggle underline">
+            Airbnb
+          </ToggleGroupItem>
+
+          <ToggleGroupItem value="presto" aria-label="Toggle underline">
+            Presto
+          </ToggleGroupItem>
+          
+          <ToggleGroupItem value="movie" aria-label="Toggle underline">
+            Movie
+          </ToggleGroupItem>
+          <ToggleGroupItem value="mobile" aria-label="Toggle underline">
+            Mobile
+          </ToggleGroupItem>
+          <ToggleGroupItem value="ott" aria-label="Toggle underline">
+            ott
           </ToggleGroupItem>
         </ToggleGroup>
 
