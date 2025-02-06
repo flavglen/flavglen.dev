@@ -21,7 +21,7 @@ export async function GET(req: Request) {
     const internalDateQuery = lastInternalDate
     ? `after:${Math.floor(new Date(lastInternalDate).getTime() / 1000)}`
     : "";
-
+    console.log("internalDateQuery", internalDateQuery);
     const response = await gmail.users.messages.list({
       userId: "me",
       //q: `subject:"Authorization on your credit account" ${internalDateQuery}`,
@@ -30,7 +30,8 @@ export async function GET(req: Request) {
       maxResults: 150, // Fetch latest 5 emails
     });
 
-    if (!response.data.messages) {
+    console.log("gmail_response", response);
+    if (!response?.data?.messages) {
       return NextResponse.json({ message: "No matching emails found" });
     }
 
@@ -40,10 +41,13 @@ export async function GET(req: Request) {
         if (!message.id) {
           throw new Error("Message ID is null or undefined");
         }
+
         const emailResponse = await gmail.users.messages.get({
           userId: "me",
           id: message.id,
         });
+
+        console.log("email_response_loop", emailResponse);
 
         const snippet = emailResponse.data.snippet || "";
 
@@ -74,10 +78,12 @@ export async function GET(req: Request) {
 
     const filteredEmails = emails.filter(Boolean);
     if (filteredEmails.length > 0) {
+      console.log("filteredEmails", filteredEmails);
       await storeEmails(filteredEmails);
+      return NextResponse.json({ emails: filteredEmails});
     }
 
-    return NextResponse.json({ emails: filteredEmails});
+    return NextResponse.json({ error: 'There is nothing to store'+ filteredEmails.length }, { status: 500 });
 
   } catch (error) {
     return NextResponse.json({ error }, { status: 500 });
