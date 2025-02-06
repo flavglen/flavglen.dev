@@ -8,6 +8,7 @@ const isLocal = process.env.NODE_ENV === "development";
 export async function GET(req: Request) {
 
   if (!isLocal && req.headers.get('Authorization') !== `Bearer ${process.env.CRON_SECRET}`) {
+    console.log("Unauthorized request");
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
   
