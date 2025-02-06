@@ -7,5 +7,11 @@ export async function getLastInternalDate() {
 }
 
 export async function saveRefreshToken(userId: string, refreshToken: string) {
-  await db.collection("ai_expenses_tokens").doc(userId).set({ refreshToken });
+  try{
+    await db.collection("ai_expenses_tokens").doc(userId).set({ refreshToken });
+    return true;
+  }catch(e){
+    console.error("Error saving refresh token:", e);
+    return false;
+  }
 }

@@ -24,8 +24,8 @@ export async function GET(req: NextRequest) {
     //   refresh_token: tokens.refresh_token, // Store this in your database!
     //   expires_in: tokens.expiry_date,
     // });
-    saveRefreshToken("flavglen", tokens?.refresh_token || '');
-    return  NextResponse.json({ data: 'refresh token as been saved to DB' });
+    const res = await saveRefreshToken("flavglen", tokens?.refresh_token || '');
+    return  NextResponse.json({ data: res ? 'refresh token has been saved to DB': 'failed to save' });
   } catch (error) {
     console.error("Error getting tokens:", error);
     return NextResponse.json({ error: "Failed to get tokens" }, { status: 500 });
