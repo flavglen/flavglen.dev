@@ -1,5 +1,5 @@
 import { db } from "./firebase";
-
+//TODO: Add types
 export async function getLastInternalDate() {
   const doc = await db.collection("ai_expense_metadata").doc("last_sync_time").get();
   console.log("getLastInternalDate...", doc.data());
