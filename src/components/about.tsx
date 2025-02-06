@@ -5,7 +5,7 @@ export const About  = () => {
         <section className="container mt-5">
                 <div className="grid md:grid-cols-2 md:grid-flow-col  grid-cols-1 grid-flow-row  gap-4 items-center">
                         <div className="md:col-span-2 md:order-1 col-auto order-2">
-                            <h1 className="text-4xl font-bold text-center text-blue-700 mt-8 transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 hover:text-indigo-500 duration-300">&lt;Glen Flavian Pais /&gt;</h1>
+                            <h1 className="text-4xl font-bold text-center text-blue-700 mt-8 transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 hover:text-indigo-400 duration-300">&lt;Glen Flavian Pais /&gt;</h1>
                             <p className="text-lg mt-3">
                                 Hello, I&apos;m <span className="font-bold">Glen</span>, A frontend and node developer with a passion for crafting beautiful and 
                                 responsive web interfaces. I&apos;ve spent 9+ working on a variety of web projects, from single-page 

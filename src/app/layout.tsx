@@ -1,10 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { MainHeader } from "@/components/main-header";
-import { Footer } from "@/components/footer";
+import { Sidebar } from "@/components/sidebar";
 import "./globals.css";
-import { About } from "@/components/about";
-import { Featured } from "@/components/featured";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,17 +17,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} flex flex-col h-screen`}>
-          <MainHeader />
-          <About />
-
-          <div className="text-center text-md">
-            UNDER CONSTRUCTION , visit <a target="_blank" href="https://flavglen.github.io">https://flavglen.github.io</a> 
-          </div>
-          
-          {/* <Featured />
-          <Footer/> */}
-        </body>
+      <title>Glen Flavian Pais - Senior web Developer and Freelancer - Canada</title>
+      <body>
+        <div className="min-h-screen flex flex-col md:flex-row">
+          <Sidebar />
+          <main className="flex-1 p-4 md:p-12 md:ml-[250px]">
+            {children}
+          </main>
+        </div>
+      </body>
     </html>
   );
 }
