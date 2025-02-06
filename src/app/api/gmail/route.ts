@@ -3,7 +3,14 @@ import { storeEmails } from "@/lib/storeExpenses";
 import { google } from "googleapis";
 import { NextResponse } from "next/server";
 
+const isLocal = process.env.NODE_ENV === "development";
+
 export async function GET(req: Request) {
+
+  if (!isLocal && req.headers.get('Authorization') !== `Bearer ${process.env.CRON_SECRET}`) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  
   const oauth2Client = new google.auth.OAuth2(
     process.env.GOOGLE_CLIENT_ID,
     process.env.GOOGLE_CLIENT_SECRET,
@@ -21,16 +28,13 @@ export async function GET(req: Request) {
     const internalDateQuery = lastInternalDate
     ? `after:${Math.floor(new Date(lastInternalDate).getTime() / 1000)}`
     : "";
-    console.log("internalDateQuery", internalDateQuery);
     const response = await gmail.users.messages.list({
       userId: "me",
-      //q: `subject:"Authorization on your credit account" ${internalDateQuery}`,
       labelIds: ["Label_6433257826956248841"],
       q: `${internalDateQuery}`,
       maxResults: 150, // Fetch latest 5 emails
     });
 
-    console.log("gmail_response", response);
     if (!response?.data?.messages) {
       return NextResponse.json({ message: "No matching emails found" });
     }
@@ -42,27 +46,26 @@ export async function GET(req: Request) {
           throw new Error("Message ID is null or undefined");
         }
 
+        // Fetch the email details
         const emailResponse = await gmail.users.messages.get({
           userId: "me",
           id: message.id,
         });
 
-        console.log("email_response_loop", emailResponse);
-
         const snippet = emailResponse.data.snippet || "";
-
         const receivedTimestamp = parseInt(emailResponse.data.internalDate || "0"); // Convert to UNIX timestamp
-
+        // Skip if the email is older than the last internal date
         if (lastInternalDate && receivedTimestamp <= new Date(lastInternalDate).getTime()) return null;
 
-
+        // Extract amount, place, and time from the email snippet
         const amountMatch = snippet.match(/\d+\.\d{2}/);
         const amount = amountMatch ? amountMatch[0] : "Not found";
 
-
+        // Extract place from the email snippet
         const placeMatch = snippet.match(/at (.*?) on account/);
         const place = placeMatch ? placeMatch[1] : "Not found";
 
+        // Extract time from the email snippet
         const timeMatch = snippet.match(/on account .* at (.*)/);
         const time = timeMatch ? timeMatch[1] : "Not found";
 
@@ -78,14 +81,18 @@ export async function GET(req: Request) {
 
     const filteredEmails = emails.filter(Boolean);
     if (filteredEmails.length > 0) {
-      console.log("filteredEmails", filteredEmails);
-      await storeEmails(filteredEmails);
-      return NextResponse.json({ emails: filteredEmails});
+      const res = await storeEmails(filteredEmails);
+      if (!res) {
+        console.log("Failed to Save Expense", filteredEmails.length);
+        return NextResponse.json({ message: 'Failed to store expenses', count: filteredEmails.length }, { status: 500 });
+      }
+      console.log("Expenses stored successfully.", filteredEmails.length);
+      return NextResponse.json({ message: 'Expenses have been saved', count: filteredEmails.length }, { status: 200 });
     }
-
-    return NextResponse.json({ error: 'There is nothing to store'+ filteredEmails.length }, { status: 500 });
-
+    console.log("There is nothing to store", filteredEmails.length);
+    return NextResponse.json({ message: 'There is nothing to store', count: filteredEmails.length }, { status: 200 });
   } catch (error) {
+    console.error("Error fetching emails:", error);
     return NextResponse.json({ error }, { status: 500 });
   }
 }

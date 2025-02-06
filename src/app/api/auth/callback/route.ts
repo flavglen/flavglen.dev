@@ -18,7 +18,6 @@ export async function GET(req: NextRequest) {
 
   try {
     const { tokens } = await oauth2Client.getToken(code);
-
     // return NextResponse.json({
     //   access_token: tokens.access_token,
     //   refresh_token: tokens.refresh_token, // Store this in your database!
