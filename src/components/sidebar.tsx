@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Switch } from "@/components/ui/switch"
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { X, Linkedin, Github, Globe, Mail, Menu} from "lucide-react"
 import { Button } from "./ui/button"
 
@@ -33,7 +33,7 @@ export function Sidebar() {
           <AvatarFallback>GP</AvatarFallback>
         </Avatar>
         <p className="text-sm text-center">
-          Hi, my name is Glen Pais and I'm a Senior web Developer. Welcome to my personal website!
+          Hi, my name is Glen Pais and I&apos;m a Senior web Developer. Welcome to my personal website!
         </p>
       </div>
 
