@@ -10,8 +10,7 @@ export default function Page() {
               <h1 className="text-4xl font-bold mb-2">Glen Pais</h1>
               <p className="text-xl text-muted-foreground mb-4">Senior web Developer</p>
               <p className="mb-4">
-              Hello, I'm Glen, A frontend and node developer with a passion for crafting beautiful and responsive web interfaces. I've spent 9+ working on a variety of web projects, from single-page applications to complex e-commerce websites. I specialize in Angular, React, Typescript, Vue Js, Node js, HTML, CSS, Next Js . I'm always looking for new ways to improve my coding skills and stay up-to-date with the latest web development trends. Additionally, I have expertise in serverless architecture and cloud computing, leveraging the power of AWS to build scalable and reliable web applications
-                . Want to know how I may help your project? Check out my project{" "}
+                Hello, I&apos;m Glen, a frontend and node developer with a passion for crafting beautiful and responsive web interfaces. I&apos;ve spent 9+ years working on a variety of web projects, from single-page applications to complex e-commerce websites. I specialize in Angular, React, Typescript, Vue.js, Node.js, HTML, CSS, and Next.js. I&apos;m always looking for new ways to improve my coding skills and stay up-to-date with the latest web development trends. Additionally, I have expertise in serverless architecture and cloud computing, leveraging the power of AWS to build scalable and reliable web applications. Want to know how I may help your project? Check out my project{" "}
                 <a href="#" className="text-red-400 hover:underline">
                   portfolio
                 </a>{" "}
@@ -41,7 +40,7 @@ export default function Page() {
               What I do
             </h2>
             <p className="mb-8">
-              I have more than 10 years' experience building software for clients all over the world. Below is a quick
+              I have more than 10 years&apos; experience building software for clients all over the world. Below is a quick
               overview of my main technical skill sets and technologies I use. Want to find out more about my
               experience?
             </p>
