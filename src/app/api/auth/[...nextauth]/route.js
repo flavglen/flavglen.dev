@@ -8,7 +8,17 @@ const authOptions = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
   ],
+  session: {
+    strategy: "jwt"
+  },
+  secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
+    async jwt({ token, account }) {
+      if (account) {
+        token.accessToken = account.access_token; // Store Google access token in JWT
+      }
+      return token;
+    },
     async session({ session, token }) {
       session.user.id = token.sub;
       return session;
