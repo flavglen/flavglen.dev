@@ -10,8 +10,7 @@ interface SkillCardProps {
 }
 
 export function SkillCard({ icon, title, description }: SkillCardProps) {
-  const { data: session } = useSession();
-  
+
   return (
     <div className="border rounded-lg p-6">
       <div className="mb-4">{icon}</div>

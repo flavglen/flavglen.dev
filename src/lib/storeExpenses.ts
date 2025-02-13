@@ -10,7 +10,7 @@ interface Expense {
 }
 
 export async function storeEmails(filteredEmails: any[]) {
-  if (filteredEmails?.length ) return;
+  if (!filteredEmails?.length ) return;
 
   try {
     const batch = db.batch();
