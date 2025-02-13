@@ -18,16 +18,17 @@ export async function GET(req: NextRequest) {
 
   try {
     const { tokens } = await oauth2Client.getToken(code);
-    // return NextResponse.json({
-    //   access_token: tokens.access_token,
-    //   refresh_token: tokens.refresh_token, // Store this in your database!
-    //   expires_in: tokens.expiry_date,
-    // });
-    const res = await saveRefreshToken("flavglen", tokens?.refresh_token || '');
-    return  NextResponse.json({ data: res ? 'refresh token has been saved to DB': 'failed to save' });
+    const res = await saveRefreshToken('admin', tokens?.refresh_token || '');
+    return NextResponse.json(
+      { 
+      message: res ? 'refresh token has been saved to DB' : 'failed to save', 
+      tokens: { 
+        access_token: tokens.access_token, 
+        expiry_date: tokens.expiry_date
+       } 
+    });
   } catch (error) {
     console.error("Error getting tokens:", error);
     return NextResponse.json({ error: "Failed to get tokens" }, { status: 500 });
   }
 }
-

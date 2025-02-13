@@ -6,12 +6,12 @@ import { Switch } from "@/components/ui/switch"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { X, Linkedin, Github, Globe, Mail, Menu} from "lucide-react"
 import { Button } from "./ui/button"
+import { useSession } from "next-auth/react"
 
 export function Sidebar() {
   const [darkMode, setDarkMode] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
-
   useEffect(() => {
     const checkIfMobile = () => setIsMobile(window.innerWidth < 768)
     checkIfMobile()

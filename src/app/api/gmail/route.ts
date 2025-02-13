@@ -39,6 +39,50 @@ export async function GET(req: Request) {
     if (!response?.data?.messages) {
       return NextResponse.json({ message: "No matching emails found" });
     }
+    
+    // todo automate this
+    // store some manual expenses which dont log into email
+    // if the date is 2nd of the month, store the expense
+    const today = new Date();
+    if (today.getDate() === 2) {
+        const rentAndParking =  [{
+          id: Math.random().toString(36).substring(7).toString(),
+          amount: process.env.RENT_AMOUNT,
+          place: 'rent',
+          time: '10:00 AM',
+          manual: true,
+          internalDate: new Date().toISOString(),
+        },{
+          id: Math.random().toString(36).substring(7).toString(),
+          amount: process.env.PARKING_AMOUNT,
+          place: 'parking',
+          time: '10:00 AM',
+          manual: true,
+          internalDate: new Date().toISOString(),
+        }]
+
+      const res = await storeEmails(rentAndParking);
+
+      if (!res) {
+        console.log("Failed to Save Expense Rent");
+      }
+    }
+
+    // 22nd of the month
+    if (today.getDate() === 22) {
+      const res = await storeEmails([{
+        id: Math.random().toString(36).substring(7).toString(),
+        amount: process.env.CAR_INSURANCE_AMOUNT,
+        place: 'car insurance',
+        time: '10:00 AM',
+        manual: true,
+        internalDate: new Date().toISOString(),
+      }]);
+
+      if (!res) {
+        console.log("Failed to Save Expense parking");
+      }
+    }
 
     const emails = await Promise.all(
       response.data.messages.map(async (message) => {
@@ -75,13 +119,14 @@ export async function GET(req: Request) {
           amount,
           place,
           time,
+          manual: false,
           internalDate: new Date(parseInt(emailResponse.data.internalDate || "0")).toISOString(),
         };
       })
     );
 
     const filteredEmails = emails.filter(Boolean);
-    if (filteredEmails.length > 0) {
+    if (filteredEmails?.length > 0) {
       const res = await storeEmails(filteredEmails);
       if (!res) {
         console.log("Failed to Save Expense", filteredEmails.length);
@@ -89,9 +134,11 @@ export async function GET(req: Request) {
       }
       console.log("Expenses stored successfully.", filteredEmails.length);
       return NextResponse.json({ message: 'Expenses have been saved', count: filteredEmails.length }, { status: 200 });
+    } else {
+      console.log("There is nothing to store", filteredEmails.length);
+      return NextResponse.json({ message: 'There is nothing to store', count: filteredEmails.length }, { status: 200 });
     }
-    console.log("There is nothing to store", filteredEmails.length);
-    return NextResponse.json({ message: 'There is nothing to store', count: filteredEmails.length }, { status: 200 });
+    
   } catch (error) {
     console.error("Error fetching emails:", error);
     return NextResponse.json({ error }, { status: 500 });

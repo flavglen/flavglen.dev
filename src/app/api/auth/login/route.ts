@@ -1,7 +1,15 @@
 import { google } from "googleapis";
 import { NextResponse } from "next/server";
 
+const isLocal = process.env.NODE_ENV === "development";
+
 export async function GET(req: Request) {
+
+  if (!isLocal && req.headers.get('Authorization') !== `Bearer ${process.env.CRON_SECRET}`) {
+    console.log("Unauthorized request");
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     const oauth2Client = new google.auth.OAuth2(
       process.env.GOOGLE_CLIENT_ID,

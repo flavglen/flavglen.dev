@@ -1,8 +1,7 @@
 "use client"
 
 import type React from "react"
-import { Button } from "./ui/button"
-import { useEffect } from "react"
+import { useSession } from "next-auth/react"
 
 interface SkillCardProps {
   icon: React.ReactNode
@@ -11,9 +10,7 @@ interface SkillCardProps {
 }
 
 export function SkillCard({ icon, title, description }: SkillCardProps) {
-  useEffect(() => {
-    console.error('Test')
-  }, [])
+  const { data: session } = useSession();
   
   return (
     <div className="border rounded-lg p-6">

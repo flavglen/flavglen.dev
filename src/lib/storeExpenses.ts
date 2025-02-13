@@ -1,7 +1,16 @@
 import { db } from "./firebase";
 
+interface Expense {
+  id: string;
+  amount: string;
+  place: string;
+  time: string;
+  manual?: boolean;
+  internalDate: string;
+}
+
 export async function storeEmails(filteredEmails: any[]) {
-  if (filteredEmails.length === 0) return;
+  if (filteredEmails?.length ) return;
 
   try {
     const batch = db.batch();
