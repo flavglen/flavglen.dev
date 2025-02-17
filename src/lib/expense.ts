@@ -4,7 +4,7 @@ import { saveLog } from "./common";
 export async function getExpense(from: string, to: string) {
     // fetch all docs from ai_expenses
     try {
-      const snapshot = await db.collection("ai_expensesw")
+      const snapshot = await db.collection("ai_expenses")
                                .where('internalDate', '>=', from)
                                .where('internalDate', '<=', to)
                                .get();
