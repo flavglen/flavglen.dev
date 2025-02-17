@@ -96,7 +96,7 @@ export const columns1: ColumnDef<Expense>[] = [
 
 export function ExpenseComponent() {
     const [date, setDate] = React.useState<DateRange | undefined>({
-        from: addDays(new Date(), -7),
+        from: addDays(new Date(), -new Date().getDate()),
         to: new Date(),
     })
     const [sorting, setSorting] = React.useState<SortingState>([])
@@ -188,7 +188,7 @@ export function ExpenseComponent() {
             <div className="flex items-center py-4">
 
                 <Input
-                    placeholder="Filter emails..."
+                    placeholder="Filter Expenses ..."
                     value={(table.getColumn("place")?.getFilterValue() as string) ?? ""}
                     onChange={(event) =>
                         table.getColumn("place")?.setFilterValue(event.target.value)
