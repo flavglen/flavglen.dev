@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { getExpense } from "@/lib/getLastInternalDate";
+import { getExpense } from "@/lib/expense";
 
 export async function GET(req: Request) {
     // query params

@@ -6,7 +6,6 @@ import { Switch } from "@/components/ui/switch"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { X, Linkedin, Github, Globe, Mail, Menu} from "lucide-react"
 import { Button } from "./ui/button"
-import { useSession } from "next-auth/react"
 
 export function Sidebar() {
   const [darkMode, setDarkMode] = useState(false)

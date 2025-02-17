@@ -1,5 +1,5 @@
-import { getLastInternalDate } from "@/lib/getLastInternalDate";
-import { storeEmails } from "@/lib/storeExpenses";
+import { getLastInternalDate } from "@/lib/security";
+import { storeExpenses } from "@/lib/expense";
 import { google } from "googleapis";
 import { NextResponse } from "next/server";
 
@@ -61,16 +61,18 @@ export async function GET(req: Request) {
           internalDate: new Date().toISOString(),
         }]
 
-      const res = await storeEmails(rentAndParking);
+      const res = await storeExpenses(rentAndParking);
 
       if (!res) {
         console.log("Failed to Save Expense Rent");
       }
+
+      
     }
 
     // 22nd of the month
     if (today.getDate() === 22) {
-      const res = await storeEmails([{
+      const res = await storeExpenses([{
         id: Math.random().toString(36).substring(7).toString(),
         amount: process.env.CAR_INSURANCE_AMOUNT,
         place: 'car insurance',
@@ -127,7 +129,7 @@ export async function GET(req: Request) {
 
     const filteredEmails = emails.filter(Boolean);
     if (filteredEmails?.length > 0) {
-      const res = await storeEmails(filteredEmails);
+      const res = await storeExpenses(filteredEmails);
       if (!res) {
         console.log("Failed to Save Expense", filteredEmails.length);
         return NextResponse.json({ message: 'Failed to store expenses', count: filteredEmails.length }, { status: 500 });
