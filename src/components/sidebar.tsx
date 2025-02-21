@@ -58,31 +58,25 @@ export function Sidebar() {
         <Link href="#about" className="block hover:opacity-80">
           About Me
         </Link>
-        <Link href="#portfolio" className="block hover:opacity-80">
-          Portfolio
-        </Link>
-        <Link href="#services" className="block hover:opacity-80">
-          Services & Pricing
-        </Link>
-        <Link href="#resume" className="block hover:opacity-80">
-          Resume
+        <Link href="#contact" className="block hover:opacity-80">
+          Projects
         </Link>
         <Link href="#blog" className="block hover:opacity-80">
           Blog
         </Link>
-        <Link href="#contact" className="block hover:opacity-80">
+        {/* <Link href="#contact" className="block hover:opacity-80">
           Contact
-        </Link>
+        </Link> */}
       </nav>
 
       {/* <div className="mt-8">
         <button className="w-full bg-white text-red-400 py-2 rounded-md hover:bg-opacity-90">Hire Me</button>
       </div> */}
 
-      <div className="absolute bottom-8 left-8 flex items-center gap-2">
+      {/* <div className="absolute bottom-8 left-8 flex items-center gap-2">
         <span className="text-sm">Dark Mode</span>
         <Switch checked={darkMode} onCheckedChange={setDarkMode} className="data-[state=checked]:bg-white" />
-      </div>
+      </div> */}
     </>
   )
 

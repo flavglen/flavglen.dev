@@ -71,6 +71,21 @@ export const columns1: ColumnDef<Expense>[] = [
         cell: ({ row }) => <div className="lowercase">{new Date(row.getValue("internalDate")).toLocaleString()}</div>,
     },
     {
+        accessorKey: "category",
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Category
+                    <ArrowUpDown />
+                </Button>
+            )
+        },
+        cell: ({ row }) => <div className="lowercase">{row.getValue("category")}</div>,
+    },
+    {
         accessorKey: "amount",
         header: () => <div className="text-right">Amount</div>,
         cell: ({ row }) => {
@@ -95,6 +110,7 @@ export const columns1: ColumnDef<Expense>[] = [
 ]
 
 export function ExpenseComponent() {
+    const [globalFilter, setGlobalFilter] = React.useState("");
     const [date, setDate] = React.useState<DateRange | undefined>({
         from: addDays(new Date(), -new Date().getDate()),
         to: new Date(),
@@ -119,11 +135,13 @@ export function ExpenseComponent() {
         getFilteredRowModel: getFilteredRowModel(),
         onColumnVisibilityChange: setColumnVisibility,
         onRowSelectionChange: setRowSelection,
+        onGlobalFilterChange: setGlobalFilter,
         state: {
             sorting,
             columnFilters,
             columnVisibility,
             rowSelection,
+            globalFilter
         },
     })
 
@@ -189,9 +207,11 @@ export function ExpenseComponent() {
 
                 <Input
                     placeholder="Filter Expenses ..."
-                    value={(table.getColumn("place")?.getFilterValue() as string) ?? ""}
-                    onChange={(event) =>
-                        table.getColumn("place")?.setFilterValue(event.target.value)
+                    value={globalFilter ?? ""}
+                    onChange={(event) => {
+                        table.setGlobalFilter(event.target.value)
+                        //table.getColumn("place")?.setFilterValue(event.target.value)
+                      }
                     }
                     className="max-w-sm"
                 />
