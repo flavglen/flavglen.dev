@@ -1,5 +1,6 @@
 import { db } from "@/lib/firebase";
 import { saveLog } from "./common";
+import { categorizeExpense } from "./categories";
 
 export async function getExpense(from: string, to: string) {
     // fetch all docs from ai_expenses
@@ -10,7 +11,11 @@ export async function getExpense(from: string, to: string) {
                                .get();
   
       const docs = snapshot.docs.map(doc => doc.data());
-      return docs;
+      // map category to each expense if not present
+      const expenseFormatted = docs.map((doc: any) => {
+        return  {...doc, ...(!doc.category && {category: categorizeExpense(doc.place)}) };
+      });
+      return expenseFormatted;
     } catch (error) {
       console.error("Error getting expenses:", error);
       saveLog({ message: "failed to get expenses" ,error, data: {from, to}}, false);
@@ -35,6 +40,7 @@ export async function storeExpenses(expenses: any[]) {
           place: expense.place,
           time: expense.time,
           internalDate: expense.internalDate,
+          category: categorizeExpense(expense.place),
         });
       });
   
