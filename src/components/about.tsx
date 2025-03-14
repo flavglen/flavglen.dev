@@ -18,19 +18,6 @@ export const About  = () => {
                                 <Button> Resume</Button>
                                 <Button> More</Button>
                             </span>
-                            {/* <p className="mt-2">
-                                When I'm not coding, you can usually find me behind a  lens, capturing the world around me through 
-                                photography. As an avid photographer, I love to explore new locations and experiment with different
-                                techniques to create stunning images that tell a story !! Whether I'm working on a complex web project or 
-                                capturing a beautiful sunset, I always bring a creative and detail-oriented approach to my work.
-                            </p>
-
-                            <p className="mt-2">
-                                I love to unwind and have fun by playing games on my PlayStation 4 (PS4).
-                                Some of my favorite games include epic multiplayer battles in 'Battlefield,' intense and
-                                action-packed missions in 'Call of Duty,' diving into the dark and gritty world of 'Max Payne,'
-                                and immersing myself in the thrilling adventures of 'Batman.
-                            </p> */}
                         </div>
                         <div className="md:justify-self-end justify-self-center md:order-2 order-1">
                             <img className="rounded-full shadow-xl" src="https://flavglen.github.io/images/PXL_dp.jpg" alt="Glen Pais" width={200} height={200} />

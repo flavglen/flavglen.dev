@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Dev icons*/
+@import url("../../node_modules/devicons/css/devicons.min.css");
+
 @layer base {
   :root {
     --background: 0 0% 100%;

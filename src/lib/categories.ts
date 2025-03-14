@@ -1,5 +1,5 @@
 export const categoryPatterns = [
-    { pattern: /coffee|wing machine|starbucks|paan|biryani|pasta|momo|tim hortons|Paandian Vilas|Biryani Nation|Thalassery|dunkin|mcdonalds|burger king|kfc|subway|chipotle|pizza hut|dominos|popeyes|wendys|taco bell|panera|arby's|chick-fil-a|pizz/i, category: "Food" },
+    { pattern: /coffee|wing machine|starbucks|paan|biryani|pasta|momo|tim hortons|Paandian Vilas|Biryani Nation|Thalassery|dunkin|mcdonalds|burger king|kfc|subway|chipotle|pizza hut|dominos|popeyes|wendys|taco bell|panera|arby's|chick-fil-a|pizz|SHAWARMA|/i, category: "Food" },
     { pattern: /uber|lyft|taxi|cab|hertz|avis|car|sonet|cooperators|enterprise|go train|budget|gas|shell|esso|bp|petro|go train|via rail|greyhound|amtrak|presto|air canada|westjet|delta|american airlines|parking|car insurance|united airlines/i, category: "Transport" },
     { pattern: /walmart|NOFRILLS|yal|eraa|costco|loblaws|sobeys|metro|no frills|whole foods|freshco|trader joe|aldi|food basics|wegmans|jian hing|FUSION|fusion market|batala/i, category: "Groceries" },
     { pattern: /amazon|best buy|walmart|DOLLARAMA|target|ikea|costco|home depot|lowes|sephora|macy|zara|h&m|nike|adidas/i, category: "Shopping" },

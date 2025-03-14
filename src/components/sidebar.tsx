@@ -2,10 +2,11 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import { Switch } from "@/components/ui/switch"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { X, Linkedin, Github, Globe, Mail, Menu} from "lucide-react"
+import { X, Menu} from "lucide-react"
 import { Button } from "./ui/button"
+import { useIsAdmin } from "@/hooks/useIsAdmin"
+import { SocialLinks } from "./shared/social-links"
 
 export function Sidebar() {
   const [darkMode, setDarkMode] = useState(false)
@@ -18,52 +19,44 @@ export function Sidebar() {
     return () => window.removeEventListener("resize", checkIfMobile)
   }, [])
 
+  const admin =  useIsAdmin()
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen)
 
   const sidebarContent = (
     <>
       <div className="flex flex-col items-center mb-6">
         <h2 className="text-xl font-semibold mb-4">Glen Pais</h2>
-        <Avatar className="w-32 h-32 mb-4">
-          { <img
-            src="https://www.flavglen.dev/logo.svg"
-            alt="Profile"
-          /> }
-          <AvatarFallback>GP</AvatarFallback>
-        </Avatar>
+        <Link href="/">
+          <Avatar className="w-32 h-32 mb-4">
+            { <img
+              src="https://www.flavglen.dev/logo.svg"
+              alt="Profile"
+            /> }
+            <AvatarFallback>GP</AvatarFallback>
+          </Avatar>
+        </Link>
         <p className="text-sm text-center">
           Hi, my name is Glen Pais and I&apos;m a Senior web Developer. Welcome to my personal website!
         </p>
       </div>
 
       <div className="flex justify-center gap-2 mb-8">
-        <Link href="#" className="hover:opacity-80">
-          <X className="w-5 h-5" />
-        </Link>
-        <Link href="#" className="hover:opacity-80">
-          <Linkedin className="w-5 h-5" />
-        </Link>
-        <Link href="#" className="hover:opacity-80">
-          <Github className="w-5 h-5" />
-        </Link>
-        <Link href="#" className="hover:opacity-80">
-          <Globe className="w-5 h-5" />
-        </Link>
-        <Link href="#" className="hover:opacity-80">
-          <Mail className="w-5 h-5" />
-        </Link>
+            <SocialLinks />
       </div>
 
       <nav className="space-y-4">
-        <Link href="#about" className="block hover:opacity-80">
+        <Link href="/coming-soon" className="block hover:opacity-80">
           About Me
         </Link>
-        <Link href="#contact" className="block hover:opacity-80">
+        <Link href="/coming-soon" className="block hover:opacity-80">
           Projects
         </Link>
-        <Link href="#blog" className="block hover:opacity-80">
+        <Link href="/coming-soon" className="block hover:opacity-80">
           Blog
         </Link>
+       {admin &&  <Link href="/admin/expenses" className="block hover:opacity-80">
+          Expenses
+        </Link>}
         {/* <Link href="#contact" className="block hover:opacity-80">
           Contact
         </Link> */}
@@ -84,7 +77,7 @@ export function Sidebar() {
     <>
       {/* Mobile Menu Button */}
       <Button
-      className="md:hidden fixed top-4 left-4 z-50 p-2 bg-slate-500 text-white rounded-md"
+      className="md:hidden fixed top-4 right-4 z-50 p-2 bg-slate-500 text-white rounded-md"
       onClick={toggleMobileMenu}
     >
       {isMobileMenuOpen ? <X /> : <Menu />}

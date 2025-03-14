@@ -21,12 +21,12 @@ export default function RootLayout({
       <title>Glen Flavian Pais - Senior web Developer and Freelancer - Canada</title>
       <body>
           <div className="min-h-screen flex flex-col md:flex-row">
-            <Sidebar />
-            <main className="flex-1 p-4 md:p-12 md:ml-[250px]">
-              <AuthSessionProvider>
-                {children}
-              </AuthSessionProvider>
-            </main>
+            <AuthSessionProvider>
+              <Sidebar />
+              <main className="flex-1 p-4 md:p-12 md:ml-[250px]">
+                  {children}
+              </main>
+            </AuthSessionProvider>
           </div>
       </body>
     </html>
