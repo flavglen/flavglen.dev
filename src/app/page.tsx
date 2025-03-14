@@ -24,7 +24,7 @@ export default async function Page() {
               </div>
             </div>
             <img
-              src="https://flavglen.github.io/images/PXL_dp.jpg"
+              src="dp.jpeg"
               alt="Profile"
               width={250}
               height={250}

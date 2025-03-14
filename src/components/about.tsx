@@ -20,7 +20,7 @@ export const About  = () => {
                             </span>
                         </div>
                         <div className="md:justify-self-end justify-self-center md:order-2 order-1">
-                            <img className="rounded-full shadow-xl" src="https://flavglen.github.io/images/PXL_dp.jpg" alt="Glen Pais" width={200} height={200} />
+                            <img className="rounded-full shadow-xl" src="dp.jpeg" alt="Glen Pais" width={200} height={200} />
                         </div>
                 </div>
          </section>
