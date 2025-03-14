@@ -45,16 +45,19 @@ export function Sidebar() {
       </div>
 
       <nav className="space-y-4">
-        <Link href="/coming-soon" className="block hover:opacity-80">
+        <Link href="/" className="block hover:opacity-80" onClick={toggleMobileMenu}>
+          Home
+        </Link>
+        <Link href="/coming-soon" className="block hover:opacity-80" onClick={toggleMobileMenu}>
           About Me
         </Link>
-        <Link href="/coming-soon" className="block hover:opacity-80">
+        <Link href="/coming-soon" className="block hover:opacity-80" onClick={toggleMobileMenu}>
           Projects
         </Link>
-        <Link href="/coming-soon" className="block hover:opacity-80">
+        <Link href="/coming-soon" className="block hover:opacity-80" onClick={toggleMobileMenu}>
           Blog
         </Link>
-       {admin &&  <Link href="/admin/expenses" className="block hover:opacity-80">
+       {admin &&  <Link href="/admin/expenses" className="block hover:opacity-80" onClick={toggleMobileMenu}>
           Expenses
         </Link>}
         {/* <Link href="#contact" className="block hover:opacity-80">
