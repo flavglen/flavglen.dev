@@ -29,7 +29,7 @@ export function Sidebar() {
         <Link href="/">
           <Avatar className="w-32 h-32 mb-4">
             { <img
-              src="https://www.flavglen.dev/logo.svg"
+              src="logo.svg"
               alt="Profile"
             /> }
             <AvatarFallback>GP</AvatarFallback>
