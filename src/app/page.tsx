@@ -5,7 +5,7 @@ import { Skills } from "@/schema/skils";
 import Link from "next/link";
 
 export default async function Page() {
-  const data = await fetch('http://localhost:3000/api/skills', {
+  const data = await fetch(`${process.env.BASE_API_URL}/skills`, {
     cache: 'no-store'
   })
   const skills = await data.json()
