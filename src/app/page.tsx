@@ -1,8 +1,15 @@
 
 import { SkillCard } from "@/components/skill-card";
 import { Button } from "@/components/ui/button";
+import { Skills } from "@/schema/skils";
+import Link from "next/link";
 
-export default function Page() {
+export default async function Page() {
+  const data = await fetch('http://localhost:3000/api/skills', {
+    cache: 'no-store'
+  })
+  const skills = await data.json()
+
   return (
     <div className="max-w-4xl mx-auto">
           <div className="flex flex-col md:flex-row justify-between items-start mb-16">
@@ -10,19 +17,10 @@ export default function Page() {
               <h1 className="text-4xl font-bold mb-2">Glen Pais</h1>
               <p className="text-xl text-muted-foreground mb-4">Senior web Developer</p>
               <p className="mb-4">
-                Hello, I&apos;m Glen, a frontend and node developer with a passion for crafting beautiful and responsive web interfaces. I&apos;ve spent 9+ years working on a variety of web projects, from single-page applications to complex e-commerce websites. I specialize in Angular, React, Typescript, Vue.js, Node.js, HTML, CSS, and Next.js. I&apos;m always looking for new ways to improve my coding skills and stay up-to-date with the latest web development trends. Additionally, I have expertise in serverless architecture and cloud computing, leveraging the power of AWS to build scalable and reliable web applications. Want to know how I may help your project? Check out my project{" "}
-                <a href="#" className="text-red-400 hover:underline">
-                  portfolio
-                </a>{" "}
-                and{" "}
-                <a href="#" className="text-red-400 hover:underline">
-                  online resume
-                </a>
-                .
+                Hello, I&apos;m Glen, a frontend and node developer with a passion for crafting beautiful and responsive web interfaces. I&apos;ve spent 9+ years working on a variety of web projects, from single-page applications to complex e-commerce websites. I specialize in Angular, React, Typescript, Vue.js, Node.js, HTML, CSS, and Next.js. I&apos;m always looking for new ways to improve my coding skills and stay up-to-date with the latest web development trends. Additionally, I have expertise in serverless architecture and cloud computing, leveraging the power of AWS to build scalable and reliable web applications. Check out my Online Resume.
               </p>
-              <div className="flex gap-4">
-                <Button className="bg-slate-500 hover:bg-red-500">View Portfolio</Button>
-                <Button variant="outline">View Resume</Button>
+              <div className="flex gap-4 border-1 border w-36 p-2 text-center align-middle justify-center">
+                <Link href="https://github.com/flavglen/resume/blob/main/GLEN%20-%20Senior%20FE%20.pdf" target="__blank">View Resume</Link>
               </div>
             </div>
             <img
@@ -34,7 +32,7 @@ export default function Page() {
             />
           </div>
 
-          <section>
+          <section className="grid">
             <h2 className="text-2xl font-bold mb-8 flex items-center gap-2">
               <div className="w-1 h-8 bg-slate-500" />
               What I do
@@ -46,42 +44,14 @@ export default function Page() {
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-              <SkillCard
-                icon={<div className="w-8 h-8 bg-slate-500 rounded" />}
-                title="Vanilla JavaScript"
-                description="List skills/technologies here. You can change the icon above to any of the 2000+ FontAwesome 5 free icons available. Aenean commodo ligula eget dolor."
-              />
-              <SkillCard
-                icon={<div className="w-8 h-8 bg-slate-500 rounded" />}
-                title="Angular, React & Vue"
-                description="List skills/technologies here. You can change the icon above to any of the 2000+ FontAwesome 5 free icons available. Aenean commodo ligula eget dolor."
-              />
-              <SkillCard
-                icon={<div className="w-8 h-8 bg-slate-500 rounded" />}
-                title="Node.js"
-                description="List skills/technologies here. You can change the icon above to any of the 2000+ FontAwesome 5 free icons available. Aenean commodo ligula eget dolor."
-              />
-              <SkillCard
-                icon={<div className="w-8 h-8 bg-slate-500 rounded" />}
-                title="Python & Django"
-                description="List skills/technologies here. You can change the icon above to any of the 2000+ FontAwesome 5 free icons available. Aenean commodo ligula eget dolor."
-              />
-              <SkillCard
-                icon={<div className="w-8 h-8 bg-slate-500 rounded" />}
-                title="PHP"
-                description="List skills/technologies here. You can change the icon above to any of the 2000+ FontAwesome 5 free icons available. Aenean commodo ligula eget dolor."
-              />
-              <SkillCard
-                icon={<div className="w-8 h-8 bg-slate-500 rounded" />}
-                title="HTML & CSS"
-                description="List skills/technologies here. You can change the icon above to any of the 2000+ FontAwesome 5 free icons available. Aenean commodo ligula eget dolor."
-              />
+              {skills.data.map((skill: Skills, index: number) => (
+                <SkillCard key={index} title={skill.technology} description={skill.description}  image={skill.image}/>
+              ))}
             </div>
-{/* 
-            <div className="flex justify-center">
-              <Button className="bg-slate-500 hover:bg-red-500">Services & Pricing</Button>
-            </div> */}
+
+            <Button className="tex" variant="link">More Skills</Button>
           </section>
         </div>
   );
 }
+

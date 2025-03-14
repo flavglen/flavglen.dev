@@ -17,7 +17,6 @@ export async function GET(req: Request) {
     process.env.GOOGLE_CLIENT_SECRET,
     process.env.GOOGLE_CALL_BACK_URL
   );
-
   oauth2Client.setCredentials({
     refresh_token: process.env.GOOGLE_REFRESH_TOKEN
   });
