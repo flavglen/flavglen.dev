@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 100">
+  <rect x="10" y="10" width="180" height="80" fill="#eee" stroke="#aaa" stroke-width="2" rx="5" ry="5"/>
+  <line x1="20" y1="20" x2="180" y2="80" stroke="#888" stroke-width="3"/>
+  <line x1="180" y1="20" x2="20" y2="80" stroke="#888" stroke-width="3"/>
+  <text x="100" y="50" text-anchor="middle" dominant-baseline="middle" font-family="sans-serif" font-size="16">No Image</text>
+</svg>

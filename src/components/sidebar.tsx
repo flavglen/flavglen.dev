@@ -48,10 +48,10 @@ export function Sidebar() {
         <Link href="/" className="block hover:opacity-80" onClick={toggleMobileMenu}>
           Home
         </Link>
-        <Link href="/coming-soon" className="block hover:opacity-80" onClick={toggleMobileMenu}>
+        {/* <Link href="/coming-soon" className="block hover:opacity-80" onClick={toggleMobileMenu}>
           About Me
-        </Link>
-        <Link href="/coming-soon" className="block hover:opacity-80" onClick={toggleMobileMenu}>
+        </Link> */}
+        <Link href="/projects" className="block hover:opacity-80" onClick={toggleMobileMenu}>
           Projects
         </Link>
         <Link href="/coming-soon" className="block hover:opacity-80" onClick={toggleMobileMenu}>
