@@ -13,7 +13,7 @@ export async function getExpense(from: string, to: string) {
       const docs = snapshot.docs.map(doc => doc.data());
       // map category to each expense if not present
       const expenseFormatted = docs.map((doc: any) => {
-        return  {...doc, ...(!doc.category && {category: categorizeExpense(doc.place)}) };
+        return  {...doc,...(!doc.category && {category: categorizeExpense(doc.place)}) };
       });
       return expenseFormatted;
     } catch (error) {

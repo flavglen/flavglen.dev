@@ -41,6 +41,21 @@ export type Expense = {
 
 export const columns1: ColumnDef<Expense>[] = [
     {
+        accessorKey: "id",
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    ID
+                    <ArrowUpDown />
+                </Button>
+            )
+        },
+        cell: ({ row }) => <div className="lowercase">{row.getValue("id")}</div>,
+    },
+    {
         accessorKey: "place",
         header: ({ column }) => {
             return (
