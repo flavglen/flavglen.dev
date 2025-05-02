@@ -163,7 +163,14 @@ export function ExpenseComponent() {
 
     const fetchExpenses = async ()  =>{
         try {
-            const response = await fetch(`/api/protected/expenses?from=${date?.from?.toISOString()}&to=${date?.to?.toISOString()}`);
+            const dateTo = date?.to ? addDays(date.to, 1) : null;
+            const dateFrom = date?.from || null;
+
+            if(!dateTo || !dateFrom) {
+                throw new Error("Invalid date range");
+            }
+
+            const response = await fetch(`/api/protected/expenses?from=${dateFrom?.toISOString()}&to=${dateTo?.toISOString()}`);
             const data = await response.json();
             const dataFormated = data?.data?.map((expense: Expense) => ({ ...expense, amount: +expense.amount }));
             setExpenses(dataFormated || []);

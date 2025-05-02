@@ -91,12 +91,23 @@ const projects:Project[] = [
   title: "Flavglen.dev",
   company: "Portfolio",
   description:`For my personal portfolio, built with Next.js, Tailwind CSS, and TypeScript, I integrated multiple apps such as an expense tracker, Google authentication, role-based authentication, dashboards, and exports. Hosted on Vercel, it utilizes Vercel's serverless functions, Google Gmail SDK, and Vercel cron jobs to enhance functionality and performance.`,
+  image: null,
+  category: "Personal",
+  tags: ["Typescript", "React", "Next js", "CSS", "HTML", "JavaScript", "Quickblox", "Cursor", "AI", "V0", "Firebase", "node.js", "Express", ],
+  demoUrl: 'https://flavglen.dev',
+  githubUrl: 'https://github.com/flavglen/flavglen.dev'
+}, 
+{
+  id: 8,
+  title: "AI Portfolio",
+  company: "Portfolio",
+  description:`A modern personal portfolio built using V0.dev, an AI tool that generates React and Tailwind components. I used AI to quickly design and structure the site, then customized it with interactive elements like a custom cursor using Framer Motion.`,
   image: 'logonew.svg',
   category: "Personal",
   tags: ["Typescript", "React", "Next js", "CSS", "HTML", "JavaScript", "Quickblox", "Python", "NET", "Firebase", "node.js", "Express", ],
-  demoUrl: 'https://flavglen.dev',
-  githubUrl: 'https://github.com/flavglen/flavglen.dev'
-}
+  demoUrl: 'https://v0-melissa-portfolio.vercel.app/',
+  githubUrl: 'https://github.com/flavglen/melissa-portfolio'
+},
 ]
 
 export default function ProjectsSection() {
