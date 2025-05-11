@@ -1,0 +1,69 @@
+export  function TimeLine() {
+    return (
+        <svg viewBox="0 0 500 600" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+        {/* Background gradient */}
+        <rect width="500" height="600" fill="url(#paint0_linear)" />
+
+        {/* Code window */}
+        <rect x="50" y="80" width="400" height="280" rx="8" fill="#1E1E3F" />
+        <rect x="50" y="80" width="400" height="30" rx="8" fill="#2D2B55" />
+
+        {/* Window buttons */}
+        <circle cx="70" cy="95" r="6" fill="#FF5F56" />
+        <circle cx="90" cy="95" r="6" fill="#FFBD2E" />
+        <circle cx="110" cy="95" r="6" fill="#27C93F" />
+
+        {/* Code lines */}
+        <rect x="70" y="130" width="140" height="10" rx="2" fill="#A599E9" />
+        <rect x="70" y="150" width="200" height="10" rx="2" fill="#9EFFFF" />
+        <rect x="100" y="170" width="240" height="10" rx="2" fill="#FAEFA5" />
+        <rect x="100" y="190" width="180" height="10" rx="2" fill="#FF8B39" />
+        <rect x="70" y="210" width="260" height="10" rx="2" fill="#9EFFFF" />
+        <rect x="70" y="230" width="120" height="10" rx="2" fill="#A599E9" />
+        <rect x="70" y="250" width="220" height="10" rx="2" fill="#FAEFA5" />
+        <rect x="100" y="270" width="160" height="10" rx="2" fill="#FF8B39" />
+        <rect x="70" y="290" width="180" height="10" rx="2" fill="#9EFFFF" />
+        <rect x="70" y="310" width="240" height="10" rx="2" fill="#A599E9" />
+
+        {/* Browser window */}
+        <rect x="100" y="380" width="300" height="180" rx="8" fill="white" />
+        <rect x="100" y="380" width="300" height="30" rx="8" fill="#F1F1F1" />
+
+        {/* Browser address bar */}
+        <rect x="130" y="390" width="240" height="10" rx="5" fill="#E4E4E4" />
+
+        {/* UI elements in browser */}
+        <rect x="120" y="430" width="260" height="30" rx="4" fill="#9333EA" opacity="0.8" />
+        <rect x="120" y="470" width="120" height="10" rx="2" fill="#333333" />
+        <rect x="120" y="490" width="200" height="10" rx="2" fill="#666666" />
+        <rect x="120" y="510" width="180" height="10" rx="2" fill="#666666" />
+        <rect x="120" y="530" width="80" height="20" rx="4" fill="#DB2777" />
+
+        {/* Floating elements */}
+        <circle cx="400" cy="200" r="30" fill="#DB2777" opacity="0.3" />
+        <circle cx="420" cy="480" r="20" fill="#9333EA" opacity="0.3" />
+        <circle cx="80" cy="520" r="25" fill="#DB2777" opacity="0.3" />
+
+        {/* HTML tags */}
+        <path d="M30 400 L50 380 L70 400 L50 420 Z" fill="#E34F26" />
+        <path d="M30 480 L50 460 L70 480 L50 500 Z" fill="#1572B6" />
+        <path d="M430 350 L450 330 L470 350 L450 370 Z" fill="#F7DF1E" />
+
+        {/* Connecting lines */}
+        <path
+          d="M250 330 C250 350, 250 360, 250 380"
+          stroke="#9333EA"
+          strokeWidth="2"
+          strokeDasharray="5 5"
+        />
+
+        {/* Gradients */}
+        <defs>
+          <linearGradient id="paint0_linear" x1="0" y1="0" x2="500" y2="600" gradientUnits="userSpaceOnUse">
+            <stop stopColor="#F9FAFB" className="dark:stop-color-[#111827]" />
+            <stop offset="1" stopColor="#F3F4F6" className="dark:stop-color-[#1F2937]" />
+          </linearGradient>
+        </defs>
+      </svg>
+    );
+  }
