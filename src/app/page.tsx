@@ -22,7 +22,13 @@ export default function Portfolio() {
         <div className="container flex h-16 items-center justify-between">
           <div className="font-bold text-xl font-montserrat">
             <Link href="/">
-              <span className="gradient-text">Glen</span>Pais
+              <img
+                src="gp-logo.png"
+                alt="Logo"
+                width={80}
+                height={50}
+                className="inline-block ml-2 rounded-full"/>
+                <span className="gradient-text">Glen</span>Pais
             </Link>
           </div>
           <nav className="hidden md:flex gap-6">
@@ -92,7 +98,7 @@ export default function Portfolio() {
         {/* Hero Section */}
         <section className="py-20 md:py-28 flex flex-col md:flex-row items-center gap-10">
           <AnimateInView className="flex-1 space-y-6" direction="left">
-            <Badge className="px-3 py-1 text-sm bg-gradient-to-r from-purple-600/20 to-pink-600/20 text-purple-700 dark:text-purple-300 border-purple-300/20">
+            <Badge className="px-3 py-1 text-sm bg-gradient-to-r from-purple-600/20 to-pink-600/20 text-white dark:text-purple-300 border-purple-300/20">
               Available for hire
             </Badge>
             <h1 className="text-4xl md:text-6xl font-bold tracking-tight font-montserrat">
@@ -491,9 +497,11 @@ function ProjectCard({ project }: { project: any }) {
         <div className="absolute inset-0 bg-gradient-to-t from-purple-900/80 via-pink-800/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center p-4">
           <div className="flex gap-2">
             <Button size="sm" variant="secondary" asChild className="bg-white/90 hover:bg-white">
-              <Link href={project.demo} target="_blank" rel="noopener noreferrer">
+              { 
+              project.demo && (<Link href={project.demo} target="_blank" rel="noopener noreferrer">
                 <ExternalLink className="mr-2 h-4 w-4" /> Live Demo
               </Link>
+             )}
             </Button>
             <Button
               size="sm"
@@ -501,9 +509,11 @@ function ProjectCard({ project }: { project: any }) {
               asChild
               className="bg-black/50 text-white border-white/50 hover:bg-black/70"
             >
-              <Link href={project.github} target="_blank" rel="noopener noreferrer">
+              {
+              project.github && (<Link href={project.github} target="_blank" rel="noopener noreferrer">
                 <Github className="mr-2 h-4 w-4" /> Code
               </Link>
+              )}
             </Button>
           </div>
         </div>
@@ -581,7 +591,7 @@ const projects = [
     id: 5,
     title: "Aira Club",
     description: "For Aira Club, an online lucky scheme portal, I built user authentication (OAuth), roles and permissions, payment gateway, and serverless functions using Firebase Cloud Functions and Firestore. I also implemented Redis caching, reports, dashboards, and a media library to enhance performance and user experience.",
-    image: "placeholder.svg",
+    image: "logo-aira.png",
     category: "personal",
     technologies: ["React", "nextJs", "Chart.js", "Firebase", "Node.js", "Express", "jest", "Cypress"],
     demo: "https://airaclub.com",
