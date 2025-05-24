@@ -13,6 +13,7 @@ import { MobileMenu } from "@/components/mobile-menu"
 import { ExperienceTimeline } from "@/components/exp-timeline"
 import { experiences } from "@/data/exp"
 import { TimeLine } from "@/components/timeline"
+import { Toaster } from "@/components/ui/toaster"
 
 export default function Portfolio() {
   return (
@@ -487,6 +488,7 @@ export default function Portfolio() {
 // Project Card Component
 function ProjectCard({ project }: { project: any }) {
   return (
+    <>
     <Card className="overflow-hidden group border-none shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
       <div className="relative aspect-video overflow-hidden">
         <img
@@ -542,6 +544,8 @@ function ProjectCard({ project }: { project: any }) {
         </div>
       </CardContent>
     </Card>
+   
+    </>
   )
 }
 
