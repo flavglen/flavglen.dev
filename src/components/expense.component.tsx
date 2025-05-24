@@ -39,92 +39,8 @@ export type Expense = {
     time?: string;
 };
 
-export const columns1: ColumnDef<Expense>[] = [
-    {
-        accessorKey: "id",
-        header: ({ column }) => {
-            return (
-                <Button
-                    variant="ghost"
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-                >
-                    ID
-                    <ArrowUpDown />
-                </Button>
-            )
-        },
-        cell: ({ row }) => <div className="lowercase">{row.getValue("id")}</div>,
-    },
-    {
-        accessorKey: "place",
-        header: ({ column }) => {
-            return (
-                <Button
-                    variant="ghost"
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-                >
-                    Place
-                    <ArrowUpDown />
-                </Button>
-            )
-        },
-        cell: ({ row }) => <div className="lowercase">{row.getValue("place")}</div>,
-    },
-    {
-        accessorKey: "internalDate",
-        header: ({ column }) => {
-            return (
-                <Button
-                    variant="ghost"
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-                >
-                    Date
-                    <ArrowUpDown />
-                </Button>
-            )
-        },
-        cell: ({ row }) => <div className="lowercase">{new Date(row.getValue("internalDate")).toLocaleString()}</div>,
-    },
-    {
-        accessorKey: "category",
-        header: ({ column }) => {
-            return (
-                <Button
-                    variant="ghost"
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-                >
-                    Category
-                    <ArrowUpDown />
-                </Button>
-            )
-        },
-        cell: ({ row }) => <div className="lowercase">{row.getValue("category")}</div>,
-    },
-    {
-        accessorKey: "amount",
-        header: () => <div className="text-right">Amount</div>,
-        cell: ({ row }) => {
-            const amount = parseFloat(row.getValue("amount"))
-            // Format the amount as a dollar amount
-            const formatted = new Intl.NumberFormat("en-US", {
-                style: "currency",
-                currency: "USD",
-            }).format(amount)
-
-            return <div className="text-right font-medium">{formatted}</div>
-        },
-        footer: ({ table }) => {
-            const total = table.getFilteredRowModel().rows.reduce((sum, row) => sum + row.original.amount, 0)
-            const formattedTotal = new Intl.NumberFormat("en-US", {
-                style: "currency",
-                currency: "USD",
-            }).format(total)
-            return <div className="text-right font-medium">{formattedTotal}</div>
-        },
-    },
-]
-
 export function ExpenseComponent() {
+    const [selectedDocId, setSelectedDocId] = React.useState<string | null>(null);
     const [globalFilter, setGlobalFilter] = React.useState("");
     const [date, setDate] = React.useState<DateRange | undefined>({
         from: addDays(new Date(), -new Date().getDate()),
@@ -138,6 +54,169 @@ export function ExpenseComponent() {
         React.useState<VisibilityState>({})
     const [rowSelection, setRowSelection] = React.useState({})
     const [expenses, setExpenses] = React.useState<Expense[]>([]);
+    const [open, setOpen] = React.useState(false)
+
+       
+    const fetchExpenses = async () => {
+        try {
+            const dateTo = date?.to ? addDays(date.to, 1) : null;
+            const dateFrom = date?.from || null;
+
+            if (!dateTo || !dateFrom) {
+                throw new Error("Invalid date range");
+            }
+
+            const response = await fetch(`/api/protected/expenses?from=${dateFrom?.toISOString()}&to=${dateTo?.toISOString()}`);
+            const data = await response.json();
+            const dataFormated = data?.data?.map((expense: Expense) => ({ ...expense, amount: +expense.amount }));
+            setExpenses(dataFormated || []);
+        } catch (error) {
+            console.error("Failed to fetch expenses:", error);
+        }
+    }
+
+    const deleteRow = async (docId?: string | null) => {
+        if (!docId) {
+            console.error("No docId provided", docId);
+            return;
+        }
+
+        fetch(`/api/protected/expenses/${docId}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                return response.json();
+            })
+            .then((data) => {
+                console.log("Success:", data)
+                alert("Expense deleted successfully");
+                fetchExpenses();
+                setSelectedDocId(null);
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+                alert("Failed to delete expense");
+                setSelectedDocId(null);
+            });
+    }
+
+ 
+
+
+    const columns1 = React.useMemo<ColumnDef<Expense>[]>(() => [
+        {
+            accessorKey: "docId",
+            header: ({ column }) => (
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    docId
+                    <ArrowUpDown />
+                </Button>
+            ),
+            cell: ({ row }) => <div className="lowercase">{row.getValue("docId")}</div>,
+        },
+        {
+            accessorKey: "id",
+            header: ({ column }) => (
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    ID
+                    <ArrowUpDown />
+                </Button>
+            ),
+            cell: ({ row }) => <div className="lowercase">{row.getValue("id")}</div>,
+        },
+        {
+            accessorKey: "place",
+            header: ({ column }) => (
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Place
+                    <ArrowUpDown />
+                </Button>
+            ),
+            cell: ({ row }) => <div className="lowercase">{row.getValue("place")}</div>,
+        },
+        {
+            accessorKey: "internalDate",
+            header: ({ column }) => (
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Date
+                    <ArrowUpDown />
+                </Button>
+            ),
+            cell: ({ row }) => (
+                <div className="lowercase">
+                    {new Date(row.getValue("internalDate")).toLocaleString()}
+                </div>
+            ),
+        },
+        {
+            accessorKey: "category",
+            header: ({ column }) => (
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Category
+                    <ArrowUpDown />
+                </Button>
+            ),
+            cell: ({ row }) => <div className="lowercase">{row.getValue("category")}</div>,
+        },
+        {
+            accessorKey: "amount",
+            header: () => <div className="text-right">Amount</div>,
+            cell: ({ row }) => {
+                const amount = parseFloat(row.getValue("amount"));
+                const formatted = new Intl.NumberFormat("en-US", {
+                    style: "currency",
+                    currency: "USD",
+                }).format(amount);
+                return <div className="text-right font-medium">{formatted}</div>;
+            },
+            footer: ({ table }) => {
+                const total = table.getFilteredRowModel().rows.reduce(
+                    (sum, row) => sum + row.original.amount,
+                    0
+                );
+                const formattedTotal = new Intl.NumberFormat("en-US", {
+                    style: "currency",
+                    currency: "USD",
+                }).format(total);
+                return <div className="text-right font-medium">{formattedTotal}</div>;
+            },
+        },
+        {
+            id: "actions",
+            header: () => <span>Action</span>,
+            cell: ({ row }) => (
+                <div className="flex items-center space-x-2">
+                    <Button
+                        variant="destructive"
+                        onClick={() => { setSelectedDocId(row.getValue("docId"))}}
+                    >
+                        Delete
+                    </Button>
+                </div>
+            ),
+        },
+    ], [deleteRow, setSelectedDocId]);
 
     const table = useReactTable({
         data: expenses,
@@ -161,32 +240,29 @@ export function ExpenseComponent() {
     })
 
 
-    const fetchExpenses = async ()  =>{
-        try {
-            const dateTo = date?.to ? addDays(date.to, 1) : null;
-            const dateFrom = date?.from || null;
-
-            if(!dateTo || !dateFrom) {
-                throw new Error("Invalid date range");
-            }
-
-            const response = await fetch(`/api/protected/expenses?from=${dateFrom?.toISOString()}&to=${dateTo?.toISOString()}`);
-            const data = await response.json();
-            const dataFormated = data?.data?.map((expense: Expense) => ({ ...expense, amount: +expense.amount }));
-            setExpenses(dataFormated || []);
-        } catch (error) {
-            console.error("Failed to fetch expenses:", error);
-        }
-    }
-
     React.useEffect(() => {
         void fetchExpenses();
     }, [])
 
 
+    const ConfirmDialog = React.useCallback(() => {
+        let text = "Press a button!\nEither OK or Cancel.";
+        if (confirm(text) == true) {
+            deleteRow(selectedDocId);
+        } else {
+            console.log("You pressed Not OK!");
+            setSelectedDocId(null);
+        }
+    },[selectedDocId])
+
+    
     React.useEffect(() => {
-        console.log("date", date)
-    },[date])
+        if(selectedDocId) {
+            console.log("Selected docId:", selectedDocId);
+            ConfirmDialog()
+        }
+    }, [selectedDocId])
+
 
     return (
         <div className="w-full relative">
@@ -233,7 +309,7 @@ export function ExpenseComponent() {
                     onChange={(event) => {
                         table.setGlobalFilter(event.target.value)
                         //table.getColumn("place")?.setFilterValue(event.target.value)
-                      }
+                    }
                     }
                     className="max-w-sm"
                 />

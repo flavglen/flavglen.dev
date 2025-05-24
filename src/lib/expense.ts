@@ -10,17 +10,32 @@ export async function getExpense(from: string, to: string) {
                                .where('internalDate', '<=', to)
                                .get();
   
-      const docs = snapshot.docs.map(doc => doc.data());
+      const docs = snapshot.docs.map(doc => {
+        return {...doc.data(), docId: doc.id};
+     });
       // map category to each expense if not present
       const expenseFormatted = docs.map((doc: any) => {
+       
         return  {...doc,...(!doc.category && {category: categorizeExpense(doc.place)}) };
       });
-      return expenseFormatted;
+      return expenseFormatted;  
     } catch (error) {
       console.error("Error getting expenses:", error);
       saveLog({ message: "failed to get expenses" ,error, data: {from, to}}, false);
       return null;
     }
+}
+
+export async function deleteExpense(docId: string) {
+  try {
+    const docRef = db.collection("ai_expenses").doc(docId);
+    await docRef.delete();
+    console.log("Document successfully deleted.");
+    return true;
+  } catch (error) {
+    console.error("Error deleting document:", error);
+    return false;
+  }
 }
 
 export async function storeExpenses(expenses: any[]) {
