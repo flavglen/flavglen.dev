@@ -12,6 +12,7 @@ export function Sidebar() {
   const [darkMode, setDarkMode] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
+  
   useEffect(() => {
     const checkIfMobile = () => setIsMobile(window.innerWidth < 768)
     checkIfMobile()
@@ -59,6 +60,10 @@ export function Sidebar() {
         </Link>
        {admin &&  <Link href="/admin/expenses" className="block hover:opacity-80" onClick={toggleMobileMenu}>
           Expenses
+        </Link>}
+
+        {admin &&  <Link href="/admin/dashboard" className="block hover:opacity-80" onClick={toggleMobileMenu}>
+          dashboard
         </Link>}
         {/* <Link href="#contact" className="block hover:opacity-80">
           Contact
