@@ -208,13 +208,20 @@ export default function Portfolio() {
                   My <span className="gradient-text">Journey</span>
                 </h3>
                 <p className="text-muted-foreground">
-                  With 9+ years of experience building everything from sleek single-page applications to large-scale e-commerce platforms, I specialize in crafting performant, accessible, and user-centric web solutions using React, Angular, Vue.js, Next.js, TypeScript, Node.js, HTML, and CSS.
+                  With 9+ years of experience building everything from sleek single-page applications to 
+                  large-scale e-commerce platforms, I specialize in crafting performant, accessible, and user-centric 
+                  web solutions using React, Angular, Vue.js, Next.js, TypeScript, Node.js, HTML, and CSS.
                 </p>
                 <p className="text-muted-foreground">
-                  Passionate about staying at the forefront of web innovation, I actively explore AI-enhanced development workflows using tools like Cursor, GitHub Copilot, and intelligent debugging to accelerate and optimize the developer experience. My expertise also extends to serverless architecture and cloud-native applications, leveraging AWS and modern DevOps practices to deliver scalable, resilient systems.
+                  Passionate about staying at the forefront of web innovation, I actively explore AI-enhanced development workflows using tools 
+                  like <b>Cursor, GitHub Copilot,</b> and intelligent debugging to accelerate and optimize the developer experience.
+                  My expertise also extends to serverless architecture and cloud-native applications, 
+                  leveraging AWS and modern DevOps practices to deliver scalable, resilient systems.
                 </p>
                 <p className="text-muted-foreground">
-                 Whether it's implementing AI-assisted features, integrating APIs, or streamlining performance, I thrive on transforming complex challenges into elegant frontend experiences. I'm constantly learning and adapting—exploring how AI, automation, and cloud computing can reshape how we build for the web.
+                 Whether it&apos;s implementing AI-assisted features, integrating APIs, or streamlining performance, I
+                  thrive on transforming complex challenges into elegant frontend experiences.
+                   I&apos;m constantly learning and adapting—exploring how AI, automation, and cloud computing can reshape how we build for the web.
                 </p>
                 <div className="pt-4">
                   <h4 className="font-semibold mb-2 gradient-text-blue">Education</h4>
