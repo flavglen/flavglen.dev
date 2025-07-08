@@ -31,13 +31,17 @@ import { Popover, PopoverContent, PopoverTrigger } from "@radix-ui/react-popover
 import { Calendar } from "./ui/calendar"
 import { ArrowUpDown, CalendarIcon } from "lucide-react"
 
-export type Expense = {
-    id: string;
-    amount: number;
-    internalDate: string;
-    place: string;
-    time?: string;
-};
+export interface Expense {
+    id: string;                 // Unique identifier for the record
+    docId: string;              // Google document ID
+    amount: number;             // Expense amount
+    category: string;           // Category like 'Others', 'Food', etc.
+    place: string;              // Vendor or store name
+    time: string;               // Time of transaction (e.g. "2:11 pm")
+    internalDate: string;       // ISO timestamp (e.g. "2025-06-01T18:11:11.000Z")
+    manual: boolean;            // Whether it was manually added
+    googleScript: boolean;      // Whether it was added via Google Script
+  }
 
 export function ExpenseComponent() {
     const [selectedDocId, setSelectedDocId] = React.useState<string | null>(null);
@@ -107,8 +111,6 @@ export function ExpenseComponent() {
     }
 
  
-
-
     const columns1 = React.useMemo<ColumnDef<Expense>[]>(() => [
         {
             accessorKey: "docId",
@@ -381,10 +383,6 @@ export function ExpenseComponent() {
                 </Table>
             </div>
             <div className="flex items-center justify-end space-x-2 py-4">
-                {/* <div className="flex-1 text-sm text-muted-foreground">
-                    {table.getFilteredSelectedRowModel().rows.length} of{" "}
-                    {table.getFilteredRowModel().rows.length} row(s) selected.
-                </div> */}
                 <div className="space-x-2">
                     <Button
                         variant="outline"
