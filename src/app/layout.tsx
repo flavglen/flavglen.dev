@@ -1,12 +1,8 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import { Sidebar } from "@/components/sidebar";
 import AuthSessionProvider from "@/components/SessionProvider";
 import "@/styles/globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/toaster";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Glen Flavian Pais - Senior web Developer and Freelancer - Canada",
