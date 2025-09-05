@@ -489,7 +489,7 @@ export function GalleryComponent() {
               <>
                 Pexels API returned an error. This usually means:
                 <br />
-                • Collection ID doesn't exist or is incorrect
+                • Collection ID doesn&apos;t exist or is incorrect
                 <br />
                 • Collection is private or requires different permissions
                 <br />
@@ -500,7 +500,7 @@ export function GalleryComponent() {
                 <br />
                 <strong>Solution:</strong> Using search API instead of collection.
                 <br />
-                Switch to "My Photos" mode to use your own images.
+                Switch to &quot;My Photos&quot; mode to use your own images.
               </>
             ) : (
               <>
