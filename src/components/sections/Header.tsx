@@ -51,6 +51,14 @@ export function Header() {
             Contact
             <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-pink-600 transition-all duration-300 group-hover:w-full"></span>
           </Link>
+          
+          <Link
+            href="/gallery"
+            className="text-muted-foreground hover:text-foreground transition-colors relative group"
+          >
+            Gallery
+            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-pink-600 transition-all duration-300 group-hover:w-full"></span>
+          </Link>
 
           {admin && <Link
             href="/admin/expenses"
@@ -82,7 +90,9 @@ export function Header() {
               { href: "#projects", label: "Projects" },
               { href: "#skills", label: "Skills" },
               { href: "#contact", label: "Contact" },
-            ]}
+              { href: "/gallery", label: "Gallery" },
+              ...(admin ? [{ href: "/admin/expenses", label: "Expenses" }] : [])
+            ].filter(Boolean)}
           />
         </div>
       </div>
