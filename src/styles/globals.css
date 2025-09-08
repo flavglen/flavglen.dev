@@ -173,16 +173,28 @@
 
   /* Smooth scrolling for masonry */
   .masonry-container {
-    column-gap: 1rem;
+    column-gap: 0.5rem;
     column-fill: balance;
+  }
+
+  @media (min-width: 640px) {
+    .masonry-container {
+      column-gap: 1rem;
+    }
   }
 
   .masonry-item {
     display: inline-block;
     width: 100%;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
     break-inside: avoid;
     page-break-inside: avoid;
+  }
+
+  @media (min-width: 640px) {
+    .masonry-item {
+      margin-bottom: 1rem;
+    }
   }
 
   /* Loading skeleton */

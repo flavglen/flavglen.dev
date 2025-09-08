@@ -190,8 +190,10 @@ export function GalleryComponent() {
   }
 
   // Calculate proper height based on aspect ratio for masonry
-  const getMasonryHeight = (width: number, height: number, containerWidth: number = 300) => {
+  const getMasonryHeight = (width: number, height: number) => {
     const aspectRatio = height / width
+    // Use responsive container width based on screen size
+    const containerWidth = typeof window !== 'undefined' && window.innerWidth < 640 ? 150 : 300
     return containerWidth * aspectRatio
   }
 
@@ -266,7 +268,7 @@ export function GalleryComponent() {
     <div className="space-y-8">
 
       {/* Masonry Photo Layout */}
-      <div className="masonry-container columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-4 space-y-4">
+      <div className="masonry-container columns-2 sm:columns-2 md:columns-3 lg:columns-3 xl:columns-4 gap-2 sm:gap-4 space-y-2 sm:space-y-4">
         {photos.map((photo, index) => {
           const aspectRatio = getAspectRatio(photo.width, photo.height)
           const masonryHeight = getMasonryHeight(photo.width, photo.height)
