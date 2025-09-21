@@ -27,87 +27,67 @@ interface Photo {
 export function GalleryComponent() {
   const [photos, setPhotos] = useState<Photo[]>([])
   const [loading, setLoading] = useState(true)
+  const [loadingMore, setLoadingMore] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null)
   const [viewMode] = useState<'masonry'>('masonry')
   const [hoveredPhoto, setHoveredPhoto] = useState<string | null>(null)
   const observerRef = useRef<IntersectionObserver | null>(null)
-  const [page, setPage] = useState(1)
+  const [nextPageUrl, setNextPageUrl] = useState<string | null>(null)
   const [hasMore, setHasMore] = useState(true)
 
-  useEffect(() => {
-    const fetchPhotos = async () => {
-      try {
+  const fetchPhotos = async (isLoadMore = false) => {
+    try {
+      if (isLoadMore) {
+        setLoadingMore(true)
+      } else {
         setLoading(true)
-        
-        // Load from Pexels API (collections)
-        const PEXELS_API_KEY = process.env.NEXT_PUBLIC_PEXELS_API_KEY
-        const PEXELS_COLLECTION_ID = process.env.NEXT_PUBLIC_PEXELS_COLLECTION_ID || "ggcylaq"
-        const SEARCH_QUERY = "nature landscape photography"
-        
-        if (!PEXELS_API_KEY) {
-          throw new Error("Pexels API key not configured")
+      }
+      
+      // Load from Pexels API (collections)
+      const PEXELS_API_KEY = process.env.NEXT_PUBLIC_PEXELS_API_KEY
+      const PEXELS_COLLECTION_ID = process.env.NEXT_PUBLIC_PEXELS_COLLECTION_ID || "ggcylaq"
+      const SEARCH_QUERY = "nature landscape photography"
+      
+      if (!PEXELS_API_KEY) {
+        throw new Error("Pexels API key not configured")
+      }
+
+      // Use nextPageUrl if available for pagination, otherwise use initial URL
+      let apiUrl: string
+      if (isLoadMore && nextPageUrl) {
+        apiUrl = nextPageUrl
+      } else {
+        apiUrl = `https://api.pexels.com/v1/collections/${PEXELS_COLLECTION_ID}?per_page=15`
+      }
+
+      const response = await fetch(apiUrl, {
+        headers: {
+          'Authorization': PEXELS_API_KEY
         }
+      })
 
-        // Fetch photos from your Pexels collection
-        const apiUrl = `https://api.pexels.com/v1/collections/${PEXELS_COLLECTION_ID}?per_page=20`
-
-        const response = await fetch(apiUrl, {
+      // If collection fails, fallback to search
+      if (!response.ok) {
+        console.warn(`Collection failed (${response.status}), falling back to search`)
+        const searchUrl = `https://api.pexels.com/v1/search?query=${encodeURIComponent(SEARCH_QUERY)}&per_page=20&orientation=landscape`
+        const searchResponse = await fetch(searchUrl, {
           headers: {
             'Authorization': PEXELS_API_KEY
           }
         })
-
-        // If collection fails, fallback to search
-        if (!response.ok) {
-          console.warn(`Collection failed (${response.status}), falling back to search`)
-          const searchUrl = `https://api.pexels.com/v1/search?query=${encodeURIComponent(SEARCH_QUERY)}&per_page=20&orientation=landscape`
-          const searchResponse = await fetch(searchUrl, {
-            headers: {
-              'Authorization': PEXELS_API_KEY
-            }
-          })
-          
-          if (!searchResponse.ok) {
-            throw new Error(`HTTP error! status: ${searchResponse.status}`)
-          }
-          
-          const searchData = await searchResponse.json()
-          const searchPhotosArray = searchData.media || searchData.photos
-          if (!searchPhotosArray) {
-            throw new Error('Invalid response from Pexels API')
-          }
-
-          const pexelsPhotos: Photo[] = searchPhotosArray.map((photo: any) => ({
-            id: photo.id.toString(),
-            title: photo.alt || "Beautiful Photo",
-            description: `Photographed by ${photo.photographer}`,
-            url: photo.src.large2x || photo.src.large,
-            thumbnail: photo.src.large, // Use higher quality for thumbnails
-            dateTaken: new Date().toISOString().split('T')[0],
-            location: "",
-            tags: [SEARCH_QUERY, "photography", "pexels"],
-            photographer: photo.photographer,
-            photographerUrl: photo.photographer_url,
-            alt: photo.alt || "Beautiful photo",
-            width: photo.width,
-            height: photo.height
-          }))
-          
-          setPhotos(pexelsPhotos)
-          return
+        
+        if (!searchResponse.ok) {
+          throw new Error(`HTTP error! status: ${searchResponse.status}`)
         }
-
-        const data = await response.json()
         
-        // Handle both collections API (data.media) and search API (data.photos) responses
-        const photosArray = data.media || data.photos
-        
-        if (!photosArray) {
+        const searchData = await searchResponse.json()
+        const searchPhotosArray = searchData.media || searchData.photos
+        if (!searchPhotosArray) {
           throw new Error('Invalid response from Pexels API')
         }
 
-        const pexelsPhotos: Photo[] = photosArray.map((photo: any) => ({
+        const pexelsPhotos: Photo[] = searchPhotosArray.map((photo: any) => ({
           id: photo.id.toString(),
           title: photo.alt || "Beautiful Photo",
           description: `Photographed by ${photo.photographer}`,
@@ -115,7 +95,7 @@ export function GalleryComponent() {
           thumbnail: photo.src.large, // Use higher quality for thumbnails
           dateTaken: new Date().toISOString().split('T')[0],
           location: "",
-          tags: ["my collection", "photography", "pexels"],
+          tags: [SEARCH_QUERY, "photography", "pexels"],
           photographer: photo.photographer,
           photographerUrl: photo.photographer_url,
           alt: photo.alt || "Beautiful photo",
@@ -123,30 +103,89 @@ export function GalleryComponent() {
           height: photo.height
         }))
         
-        setPhotos(pexelsPhotos)
-      } catch (err) {
-        console.error("Error fetching photos:", err)
-        const errorMessage = err instanceof Error ? err.message : "Failed to load photos"
-        setError(errorMessage)
+        // Update pagination state
+        setNextPageUrl(searchData.next_page || null)
+        setHasMore(!!searchData.next_page)
         
-        // Log additional debugging info
-        if (err instanceof Error && err.message.includes('500')) {
-          console.error("500 error - this might be due to:")
-          console.error("1. Invalid Pexels User ID format")
-          console.error("2. User doesn't exist on Pexels")
-          console.error("3. API rate limiting")
-          console.error("4. Invalid API key")
+        if (isLoadMore) {
+          setPhotos(prev => [...prev, ...pexelsPhotos])
+        } else {
+          setPhotos(pexelsPhotos)
         }
-        
-        // Set empty photos array to show no results view
+        return
+      }
+
+      const data = await response.json()
+      
+      // Handle both collections API (data.media) and search API (data.photos) responses
+      const photosArray = data.media || data.photos
+      
+      if (!photosArray) {
+        throw new Error('Invalid response from Pexels API')
+      }
+
+      const pexelsPhotos: Photo[] = photosArray.map((photo: any) => ({
+        id: photo.id.toString(),
+        title: photo.alt || "Beautiful Photo",
+        description: `Photographed by ${photo.photographer}`,
+        url: photo.src.large2x || photo.src.large,
+        thumbnail: photo.src.large, // Use higher quality for thumbnails
+        dateTaken: new Date().toISOString().split('T')[0],
+        location: "",
+        tags: ["my collection", "photography", "pexels"],
+        photographer: photo.photographer,
+        photographerUrl: photo.photographer_url,
+        alt: photo.alt || "Beautiful photo",
+        width: photo.width,
+        height: photo.height
+      }))
+      
+      // Update pagination state
+      setNextPageUrl(data.next_page || null)
+      setHasMore(!!data.next_page)
+      
+      if (isLoadMore) {
+        setPhotos(prev => [...prev, ...pexelsPhotos])
+      } else {
+        setPhotos(pexelsPhotos)
+      }
+    } catch (err) {
+      console.error("Error fetching photos:", err)
+      const errorMessage = err instanceof Error ? err.message : "Failed to load photos"
+      setError(errorMessage)
+      
+      // Log additional debugging info
+      if (err instanceof Error && err.message.includes('500')) {
+        console.error("500 error - this might be due to:")
+        console.error("1. Invalid Pexels User ID format")
+        console.error("2. User doesn't exist on Pexels")
+        console.error("3. API rate limiting")
+        console.error("4. Invalid API key")
+      }
+      
+      // Set empty photos array to show no results view
+      if (!isLoadMore) {
         setPhotos([])
-      } finally {
+      }
+    } finally {
+      if (isLoadMore) {
+        setLoadingMore(false)
+      } else {
         setLoading(false)
       }
     }
+  }
 
+  useEffect(() => {
     fetchPhotos()
   }, [])
+
+  // Load more photos function
+  const loadMore = useCallback(() => {
+    if (hasMore && !loadingMore && nextPageUrl) {
+      fetchPhotos(true)
+    }
+  }, [hasMore, loadingMore, nextPageUrl])
 
   // Helper functions
 
@@ -196,6 +235,32 @@ export function GalleryComponent() {
     const containerWidth = typeof window !== 'undefined' && window.innerWidth < 640 ? 150 : 300
     return containerWidth * aspectRatio
   }
+
+  // Intersection observer for infinite scroll
+  useEffect(() => {
+    if (!hasMore || loadingMore) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          loadMore()
+        }
+      },
+      { threshold: 0.1 }
+    )
+
+    // Observe the last photo element
+    const lastPhoto = document.querySelector('.gallery-card:last-child')
+    if (lastPhoto) {
+      observer.observe(lastPhoto)
+    }
+
+    return () => {
+      if (lastPhoto) {
+        observer.unobserve(lastPhoto)
+      }
+    }
+  }, [hasMore, loadingMore, loadMore, photos.length])
 
   if (loading) {
     return (
@@ -351,6 +416,16 @@ export function GalleryComponent() {
           )
         })}
       </div>
+
+      {/* Loading more indicator */}
+      {loadingMore && (
+        <div className="flex items-center justify-center py-8">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600 mx-auto mb-2"></div>
+            <p className="text-muted-foreground text-sm">Loading more photos...</p>
+          </div>
+        </div>
+      )}
 
       {/* 80% Screen Photo Modal */}
       {selectedPhoto && (
