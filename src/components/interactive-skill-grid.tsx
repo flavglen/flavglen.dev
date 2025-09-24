@@ -71,31 +71,31 @@ export function InteractiveSkillGrid({ skills, className }: InteractiveSkillGrid
 
   return (
     <div className={cn("space-y-6", className)}>
-      <div className="flex flex-wrap gap-2 justify-center mb-8">
-        <Badge
-          variant="outline"
+      <div className="flex flex-wrap gap-1.5 justify-center mb-6">
+        <button
           className={cn(
-            "cursor-pointer px-4 py-2 text-sm transition-all hover:scale-105",
-            !activeCategory ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white" : "bg-muted hover:bg-muted/80",
+            "px-3 py-1.5 text-xs font-medium rounded-full transition-all duration-300 hover:scale-105",
+            !activeCategory 
+              ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-md" 
+              : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
           )}
           onClick={() => setActiveCategory(null)}
         >
-          All Skills
-        </Badge>
+          All
+        </button>
         {categories.map((category) => (
-          <Badge
+          <button
             key={category}
-            variant="outline"
             className={cn(
-              "cursor-pointer px-4 py-2 text-sm transition-all hover:scale-105",
+              "px-3 py-1.5 text-xs font-medium rounded-full transition-all duration-300 hover:scale-105",
               activeCategory === category
-                ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white"
-                : "bg-muted hover:bg-muted/80",
+                ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-md"
+                : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
             )}
             onClick={() => setActiveCategory(category)}
           >
             {category}
-          </Badge>
+          </button>
         ))}
       </div>
 
@@ -104,35 +104,56 @@ export function InteractiveSkillGrid({ skills, className }: InteractiveSkillGrid
           variants={container}
           initial="hidden"
           animate="show"
-          className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"
+          className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-3"
         >
           {filteredSkills.map((skill) => (
             <motion.div
               key={skill.name}
               variants={item}
               className={cn(
-                "relative flex flex-col items-center p-4 rounded-lg transition-all duration-300",
+                "relative flex flex-col items-center p-3 rounded-xl transition-all duration-300 group cursor-pointer overflow-hidden",
                 hoveredSkill === skill.name
-                  ? "bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-950/20 dark:to-pink-950/20 shadow-lg scale-105"
-                  : "bg-card hover:shadow-md",
-                "border border-border",
+                  ? "bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-950/30 dark:to-pink-950/30 shadow-lg scale-110"
+                  : "bg-card hover:shadow-md hover:scale-105",
+                "border border-border/50 hover:border-purple-200 dark:hover:border-purple-800",
               )}
               onMouseEnter={() => setHoveredSkill(skill.name)}
               onMouseLeave={() => setHoveredSkill(null)}
             >
-              <div className="absolute top-2 right-2">
-                <Badge
-                  variant="outline"
-                  className={cn("text-xs", getLevelColor(skill.level), "text-white border-transparent")}
-                >
-                  {getLevelLabel(skill.level)}
-                </Badge>
+              {/* Skill Level Indicator - Bottom Border */}
+              <div className="absolute bottom-0 left-0 right-0 h-1 bg-gray-200 dark:bg-gray-700">
+                <div
+                  className={cn(
+                    "h-full transition-all duration-700 ease-out",
+                    skill.level >= 90 ? "bg-gradient-to-r from-purple-600 to-pink-600" :
+                    skill.level >= 80 ? "bg-gradient-to-r from-blue-500 to-purple-500" :
+                    skill.level >= 70 ? "bg-gradient-to-r from-green-500 to-blue-500" :
+                    skill.level >= 50 ? "bg-gradient-to-r from-yellow-500 to-green-500" :
+                    "bg-gradient-to-r from-gray-400 to-yellow-500"
+                  )}
+                  style={{ width: `${skill.level}%` }}
+                />
+              </div>
+
+              {/* Skill Level Stars */}
+              <div className="absolute top-2 right-2 flex gap-0.5">
+                {[...Array(5)].map((_, i) => (
+                  <div
+                    key={i}
+                    className={cn(
+                      "w-1 h-1 rounded-full transition-all duration-300",
+                      i < Math.ceil(skill.level / 20) 
+                        ? "bg-yellow-400" 
+                        : "bg-gray-300 dark:bg-gray-600"
+                    )}
+                  />
+                ))}
               </div>
 
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 flex items-center justify-center mb-3">
-                    <IconComponent name={skill.icon} className={cn("w-6 h-6", skill.color || "text-purple-600")} />
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 flex items-center justify-center mb-2 group-hover:scale-110 transition-transform duration-300">
+                    <IconComponent name={skill.icon} className={cn("w-5 h-5", skill.color || "text-purple-600")} />
                   </div>
                 </TooltipTrigger>
                 <TooltipContent>
@@ -150,15 +171,11 @@ export function InteractiveSkillGrid({ skills, className }: InteractiveSkillGrid
                 </TooltipContent>
               </Tooltip>
 
-              <p className="font-medium text-sm text-center">{skill.name}</p>
+              <p className="font-medium text-xs text-center leading-tight">{skill.name}</p>
 
+              {/* Animated background on hover */}
               {hoveredSkill === skill.name && (
-                <div className="mt-2 h-1 w-full bg-gray-200 rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-gradient-to-r from-purple-600 to-pink-600 rounded-full transition-all duration-700 ease-out"
-                    style={{ width: `${skill.level}%` }}
-                  />
-                </div>
+                <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-xl animate-pulse" />
               )}
             </motion.div>
           ))}

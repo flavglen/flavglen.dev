@@ -5,9 +5,9 @@ import { projects } from "@/data/projects"
 
 export function ProjectsSection() {
   return (
-    <section id="projects" className="py-12 scroll-mt-20">
+    <section id="projects" className="py-6 sm:py-8 md:py-12 scroll-mt-20">
       <AnimateInView>
-        <div className="space-y-4 text-center max-w-3xl mx-auto mb-16">
+        <div className="space-y-4 text-center max-w-3xl mx-auto mb-8 sm:mb-12 md:mb-16">
           <h2 className="text-3xl font-bold font-montserrat">
             My <span className="gradient-text">Projects</span>
           </h2>
@@ -40,7 +40,7 @@ export function ProjectsSection() {
         </div>
 
         <TabsContent value="all" className="mt-0">
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
             {projects.map((project, index) => (
               <AnimateInView key={project.id} delay={index * 100}>
                 <ProjectCard project={project} />
@@ -50,7 +50,7 @@ export function ProjectsSection() {
         </TabsContent>
 
         <TabsContent value="web" className="mt-0">
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
             {projects
               .filter((p) => p.category === "personal")
               .map((project, index) => (
@@ -62,7 +62,7 @@ export function ProjectsSection() {
         </TabsContent>
 
         <TabsContent value="mobile" className="mt-0">
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
             {projects
               .filter((p) => p.category === "professional")
               .map((project, index) => (
