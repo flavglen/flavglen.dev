@@ -10,9 +10,9 @@ export function ContactSection() {
       <AnimateInView>
         <div className="space-y-4 text-center max-w-3xl mx-auto mb-16">
           <h2 className="text-3xl font-bold font-montserrat">
-            Let's <span className="gradient-text">Connect</span>
+            Let&apos;s <span className="gradient-text">Connect</span>
           </h2>
-          <p className="text-muted-foreground text-lg">Ready to collaborate? I'm always excited to discuss new opportunities and innovative projects.</p>
+          <p className="text-muted-foreground text-lg">Ready to collaborate? I&apos;m always excited to discuss new opportunities and innovative projects.</p>
         </div>
       </AnimateInView>
 
