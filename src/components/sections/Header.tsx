@@ -5,20 +5,48 @@ import { Github, Linkedin } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { MobileMenu } from "@/components/mobile-menu"
 import { useIsAdmin } from "@/hooks/useIsAdmin"
+import { ThemeToggle } from "@/components/theme-toggle"
+import { useState, useEffect } from "react"
 
 export function Header() {
   const admin = useIsAdmin();
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  useEffect(() => {
+    const animateLogo = () => {
+      setIsAnimating(true);
+      setTimeout(() => setIsAnimating(false), 1000);
+    };
+
+    // Animate every 8-15 seconds randomly
+    const getRandomInterval = () => Math.random() * 7000 + 8000; // 8-15 seconds
+
+    const scheduleNextAnimation = () => {
+      setTimeout(() => {
+        animateLogo();
+        scheduleNextAnimation();
+      }, getRandomInterval());
+    };
+
+    // Start the animation cycle
+    scheduleNextAnimation();
+  }, []);
+
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur">
       <div className="container flex h-16 items-center justify-between">
         <div className="font-bold text-xl font-montserrat">
           <Link href="/">
             <img
-              src="gp-logo.png"
+              src="/gp-logo.png"
               alt="Logo"
               width={80}
               height={50}
-              className="inline-block ml-2 rounded-full"/>
+              className={`inline-block ml-2 rounded-full transition-all duration-1000 ${
+                isAnimating 
+                  ? 'animate-bounce scale-110 drop-shadow-lg' 
+                  : 'hover:scale-105 transition-transform duration-300'
+              }`}/>
               <span className="gradient-text">Glen</span>Pais
           </Link>
         </div>
@@ -83,6 +111,7 @@ export function Header() {
                 <span className="sr-only">LinkedIn</span>
               </Link>
             </Button>
+            <ThemeToggle />
           </div>
           <MobileMenu
             links={[

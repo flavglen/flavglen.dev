@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Menu, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { ThemeToggle } from "@/components/theme-toggle"
 import { cn } from "@/lib/utils"
 
 interface MobileMenuProps {
@@ -89,6 +90,11 @@ export function MobileMenu({ links }: MobileMenuProps) {
                   <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-pink-600 transition-all duration-300 group-hover:w-full"></span>
                 </Link>
               ))}
+              
+              {/* Theme Toggle for Mobile */}
+              <div className="flex items-center justify-center pt-4">
+                <ThemeToggle />
+              </div>
             </nav>
           </div>
         </div>

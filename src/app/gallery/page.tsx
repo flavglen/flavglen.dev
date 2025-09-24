@@ -1,4 +1,5 @@
 import { GalleryComponent } from "@/components/gallery-component"
+import { Header } from "@/components/sections/Header"
 import { Metadata } from "next"
 import Image from "next/image"
 
@@ -30,6 +31,7 @@ export const metadata: Metadata = {
 export default function GalleryPage() {
   return (
     <div className="min-h-screen bg-background">
+      <Header />
       <div className="container py-10">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold font-montserrat mb-4">

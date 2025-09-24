@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { Github, Linkedin } from "lucide-react"
+import { Github, Linkedin, Mail, MapPin, Phone, Calendar, MessageCircle, ExternalLink } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { AnimateInView } from "@/components/animate-in-view"
@@ -10,58 +10,101 @@ export function ContactSection() {
       <AnimateInView>
         <div className="space-y-4 text-center max-w-3xl mx-auto mb-16">
           <h2 className="text-3xl font-bold font-montserrat">
-            Get In <span className="gradient-text">Touch</span>
+            Let's <span className="gradient-text">Connect</span>
           </h2>
-          <p className="text-muted-foreground">Feel free to contact me for work or collaboration</p>
+          <p className="text-muted-foreground text-lg">Ready to collaborate? I'm always excited to discuss new opportunities and innovative projects.</p>
         </div>
       </AnimateInView>
 
-      <div className="grid md:grid-cols-1 gap-10" style={{ margin: "0 auto" }}>
+      <div className="grid lg:grid-cols-2 gap-8">
+        {/* Contact Information Card */}
         <AnimateInView direction="left">
-          <Card className="overflow-hidden border-none shadow-lg hover:shadow-xl transition-shadow bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-950/20 dark:to-pink-950/20">
-            <CardContent className="p-6 space-y-4">
-              <h3 className="text-xl font-semibold font-montserrat gradient-text">Contact Information</h3>
-              <div className="space-y-4">
-                <div className="flex items-center gap-3 group">
-                  <div className="w-10 h-10 rounded-full bg-purple-100 dark:bg-purple-900/20 flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <Linkedin className="h-5 w-5 text-purple-600" />
-                  </div>
-                  <Link target="_blank" className="group-hover:translate-x-1 transition-transform" href={'https://linkedin.com/in/flavglen'}>linkedin.com/in/flavglen</Link>
+          <Card className="overflow-hidden border-none shadow-xl hover:shadow-2xl transition-all duration-500 bg-gradient-to-br from-purple-50/80 to-pink-50/80 dark:from-purple-950/30 dark:to-pink-950/30 backdrop-blur-sm h-full">
+            <CardContent className="p-8 h-full flex flex-col">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-12 h-12 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center">
+                  <MessageCircle className="h-6 w-6 text-white" />
                 </div>
-                <div className="flex items-center gap-3 group">
-                  <div className="w-10 h-10 rounded-full bg-purple-100 dark:bg-purple-900/20 flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <Github className="h-5 w-5 text-purple-600" />
+                <h3 className="text-2xl font-bold font-montserrat gradient-text">Get In Touch</h3>
+              </div>
+              
+              <div className="space-y-6 flex-1">
+                {/* Location */}
+                <div className="group flex items-center gap-4 p-4 rounded-xl bg-white/50 dark:bg-gray-800/50 hover:bg-white/80 dark:hover:bg-gray-800/80 transition-all duration-300 hover:scale-105">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-r from-green-500 to-emerald-500 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                    <MapPin className="h-6 w-6 text-white" />
                   </div>
-                  <Link target="_blank" className="group-hover:translate-x-1 transition-transform" href={'https://github.com/flavglen'}>github.com/in/flavglen</Link>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Location</p>
+                    <p className="text-lg font-semibold">Canada</p>
+                  </div>
+                </div>
+
+                {/* Availability */}
+                <div className="group flex items-center gap-4 p-4 rounded-xl bg-white/50 dark:bg-gray-800/50 hover:bg-white/80 dark:hover:bg-gray-800/80 transition-all duration-300 hover:scale-105">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-r from-orange-500 to-red-500 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                    <Calendar className="h-6 w-6 text-white" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Availability</p>
+                    <p className="text-lg font-semibold">Open to Opportunities</p>
+                  </div>
                 </div>
               </div>
+            </CardContent>
+          </Card>
+        </AnimateInView>
 
-              <div className="pt-4">
-                <h3 className="text-xl font-semibold font-montserrat gradient-text mb-4">Follow Me</h3>
-                <div className="flex gap-3">
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="rounded-full hover:scale-110 transition-transform hover:bg-purple-100 dark:hover:bg-purple-900/20"
-                    asChild
-                  >
-                    <Link href="https://linkedin.com/in/flavglen" target="_blank" rel="noopener noreferrer">
-                      <Github className="h-5 w-5" />
-                      <span className="sr-only">GitHub</span>
-                    </Link>
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="rounded-full hover:scale-110 transition-transform hover:bg-purple-100 dark:hover:bg-purple-900/20"
-                    asChild
-                  >
-                    <Link href="https://linkedin.com/in/flavglen" target="_blank" rel="noopener noreferrer">
-                      <Linkedin className="h-5 w-5" />
-                      <span className="sr-only">LinkedIn</span>
-                    </Link>
-                  </Button>
+        {/* Social Links Card */}
+        <AnimateInView direction="right">
+          <Card className="overflow-hidden border-none shadow-xl hover:shadow-2xl transition-all duration-500 bg-gradient-to-br from-blue-50/80 to-cyan-50/80 dark:from-blue-950/30 dark:to-cyan-950/30 backdrop-blur-sm">
+            <CardContent className="p-8">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-12 h-12 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 flex items-center justify-center">
+                  <Github className="h-6 w-6 text-white" />
                 </div>
+                <h3 className="text-2xl font-bold font-montserrat gradient-text">Connect Online</h3>
+              </div>
+              
+              <div className="space-y-6">
+                {/* GitHub */}
+                <div className="group">
+                  <Link 
+                    href="https://github.com/flavglen" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-4 p-4 rounded-xl bg-white/50 dark:bg-gray-800/50 hover:bg-white/80 dark:hover:bg-gray-800/80 transition-all duration-300 hover:scale-105"
+                  >
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-r from-gray-700 to-gray-900 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                      <Github className="h-6 w-6 text-white" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm text-muted-foreground">GitHub</p>
+                      <p className="text-lg font-semibold">github.com/flavglen</p>
+                    </div>
+                    <ExternalLink className="h-4 w-4 text-muted-foreground group-hover:text-blue-600 transition-colors" />
+                  </Link>
+                </div>
+
+                {/* LinkedIn */}
+                <div className="group">
+                  <Link 
+                    href="https://linkedin.com/in/flavglen" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-4 p-4 rounded-xl bg-white/50 dark:bg-gray-800/50 hover:bg-white/80 dark:hover:bg-gray-800/80 transition-all duration-300 hover:scale-105"
+                  >
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-r from-blue-600 to-blue-800 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                      <Linkedin className="h-6 w-6 text-white" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm text-muted-foreground">LinkedIn</p>
+                      <p className="text-lg font-semibold">linkedin.com/in/flavglen</p>
+                    </div>
+                    <ExternalLink className="h-4 w-4 text-muted-foreground group-hover:text-blue-600 transition-colors" />
+                  </Link>
+                </div>
+
               </div>
             </CardContent>
           </Card>

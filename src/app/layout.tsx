@@ -3,16 +3,17 @@ import AuthSessionProvider from "@/components/SessionProvider";
 import "@/styles/globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/toaster";
+import GoogleAnalytics from "@/components/GoogleAnalytics";
 
 export const metadata: Metadata = {
-  title: "Glen Flavian Pais - Senior web Developer and Freelancer - Canada",
-  description: "Hello, I'm Glen, a frontend and node developer with a passion for crafting beautiful and responsive web interfaces. I've spent 9+ years working on a variety of web projects, from single-page applications to complex e-commerce Appliations.",
+  title: "Glen Flavian Pais - AI-Enhanced Frontend Developer - Canada",
+  description: "Hello, I'm Glen, an AI-enhanced frontend developer specializing in modern web development with AI-powered tools like Cursor, GitHub Copilot, and V0.dev. I've spent 9+ years building intelligent web interfaces and complex applications.",
   keywords: [
-    "Glen Pais", "web developer", "frontend", "react", "next.js", "node.js", "canada", "portfolio", "freelancer", "typescript", "tailwindcss", "AI developer"
+    "Glen Pais", "AI developer", "frontend", "react", "next.js", "cursor ai", "github copilot", "v0.dev", "canada", "portfolio", "freelancer", "typescript", "tailwindcss", "AI-enhanced development"
   ],
   openGraph: {
-    title: "Glen Flavian Pais - Senior web Developer and Freelancer - Canada",
-    description: "Hello, I'm Glen, a frontend and node developer with a passion for crafting beautiful and responsive web interfaces. I've spent 9+ years working on a variety of web projects, from single-page applications to complex e-commerce Appliations.",
+    title: "Glen Flavian Pais - AI-Enhanced Frontend Developer - Canada",
+    description: "Hello, I'm Glen, an AI-enhanced frontend developer specializing in modern web development with AI-powered tools like Cursor, GitHub Copilot, and V0.dev. I've spent 9+ years building intelligent web interfaces and complex applications.",
     url: "https://flavglen.dev/",
     siteName: "Glen Flavian Pais Portfolio",
     images: [
@@ -51,6 +52,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
+        <GoogleAnalytics />
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem >
             <AuthSessionProvider>
               {/* <Sidebar /> */}

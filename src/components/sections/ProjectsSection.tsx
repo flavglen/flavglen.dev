@@ -5,7 +5,7 @@ import { projects } from "@/data/projects"
 
 export function ProjectsSection() {
   return (
-    <section id="projects" className="py-20 scroll-mt-20">
+    <section id="projects" className="py-12 scroll-mt-20">
       <AnimateInView>
         <div className="space-y-4 text-center max-w-3xl mx-auto mb-16">
           <h2 className="text-3xl font-bold font-montserrat">
