@@ -12,7 +12,7 @@ export default function Portfolio() {
     <div className="min-h-screen bg-background">
       <Header />
       
-      <main className="container py-10">
+      <main className="container py-4 sm:py-6 md:py-10">
         <HeroSection />
         <StatsSection />
         <AboutSection />

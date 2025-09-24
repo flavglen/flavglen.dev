@@ -33,9 +33,9 @@ export function ExperienceTimeline({ experiences, className }: ExperienceTimelin
   }
 
   return (
-    <div className={cn("space-y-8", className)}>
+    <div className={cn("space-y-4 sm:space-y-8", className)}>
       {/* Timeline Navigation */}
-      <div className="flex flex-col sm:flex-row gap-4 relative">
+      <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 relative">
         <div className="hidden sm:block absolute left-1/2 top-6 h-0.5 w-[calc(100%-4rem)] -translate-x-1/2 bg-gradient-to-r from-purple-200 via-pink-200 to-purple-200 dark:from-purple-900/30 dark:via-pink-900/30 dark:to-purple-900/30 z-0"></div>
 
         {experiences.map((experience, index) => (
@@ -52,18 +52,18 @@ export function ExperienceTimeline({ experiences, className }: ExperienceTimelin
             <div className="flex flex-col items-center">
               <div
                 className={cn(
-                  "w-12 h-12 rounded-full flex items-center justify-center mb-2 transition-all duration-300",
+                  "w-8 h-8 sm:w-12 sm:h-12 rounded-full flex items-center justify-center mb-1 sm:mb-2 transition-all duration-300",
                   activeExperience === experience.id
                     ? "bg-gradient-to-br from-purple-600 to-pink-600 text-white shadow-lg scale-110"
                     : "bg-muted text-muted-foreground",
                 )}
               >
-                <Briefcase className="w-5 h-5" />
+                <Briefcase className="w-3 h-3 sm:w-5 sm:h-5" />
               </div>
               <div className="text-center">
                 <h4
                   className={cn(
-                    "font-medium transition-all duration-300",
+                    "font-medium text-xs sm:text-sm transition-all duration-300",
                     activeExperience === experience.id ? "text-foreground" : "text-muted-foreground",
                   )}
                 >
@@ -89,31 +89,31 @@ export function ExperienceTimeline({ experiences, className }: ExperienceTimelin
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -20 }}
         transition={{ duration: 0.3 }}
-        className="bg-gradient-to-br from-purple-50/50 to-pink-50/50 dark:from-purple-950/10 dark:to-pink-950/10 rounded-xl p-6 shadow-lg border border-purple-100/50 dark:border-purple-900/20"
+        className="bg-gradient-to-br from-purple-50/50 to-pink-50/50 dark:from-purple-950/10 dark:to-pink-950/10 rounded-xl p-3 sm:p-6 shadow-lg border border-purple-100/50 dark:border-purple-900/20"
       >
-        <div className="flex flex-col md:flex-row gap-6">
+        <div className="flex flex-col md:flex-row gap-3 sm:gap-6">
           {/* Logo/Icon */}
           <div className="flex-shrink-0">
-            <div className="w-16 h-16 md:w-20 md:h-20 rounded-xl bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 flex items-center justify-center shadow-inner">
+            <div className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-xl bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 flex items-center justify-center shadow-inner">
               {getActiveExperience().logo ? (
                 <img
                   src={getActiveExperience().logo || "/placeholder.svg"}
                   alt={getActiveExperience().company}
-                  className="w-12 h-12 md:w-14 md:h-14 object-contain"
+                  className="w-8 h-8 sm:w-12 sm:h-12 md:w-14 md:h-14 object-contain"
                 />
               ) : (
                 <Briefcase
-                  className={cn("w-8 h-8 md:w-10 md:h-10", getActiveExperience().color || "text-purple-600")}
+                  className={cn("w-5 h-5 sm:w-8 sm:h-8 md:w-10 md:h-10", getActiveExperience().color || "text-purple-600")}
                 />
               )}
             </div>
           </div>
 
           {/* Content */}
-          <div className="flex-1 space-y-4">
+          <div className="flex-1 space-y-2 sm:space-y-4">
             <div>
               <div className="flex items-center justify-between">
-                <h3 className="text-xl md:text-2xl font-bold font-montserrat gradient-text">
+                <h3 className="text-lg sm:text-xl md:text-2xl font-bold font-montserrat gradient-text">
                   {getActiveExperience().role}
                 </h3>
                 {getActiveExperience().link && (
@@ -134,24 +134,24 @@ export function ExperienceTimeline({ experiences, className }: ExperienceTimelin
               </div>
             </div>
 
-            <p className="text-muted-foreground">{getActiveExperience().description}</p>
+            <p className="text-muted-foreground text-sm sm:text-base">{getActiveExperience().description}</p>
 
             {getActiveExperience().achievements.length > 0 && (
               <div>
-                <h4 className="font-semibold mb-2 text-sm uppercase tracking-wider text-muted-foreground">
+                <h4 className="font-semibold mb-1 sm:mb-2 text-xs sm:text-sm uppercase tracking-wider text-muted-foreground">
                   Key Achievements
                 </h4>
-                <ul className="space-y-2">
+                <ul className="space-y-1 sm:space-y-2">
                   {getActiveExperience().achievements.map((achievement, index) => (
                     <motion.li
                       key={index}
                       initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: index * 0.1 }}
-                      className="flex items-start gap-2"
+                      className="flex items-start gap-1 sm:gap-2"
                     >
-                      <Award className="w-5 h-5 text-purple-500 mt-0.5 flex-shrink-0" />
-                      <span>{achievement}</span>
+                      <Award className="w-3 h-3 sm:w-5 sm:h-5 text-purple-500 mt-0.5 flex-shrink-0" />
+                      <span className="text-xs sm:text-sm">{achievement}</span>
                     </motion.li>
                   ))}
                 </ul>
@@ -160,15 +160,15 @@ export function ExperienceTimeline({ experiences, className }: ExperienceTimelin
 
             {getActiveExperience().skills.length > 0 && (
               <div>
-                <h4 className="font-semibold mb-2 text-sm uppercase tracking-wider text-muted-foreground">
+                <h4 className="font-semibold mb-1 sm:mb-2 text-xs sm:text-sm uppercase tracking-wider text-muted-foreground">
                   Technologies
                 </h4>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-1 sm:gap-2">
                   {getActiveExperience().skills.map((skill) => (
                     <Badge
                       key={skill}
                       variant="secondary"
-                      className="bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-900/20 dark:to-pink-900/20 hover:scale-105 transition-transform"
+                      className="text-xs bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-900/20 dark:to-pink-900/20 hover:scale-105 transition-transform"
                     >
                       {skill}
                     </Badge>

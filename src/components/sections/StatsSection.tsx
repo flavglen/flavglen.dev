@@ -6,8 +6,8 @@ import { Counter } from "@/components/counter"
 export function StatsSection() {
   return (
     <AnimateInView>
-      <section className="py-10">
-        <div className="grid grid-cols-3 md:grid-cols-3 gap-6">
+      <section className="py-4 sm:py-6 md:py-8 lg:py-10">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
           <Card className="border-none shadow-lg hover:shadow-xl transition-shadow bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-950/20 dark:to-pink-950/20">
             <CardContent className="p-2 md:p-6 text-center">
               <Code className="w-10 h-10 mx-auto mb-4 text-purple-600" />
