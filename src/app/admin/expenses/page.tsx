@@ -1,5 +1,9 @@
 import { ExpenseComponent } from "@/components/expense.component";
 
 export default function Page() {
-    return (<ExpenseComponent /> );
+    return (
+        <div className="container py-10">
+            <ExpenseComponent />
+        </div>
+    );
 }

@@ -39,39 +39,41 @@ const SkillPage = ({ params }: SkillPageProps) => {
     }
 
     return (
-        <form onSubmit={handleSubmit}>
-            <div className="field">
-                <label htmlFor="description">Description</label>
-                <Textarea required id="description" name="description" value={formData.description}
-                    onChange={handleChange} />
-            </div>
+        <div className="container py-10">
+            <form onSubmit={handleSubmit}>
+                <div className="field">
+                    <label htmlFor="description">Description</label>
+                    <Textarea required id="description" name="description" value={formData.description}
+                        onChange={handleChange} />
+                </div>
 
-            <div className="field">
-                <label htmlFor="image">Image URL</label>
-                <Input required id="image" name="image" type="text" value={formData.image}
-                    onChange={handleChange} />
-            </div>
+                <div className="field">
+                    <label htmlFor="image">Image URL</label>
+                    <Input required id="image" name="image" type="text" value={formData.image}
+                        onChange={handleChange} />
+                </div>
 
-            <div className="field">
-                <label htmlFor="longDescription">Long Description</label>
-                <Textarea required id="longDescription" name="longDescription" value={formData.longDescription}
-                    onChange={handleChange} />
-            </div>
+                <div className="field">
+                    <label htmlFor="longDescription">Long Description</label>
+                    <Textarea required id="longDescription" name="longDescription" value={formData.longDescription}
+                        onChange={handleChange} />
+                </div>
 
-            <div className="field">
-                <label htmlFor="technology">Technology headline</label>
-                <Input required id="technology" name="technology" type="text" value={formData.technology}
-                    onChange={handleChange} />
-            </div>
+                <div className="field">
+                    <label htmlFor="technology">Technology headline</label>
+                    <Input required id="technology" name="technology" type="text" value={formData.technology}
+                        onChange={handleChange} />
+                </div>
 
-            <div className="field">
-                <label htmlFor="years">Years</label>
-                <Input required id="years" name="years" type="number" value={formData.years}
-                    onChange={handleChange} />
-            </div>
+                <div className="field">
+                    <label htmlFor="years">Years</label>
+                    <Input required id="years" name="years" type="number" value={formData.years}
+                        onChange={handleChange} />
+                </div>
 
-            <Button type="submit">Submit</Button>
-        </form>
+                <Button type="submit">Submit</Button>
+            </form>
+        </div>
     );
 };
 

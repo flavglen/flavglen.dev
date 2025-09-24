@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { Header } from "@/components/sections/Header"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -117,7 +118,9 @@ export default function ProjectsSection() {
     activeCategory === "All" ? projects : projects.filter((project) => project.category === activeCategory)
 
   return (
-    <section className="container py-12 mx-auto">
+    <div className="min-h-screen bg-background">
+      <Header />
+      <section className="container py-12 mx-auto">
       <div className="flex flex-col items-center mb-12 text-center">
         <h2 className="text-3xl font-bold tracking-tight sm:text-4xl mb-4">My Projects</h2>
         <p className="max-w-2xl text-muted-foreground">
@@ -164,7 +167,8 @@ export default function ProjectsSection() {
           </div>
         </TabsContent>
       </Tabs>
-    </section>
+      </section>
+    </div>
   )
 }
 
