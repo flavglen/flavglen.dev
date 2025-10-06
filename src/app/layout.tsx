@@ -7,6 +7,7 @@ import GoogleAnalytics from "@/components/GoogleAnalytics";
 import StructuredData from "@/components/StructuredData";
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://flavglen.dev'),
   title: "Glen Flavian Pais - AI-Enhanced Frontend Developer | React, Next.js Expert | Canada & India",
   description: "Expert AI-enhanced frontend developer with 9+ years experience in React, Next.js, TypeScript, and AI-powered development tools. Available for hire in Canada and India. Specializing in modern web applications, e-commerce platforms, and intelligent user interfaces.",
   keywords: [
@@ -67,11 +68,12 @@ export const metadata: Metadata = {
     google: "your-google-verification-code", // Replace with actual verification code
   },
   category: "Technology",
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    maximumScale: 5,
-  },
+};
+
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
 };
 
 export default function RootLayout({

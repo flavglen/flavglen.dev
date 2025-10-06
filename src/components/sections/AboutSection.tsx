@@ -53,7 +53,7 @@ export function AboutSection() {
               <p className="text-sm sm:text-base text-muted-foreground dark:text-gray-300 leading-relaxed">
                 With 9+ years of experience building everything from sleek single-page applications to 
                 large-scale e-commerce platforms, I specialize in crafting performant, accessible, and user-centric 
-                web solutions using React, Angular, Vue.js, Next.js, TypeScript, Node.js, HTML, and CSS. Based in Canada with strong connections to India's tech ecosystem.
+                web solutions using React, Angular, Vue.js, Next.js, TypeScript, Node.js, HTML, and CSS. Based in Canada with strong connections to India&apos;s tech ecosystem.
               </p>
               
               <p className="text-sm sm:text-base text-muted-foreground dark:text-gray-300 leading-relaxed">

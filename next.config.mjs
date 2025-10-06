@@ -32,10 +32,6 @@ const nextConfig = {
   compress: true,
   poweredByHeader: false,
   generateEtags: true,
-  // Enable experimental features for better SEO
-  experimental: {
-    optimizeCss: true,
-  },
   // Headers for better SEO and security
   async headers() {
     return [
