@@ -3,4 +3,15 @@ Disallow: /admin/
 Disallow: /api/
 Allow: /
 
-Sitemap: https://flavglen.dev/sitemap.xml 
+# Allow search engines to crawl all other content
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+# Sitemap location
+Sitemap: https://flavglen.dev/sitemap.xml
+
+# Crawl delay (optional)
+Crawl-delay: 1 
