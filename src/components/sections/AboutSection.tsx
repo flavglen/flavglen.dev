@@ -53,19 +53,19 @@ export function AboutSection() {
               <p className="text-sm sm:text-base text-muted-foreground dark:text-gray-300 leading-relaxed">
                 With 9+ years of experience building everything from sleek single-page applications to 
                 large-scale e-commerce platforms, I specialize in crafting performant, accessible, and user-centric 
-                web solutions using React, Angular, Vue.js, Next.js, TypeScript, Node.js, HTML, and CSS.
+                web solutions using React, Angular, Vue.js, Next.js, TypeScript, Node.js, HTML, and CSS. Based in Canada with strong connections to India&apos;s tech ecosystem.
               </p>
               
               <p className="text-sm sm:text-base text-muted-foreground dark:text-gray-300 leading-relaxed">
                 Passionate about staying at the forefront of web innovation, I specialize in <b className="text-foreground dark:text-white">AI-enhanced frontend development</b> using cutting-edge tools 
                 like <b className="text-foreground dark:text-white">Cursor AI, GitHub Copilot, V0.dev,</b> and intelligent debugging to accelerate and optimize the developer experience.
-                My expertise combines traditional frontend mastery with modern AI workflows, delivering faster, more efficient, and innovative web solutions.
+                My expertise combines traditional frontend mastery with modern AI workflows, delivering faster, more efficient, and innovative web solutions for clients across Canada and India.
               </p>
               
               <p className="text-sm sm:text-base text-muted-foreground dark:text-gray-300 leading-relaxed">
                 Whether it&apos;s implementing AI-assisted features, integrating APIs, or streamlining performance, I
-                thrive on transforming complex challenges into elegant frontend experiences.
-                I&apos;m constantly learning and adapting—exploring how AI, automation, and cloud computing can reshape how we build for the web.
+                thrive on transforming complex challenges into elegant frontend experiences. I offer remote development services 
+                and can work across different time zones to serve clients in both Canada and India effectively.
               </p>
             </div>
             
