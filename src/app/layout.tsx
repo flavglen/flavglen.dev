@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/toaster";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import StructuredData from "@/components/StructuredData";
+import { AnalyticsTracker } from "@/components/analytics-tracker";
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://flavglen.dev'),
@@ -90,10 +91,12 @@ export default function RootLayout({
         <GoogleAnalytics />
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem >
             <AuthSessionProvider>
-              {/* <Sidebar /> */}
-              <main className="flex-1 p-4">
-                  {children}
-              </main>
+              <AnalyticsTracker pageName="Portfolio">
+                {/* <Sidebar /> */}
+                <main className="flex-1 p-4">
+                    {children}
+                </main>
+              </AnalyticsTracker>
             </AuthSessionProvider>
          </ThemeProvider>
          <Toaster  />
