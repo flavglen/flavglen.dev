@@ -1,7 +1,6 @@
 import { GalleryComponent } from "@/components/gallery-component"
 import { Header } from "@/components/sections/Header"
 import { Metadata } from "next"
-import Image from "next/image"
 
 export const metadata: Metadata = {
   title: "Gallery - Flavglen Portfolio | Photography & Visual Stories",

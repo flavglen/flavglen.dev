@@ -7,6 +7,15 @@ import { Badge } from "@/components/ui/badge"
 import { AnimateInView } from "@/components/animate-in-view"
 import { ExternalLink, Calendar, MapPin, Camera, Share2, Download } from "lucide-react"
 import Image from "next/image"
+import { 
+  trackPhotoView, 
+  trackPhotoDownload, 
+  trackPhotoShare, 
+  trackGalleryLoadMore, 
+  trackGalleryError,
+  trackGalleryEvent 
+} from "@/lib/analytics"
+import { useGalleryAnalytics } from "@/hooks/useAnalytics"
 
 interface Photo {
   id: string
@@ -35,6 +44,9 @@ export function GalleryComponent() {
   const observerRef = useRef<IntersectionObserver | null>(null)
   const [nextPageUrl, setNextPageUrl] = useState<string | null>(null)
   const [hasMore, setHasMore] = useState(true)
+  
+  // Analytics hooks
+  const { trackPhotoClick, trackPhotoHover, trackGalleryAction } = useGalleryAnalytics()
 
   const fetchPhotos = async (isLoadMore = false) => {
     try {
@@ -109,8 +121,10 @@ export function GalleryComponent() {
         
         if (isLoadMore) {
           setPhotos(prev => [...prev, ...pexelsPhotos])
+          trackGalleryLoadMore(photos.length + pexelsPhotos.length)
         } else {
           setPhotos(pexelsPhotos)
+          trackGalleryEvent('photos_loaded', undefined, `Loaded ${pexelsPhotos.length} photos`)
         }
         return
       }
@@ -146,13 +160,18 @@ export function GalleryComponent() {
       
       if (isLoadMore) {
         setPhotos(prev => [...prev, ...pexelsPhotos])
+        trackGalleryLoadMore(photos.length + pexelsPhotos.length)
       } else {
         setPhotos(pexelsPhotos)
+        trackGalleryEvent('photos_loaded', undefined, `Loaded ${pexelsPhotos.length} photos`)
       }
     } catch (err) {
       console.error("Error fetching photos:", err)
       const errorMessage = err instanceof Error ? err.message : "Failed to load photos"
       setError(errorMessage)
+      
+      // Track error
+      trackGalleryError('fetch_error', errorMessage)
       
       // Log additional debugging info
       if (err instanceof Error && err.message.includes('500')) {
@@ -161,6 +180,7 @@ export function GalleryComponent() {
         console.error("2. User doesn't exist on Pexels")
         console.error("3. API rate limiting")
         console.error("4. Invalid API key")
+        trackGalleryError('api_500', 'Pexels API 500 error')
       }
       
       // Set empty photos array to show no results view
@@ -190,6 +210,8 @@ export function GalleryComponent() {
   // Helper functions
 
   const handleShare = useCallback(async (photo: Photo) => {
+    trackPhotoShare(photo.id, photo.title, 'native')
+    
     if (navigator.share) {
       try {
         await navigator.share({
@@ -197,16 +219,26 @@ export function GalleryComponent() {
           text: photo.description,
           url: photo.url,
         })
+        trackGalleryAction('share_success', `Native share: ${photo.title}`)
       } catch (err) {
         console.log('Error sharing:', err)
+        trackGalleryAction('share_error', `Native share failed: ${photo.title}`)
       }
     } else {
       // Fallback to copying URL
-      navigator.clipboard.writeText(photo.url)
+      try {
+        await navigator.clipboard.writeText(photo.url)
+        trackGalleryAction('share_success', `Clipboard copy: ${photo.title}`)
+      } catch (err) {
+        console.log('Error copying to clipboard:', err)
+        trackGalleryAction('share_error', `Clipboard copy failed: ${photo.title}`)
+      }
     }
-  }, [])
+  }, [trackPhotoShare, trackGalleryAction])
 
   const handleDownload = useCallback(async (photo: Photo) => {
+    trackPhotoDownload(photo.id, photo.title)
+    
     try {
       const response = await fetch(photo.url)
       const blob = await response.blob()
@@ -218,10 +250,13 @@ export function GalleryComponent() {
       a.click()
       window.URL.revokeObjectURL(url)
       document.body.removeChild(a)
+      
+      trackGalleryAction('download_success', `Downloaded: ${photo.title}`)
     } catch (err) {
       console.log('Error downloading:', err)
+      trackGalleryAction('download_error', `Download failed: ${photo.title}`)
     }
-  }, [])
+  }, [trackPhotoDownload, trackGalleryAction])
 
   // Calculate aspect ratio for masonry layout
   const getAspectRatio = (width: number, height: number) => {
@@ -277,7 +312,10 @@ export function GalleryComponent() {
     return (
       <div className="text-center py-20">
         <p className="text-red-500 mb-4">{error}</p>
-        <Button onClick={() => window.location.reload()}>
+        <Button onClick={() => {
+          trackGalleryAction('retry_after_error', error || 'Unknown error')
+          window.location.reload()
+        }}>
           Try Again
         </Button>
       </div>
@@ -309,7 +347,10 @@ export function GalleryComponent() {
           {/* Fancy Button */}
           <div className="space-y-4">
             <Button 
-              onClick={() => window.location.reload()} 
+              onClick={() => {
+                trackGalleryAction('refresh_gallery', 'No photos found')
+                window.location.reload()
+              }} 
               className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:opacity-90 transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
               size="lg"
             >
@@ -342,8 +383,15 @@ export function GalleryComponent() {
             <AnimateInView key={photo.id} delay={index * 50}>
               <Card 
                 className="gallery-card masonry-item overflow-hidden group border-none shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-1 cursor-pointer break-inside-avoid mb-4"
-                onClick={() => setSelectedPhoto(photo)}
-                onMouseEnter={() => setHoveredPhoto(photo.id)}
+                onClick={() => {
+                  trackPhotoClick(photo.id, photo.title)
+                  trackPhotoView(photo.id, photo.title, photo.photographer)
+                  setSelectedPhoto(photo)
+                }}
+                onMouseEnter={() => {
+                  trackPhotoHover(photo.id, photo.title)
+                  setHoveredPhoto(photo.id)
+                }}
                 onMouseLeave={() => setHoveredPhoto(null)}
                 style={{ height: `${masonryHeight}px` }}
               >
@@ -429,7 +477,10 @@ export function GalleryComponent() {
 
       {/* 80% Screen Photo Modal */}
       {selectedPhoto && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={() => setSelectedPhoto(null)}>
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={() => {
+          trackGalleryAction('modal_close', selectedPhoto.title)
+          setSelectedPhoto(null)
+        }}>
           <div className="bg-white dark:bg-gray-900 rounded-xl w-[80vw] h-[80vh] flex flex-col overflow-hidden shadow-2xl" onClick={(e) => e.stopPropagation()}>
             {/* Header with controls */}
             <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
@@ -461,7 +512,10 @@ export function GalleryComponent() {
                 <Button
                   variant="ghost"
                   size="icon"
-                  onClick={() => setSelectedPhoto(null)}
+                  onClick={() => {
+                    trackGalleryAction('modal_close_button', selectedPhoto.title)
+                    setSelectedPhoto(null)
+                  }}
                 >
                   ×
                 </Button>
