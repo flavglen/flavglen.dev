@@ -1,6 +1,8 @@
 // Utility for logging security events from middleware to Firebase
 // This works around Edge Runtime limitations by calling an API endpoint
 
+import { isMiddlewareLoggingEnabled } from './common';
+
 interface SecurityLogData {
   eventType: string;
   level: string;
@@ -16,6 +18,11 @@ interface SecurityLogData {
 }
 
 export async function logSecurityEvent(data: SecurityLogData): Promise<void> {
+  // Check if middleware logging is disabled
+  if (!isMiddlewareLoggingEnabled()) {
+    return;
+  }
+
   try {
     // Filter out undefined values before sending to Firebase
     const cleanData = Object.fromEntries(

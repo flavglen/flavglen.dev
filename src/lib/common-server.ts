@@ -1,5 +1,8 @@
-// Client-safe common utilities
-// This file can be imported in both client and server code
+// Server-only common utilities
+// This file should only be imported in server-side code (API routes, server components, etc.)
+
+import { db } from "@/lib/firebase";
+import { v4 as uuidv4 } from 'uuid';
 
 type Log = {
     message: string;
@@ -8,7 +11,6 @@ type Log = {
     data?: unknown
 }
 
-// Client-safe version of saveLog (doesn't actually save to Firebase)
 export async function saveLog(log: Log, success: boolean = true) {
   try{
     const logToStore = {
@@ -16,8 +18,9 @@ export async function saveLog(log: Log, success: boolean = true) {
         success,
         date: new Date().toISOString(),
     }
-    // Just log to console on client side
-    console.log("Log (client-side):", logToStore);
+    // generate random firebase doc id
+    await db.collection("ai_expenses_logs").doc(uuidv4()).set({ ...logToStore });
+    console.log("Log has been saved:");
     return true;
   }catch(e){
     console.log("failed to save log", e);
@@ -27,11 +30,14 @@ export async function saveLog(log: Log, success: boolean = true) {
 
 /**
  * Configure Firebase logging based on environment variable
- * Client-safe version (no-op)
+ * Call this function before initializing Firebase Admin SDK
  */
 export function configureFirebaseLogging() {
-  // Client-safe version - no Firebase operations
-  console.log("Firebase logging configuration (client-side)");
+  if (process.env.FIREBASE_DISABLE_LOGS === 'true') {
+    // Disable Firebase logs
+    const admin = require('firebase-admin');
+    admin.setLogLevel('silent');
+  }
 }
 
 /**
@@ -39,6 +45,5 @@ export function configureFirebaseLogging() {
  * @returns boolean - true if logging is enabled, false if disabled
  */
 export function isMiddlewareLoggingEnabled(): boolean {
-  //return process.env.MIDDLEWARE_DISABLE_LOGS !== 'true';
-  return false
+  return Boolean(process.env.MIDDLEWARE_DISABLE_LOGS);
 }

@@ -1,4 +1,8 @@
 import admin from "firebase-admin";
+import { configureFirebaseLogging } from "./common";
+
+// Configure Firebase logging based on environment variable
+configureFirebaseLogging();
 
 // Initialize Firebase Admin SDK (only once)
 if (!admin.apps.length) {

@@ -1,5 +1,6 @@
 import { db } from "@/lib/firebase";
-import { saveLog } from "./common";
+import { saveLog } from "./common-server";
+import { serverFirebaseCache, CACHE_TTL } from "./firebase-cache-server";
 
 export const addSkills = async (skills: any) => {
     try {
@@ -12,17 +13,21 @@ export const addSkills = async (skills: any) => {
 
 export async function getSkills() {
     try {
-      const snapshot = await db.collection("skills")
-                               .get();
-  
-      const docs = snapshot.docs.map(doc => doc.data());
+      const docs = await serverFirebaseCache.getCollection(
+        "skills",
+        {
+          ttl: CACHE_TTL.SKILLS,
+          key: "skills:all"
+        }
+      );
+      
       const expenseFormatted = docs.map((doc: any) => {
         return  {...doc };
       });
       return expenseFormatted;
     } catch (error) {
-      console.error("Error getting expenses:", error);
-      saveLog({ message: "Error getting expenses:" ,error, data: {}}, false);
+      console.error("Error getting skills:", error);
+      saveLog({ message: "Error getting skills:" ,error, data: {}}, false);
       return null;
     }
 }

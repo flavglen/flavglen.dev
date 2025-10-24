@@ -9,6 +9,7 @@ import {
   logApiAccessDenied, 
   logApiAccessGranted 
 } from "@/lib/middleware-logger";
+import { isMiddlewareLoggingEnabled } from "@/lib/common";
 
 // Security utility functions
 function isValidEmail(email: string): boolean {
@@ -35,6 +36,11 @@ function createSecureRedirect(path: string, req: NextRequest): NextResponse {
 export async function middleware(req: NextRequest) {
   const pathname = sanitizePathname(req.nextUrl.pathname);
   const method = req.method;
+  
+  // Debug: Show middleware logging status (only in development)
+  if (process.env.NODE_ENV === 'development' && pathname === '/admin/expenses') {
+    console.log('Middleware logging enabled:', isMiddlewareLoggingEnabled());
+  }
   // Get client IP address with better fallback handling
   const getClientIP = (req: NextRequest): string => {
     // Check various headers for real client IP
