@@ -2,6 +2,11 @@
 // This file should only be imported in server-side code (API routes, middleware, etc.)
 
 import admin from "firebase-admin";
+import { configureFirebaseLogging } from "./common-server";
+import { serverFirebaseCache, CACHE_TTL } from "./firebase-cache-server";
+
+// Configure Firebase logging based on environment variable
+configureFirebaseLogging();
 
 // Initialize Firebase Admin SDK (only once)
 if (!admin.apps.length) {
@@ -53,24 +58,35 @@ export class FirebaseServer {
   // Get security logs
   async getSecurityLogs(filters: any = {}) {
     try {
-      let query = db.collection('security_logs').orderBy('timestamp', 'desc');
+      const cacheKey = `security_logs:${JSON.stringify(filters)}`;
       
-      // Apply filters
-      if (filters.eventType) {
-        query = query.where('eventType', '==', filters.eventType);
-      }
-      if (filters.level) {
-        query = query.where('level', '==', filters.level);
-      }
-      if (filters.userEmail) {
-        query = query.where('userEmail', '==', filters.userEmail);
-      }
-      if (filters.success !== undefined) {
-        query = query.where('success', '==', filters.success);
-      }
-      
-      const snapshot = await query.limit(1000).get();
-      return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      return await serverFirebaseCache.get(
+        'security_logs',
+        async () => {
+          let query = db.collection('security_logs').orderBy('timestamp', 'desc');
+          
+          // Apply filters
+          if (filters.eventType) {
+            query = query.where('eventType', '==', filters.eventType);
+          }
+          if (filters.level) {
+            query = query.where('level', '==', filters.level);
+          }
+          if (filters.userEmail) {
+            query = query.where('userEmail', '==', filters.userEmail);
+          }
+          if (filters.success !== undefined) {
+            query = query.where('success', '==', filters.success);
+          }
+          
+          const snapshot = await query.limit(1000).get();
+          return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        },
+                {
+                  ttl: CACHE_TTL.SECURITY_LOGS,
+                  key: cacheKey
+                }
+      );
     } catch (error) {
       console.error('Failed to get security logs:', error);
       return [];

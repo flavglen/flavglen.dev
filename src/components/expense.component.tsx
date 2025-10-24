@@ -268,13 +268,13 @@ export function ExpenseComponent() {
 
     return (
         <div className="w-full relative">
-            <div className="flex items-center">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
                 <Popover>
                     <PopoverTrigger asChild>
                         <Button
                             id="date"
                             variant={"outline"}
-                            className={cn("w-[300px] justify-start text-left font-normal", !date && "text-muted-foreground")}
+                            className={cn("w-full sm:w-[300px] justify-start text-left font-normal", !date && "text-muted-foreground")}
                         >
                             <CalendarIcon />
                             {date?.from ? (
@@ -301,10 +301,9 @@ export function ExpenseComponent() {
                         />
                     </PopoverContent>
                 </Popover>
-                <Button variant="default" className="ml-5" onClick={fetchExpenses}>Fetch</Button>
+                <Button variant="default" className="w-full sm:w-auto sm:ml-5" onClick={fetchExpenses}>Fetch</Button>
             </div>
             <div className="flex items-center py-4">
-
                 <Input
                     placeholder="Filter Expenses ..."
                     value={globalFilter ?? ""}
@@ -313,11 +312,11 @@ export function ExpenseComponent() {
                         //table.getColumn("place")?.setFilterValue(event.target.value)
                     }
                     }
-                    className="max-w-sm"
+                    className="w-full max-w-sm"
                 />
             </div>
-            <div className="rounded-md border">
-                <Table>
+            <div className="rounded-md border overflow-x-auto">
+                <Table className="min-w-[800px]">
                     <TableHeader>
                         {table.getHeaderGroups().map((headerGroup) => (
                             <TableRow key={headerGroup.id}>

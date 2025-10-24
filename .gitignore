@@ -37,3 +37,8 @@ next-env.d.ts
 
 # documentation
 SEO_RECOMMENDATIONS.md
+
+# ignore specific README files
+*EXPENSE_*.md
+*FIREBASE_*.md
+*ADMIN_*.md
