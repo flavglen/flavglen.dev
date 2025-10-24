@@ -60,7 +60,7 @@ export const projects = [
     github: "https://github.com/flavglen/flavglen.dev",
   },
   {
-    id: 6,
+    id: 7,
     title: "AI Portfolio",
     description: "A modern personal portfolio built using V0.dev, an AI tool that generates React and Tailwind components. I used AI to quickly design and structure the site, then customized it with interactive elements like a custom cursor using Framer Motion.",
     image: "placeholder.svg",
@@ -68,5 +68,15 @@ export const projects = [
     technologies: ["React", "V0", "TypeScript", "Angular", "OpenAI", "Cursor", "SQL", "Firebase", "Docker", "Deepseek", "Next.js", "Zustand / Redux", "Tailwind CSS", "Jest", "Cypress", "GraphQL", "Node.js"],
     demo: "https://v0-melissa-portfolio.vercel.app/",
     github: "https://github.com/flavglen/melissa-portfolio",
+  },
+  {
+    id: 8,
+    title: "Axios Error Handling",
+    description: "A React application demonstrating centralized error handling with Axios interceptors and Material-UI snackbars. Features comprehensive error types handling, automatic error display, and modern UI built with React, TypeScript, Tailwind CSS, and Material-UI.",
+    image: "placeholder.svg",
+    category: "personal",
+    technologies: ["React", "TypeScript", "Axios", "Material-UI", "Tailwind CSS", "Vite", "Lucide React", "Error Handling", "HTTP Interceptors"],
+    demo: "",
+    github: "https://github.com/flavglen/axios-error-handling",
   },
 ].sort((a, b) => b.id - a.id) 
