@@ -1,12 +1,11 @@
 "use client"
 
-import { useState } from "react"
 import { Header } from "@/components/sections/Header"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ExternalLink, Github } from "lucide-react"
+import ProjectsStructuredData from "@/components/ProjectsStructuredData"
 
 // type
 type Project = {
@@ -21,61 +20,8 @@ type Project = {
   githubUrl: string | null;
 };
 
-// Project data
+// Project data - only personal projects
 const projects:Project[] = [
-  {
-    id: 1,
-    title: "Loblaws.ca",
-    company: "Loblaws",
-    description:`At Loblaw.ca, I enhance Product Listing Pages, Product Detail Pages, and the Cart by adding features, ensuring accessibility, and optimizing performance. I led the Next.js migration, implementing SSR, SSG, and SEO optimizations to improve speed and user experience while maintaining high Lighthouse scores`,
-    image: null,
-    category: "Professional",
-    tags: ["Next.js", "Typescript", "StoryBook", "Tailwind CSS", "React", "Node.js", "Express", "GraphQL", "Apollo Client", "Jest", "Cypress", "Git", "Jira", "Confluence", "Python"],
-    demoUrl: null,
-    githubUrl: null,
-  },
- {
-  id: 2,
-  title: "Underwriter tool",
-  company: "Confidential",
-  description:`For the new Underwriter Tool, I developed complex forms with dynamic validation, intricate calculations, and micro frontends using Angular, React, and TypeScript, ensuring scalability, code reusability, and robust test coverage.`,
-  image: null,
-  category: "Professional",
-  tags: ["Angular", "Typescript", "React", "Vue" , "Node.js", "Express", "Graphql", "Jest", "Cypress", "PHP", "Laravel", "Git", "python", "SQL", "MongoDB",],
-  demoUrl: null,
-  githubUrl: null,
-},{
-  id: 3,
-  title: "Connect Audit Manager",
-  company: "Confidential",
-  description:`For Connect Audit Manager, an internal audit management solution, I built high-performance shared components, dynamic forms, and state management using Angular and React, ensuring reusability, efficiency, and a seamless audit workflow for team heads, managers, and auditors.`,
-  image: null,
-  category: "Professional",
-  tags: ["Angular", "Typescript", "React", "Vue" , "Node.js", "Express", "Graphql", "Jest", "Cypress", "PHP", "Laravel", "C#", "ASP.NET", "SQL", "MongoDB"],
-  demoUrl: null,
-  githubUrl: null
-},{
-  id: 4,
-  title: "Quick Market Reports",
-  company: "Confidential",
-  description:`For Quick Market Reports, a tool delivering timely market insights, I built various pages from scratch, developed APIs, and integrated a payment gateway using Angular, React, and PHP, while optimizing performance for a seamless user experience.`,
-  image: null,
-  category: "Professional",
-  tags: ["Angular", "Typescript", "PHP", "Laravel", "Codeigniter", "SQL", "React", "Jest"],
-  demoUrl: null,
-  githubUrl: null
-},
-{
-  id: 5,
-  title: "Video Chat App",
-  company: "Confidential",
-  description:`For the Video Calling App, I implemented user authentication, signaling, media streaming, and push notifications using the QuickBlox API, Angular, and PHP, ensuring a seamless, secure, and high-quality communication experience across multiple platforms.`,
-  image: null,
-  category: "Professional",
-  tags: ["Angular", "Typescript", "PHP", "Laravel", "Codeigniter", "SQL", "React", "CSS", "HTML", "JavaScript", "Quickblox", "Python", "NET", "Jest"],
-  demoUrl: null,
-  githubUrl: null
-},
 {
   id: 6,
   title: "Aira Club",
@@ -109,77 +55,113 @@ const projects:Project[] = [
   demoUrl: 'https://v0-melissa-portfolio.vercel.app/',
   githubUrl: 'https://github.com/flavglen/melissa-portfolio'
 },
+{
+  id: 9,
+  title: "Axios Error Handling",
+  company: "Personal",
+  description:`A React application demonstrating centralized error handling with Axios interceptors and Material-UI snackbars. Features comprehensive error types handling, automatic error display, and modern UI built with React, TypeScript, Tailwind CSS, and Material-UI.`,
+  image: null,
+  category: "Personal",
+  tags: ["React", "TypeScript", "Axios", "Material-UI", "Tailwind CSS", "Vite", "Lucide React", "Error Handling", "HTTP Interceptors"],
+  demoUrl: null,
+  githubUrl: 'https://github.com/flavglen/axios-error-handling'
+},
 ]
 
 export default function ProjectsSection() {
-  const [activeCategory, setActiveCategory] = useState("All")
-
-  const filteredProjects =
-    activeCategory === "All" ? projects : projects.filter((project) => project.category === activeCategory)
-
   return (
     <div className="min-h-screen bg-background">
+      <ProjectsStructuredData />
       <Header />
       <section className="container py-12 mx-auto">
       <div className="flex flex-col items-center mb-12 text-center">
-        <h2 className="text-3xl font-bold tracking-tight sm:text-4xl mb-4">My Projects</h2>
-        <p className="max-w-2xl text-muted-foreground">
-          A collection of projects I&apos;ve built, ranging from web applications to mobile apps and IoT solutions.
+        <h1 className="text-4xl font-bold tracking-tight sm:text-5xl mb-4">
+          My Personal Projects - React, TypeScript & Full Stack Development
+        </h1>
+        <p className="max-w-4xl text-lg text-muted-foreground mb-8">
+          Explore my collection of personal projects showcasing expertise in React, TypeScript, Next.js, 
+          Firebase, and modern web development. From full-stack applications to error handling libraries, 
+          these projects demonstrate my passion for building innovative solutions, implementing authentication 
+          systems, payment gateways, and creating seamless user experiences with cutting-edge technologies.
         </p>
+        <div className="max-w-3xl text-sm text-muted-foreground mb-8">
+          <p>
+            Featured technologies include React, TypeScript, Next.js, Firebase, Node.js, Express, 
+            Material-UI, Tailwind CSS, Axios, OAuth authentication, serverless functions, 
+            Cloud Functions, Firestore, Redis caching, and modern web development practices.
+          </p>
+        </div>
+        <div className="flex flex-wrap gap-2 justify-center">
+          <Badge variant="secondary" className="text-sm">React</Badge>
+          <Badge variant="secondary" className="text-sm">TypeScript</Badge>
+          <Badge variant="secondary" className="text-sm">Next.js</Badge>
+          <Badge variant="secondary" className="text-sm">Firebase</Badge>
+          <Badge variant="secondary" className="text-sm">Node.js</Badge>
+          <Badge variant="secondary" className="text-sm">Express</Badge>
+          <Badge variant="secondary" className="text-sm">Tailwind CSS</Badge>
+          <Badge variant="secondary" className="text-sm">Material-UI</Badge>
+          <Badge variant="secondary" className="text-sm">Axios</Badge>
+          <Badge variant="secondary" className="text-sm">OAuth</Badge>
+          <Badge variant="secondary" className="text-sm">Serverless</Badge>
+          <Badge variant="secondary" className="text-sm">Cloud Functions</Badge>
+        </div>
       </div>
 
-      <Tabs defaultValue="All" className="w-full mb-8">
-        <div className="flex justify-center">
-          <TabsList>
-            <TabsTrigger value="All" onClick={() => setActiveCategory("All")}>
-              All Projects
-            </TabsTrigger>
-            <TabsTrigger value="professional" onClick={() => setActiveCategory("Professional")}>
-              Professional
-            </TabsTrigger>
-            <TabsTrigger value="personal" onClick={() => setActiveCategory("Personal")}>
-              Personal
-            </TabsTrigger>
-          </TabsList>
+      <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        {projects.map((project) => (
+          <ProjectCard key={project.id} project={project} />
+        ))}
+      </div>
+
+      <div className="mt-16 text-center">
+        <h2 className="text-2xl font-bold mb-4">Explore More Projects & Open Source Contributions</h2>
+        <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
+          Discover additional React, TypeScript, and full-stack development projects on my GitHub profile. 
+          Follow my journey in web development, explore open source contributions, and see the latest 
+          innovations in modern web technologies.
+        </p>
+        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+          <Button asChild size="lg">
+            <a href="https://github.com/flavglen" target="_blank" rel="noopener noreferrer">
+              <Github className="mr-2 h-5 w-5" />
+              View GitHub Profile
+            </a>
+          </Button>
+          <Button variant="outline" asChild size="lg">
+            <a href="https://flavglen.dev" target="_blank" rel="noopener noreferrer">
+              <ExternalLink className="mr-2 h-5 w-5" />
+              Visit Portfolio
+            </a>
+          </Button>
         </div>
-
-        <TabsContent value="All" className="mt-6">
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {filteredProjects.map((project) => (
-              <ProjectCard key={project.id} project={project} />
-            ))}
-          </div>
-        </TabsContent>
-
-        <TabsContent value="professional" className="mt-6">
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {filteredProjects.map((project) => (
-              <ProjectCard key={project.id} project={project} />
-            ))}
-          </div>
-        </TabsContent>
-
-        <TabsContent value="personal" className="mt-6">
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {filteredProjects.map((project) => (
-              <ProjectCard key={project.id} project={project} />
-            ))}
-          </div>
-        </TabsContent>
-      </Tabs>
+      </div>
       </section>
     </div>
   )
 }
 
 function ProjectCard({ project }: { project: Project }) {
+  const getDefaultImage = (projectTitle: string) => {
+    const title = projectTitle.toLowerCase()
+    if (title.includes('aira')) return '/airaclub.webp'
+    if (title.includes('flavglen')) return '/placeholder.svg'
+    if (title.includes('ai portfolio')) return '/logonew.svg'
+    if (title.includes('axios')) return '/placeholder.svg'
+    return '/placeholder.svg'
+  }
+
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    e.currentTarget.src = getDefaultImage(project.title)
+  }
+
   return (
     <Card className="overflow-hidden flex flex-col h-full transition-all hover:shadow-md">
-      <div className="aspect-video w-full overflow-hidden p-2">
+      <div className="aspect-video w-full overflow-hidden p-2 bg-gradient-to-br from-blue-50 to-indigo-100">
         <img
-          src={ project.image || "ni.svg"}
+          src={project.image || getDefaultImage(project.title)}
           alt={project.title}
           className="object-cover w-full h-full transition-transform hover:scale-105"
+          onError={handleImageError}
         />
       </div>
       <CardHeader>
