@@ -1,13 +1,17 @@
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'My Projects | Glen Pais - Full Stack Developer Portfolio',
-  description: 'Explore my personal projects showcasing React, TypeScript, Next.js, Firebase, and modern web development. From portfolio websites to error handling libraries, discover my passion for building innovative solutions.',
+  title: 'My Projects | Glen Pais - Full Stack Developer Portfolio | React, Next.js, Angular, Vue, Node.js',
+  description: 'Explore my personal projects showcasing React, Next.js, Angular, Vue.js, Node.js, TypeScript, Firebase, and modern web development. From portfolio websites to error handling libraries, discover my passion for building innovative solutions.',
   keywords: [
     'personal projects',
     'React projects',
+    'Angular projects',
+    'Vue.js projects',
+    'Vue projects',
     'TypeScript projects',
     'Next.js projects',
+    'Node.js projects',
     'Firebase projects',
     'web development projects',
     'portfolio projects',
@@ -17,7 +21,6 @@ export const metadata: Metadata = {
     'frontend developer',
     'backend developer',
     'JavaScript projects',
-    'Node.js projects',
     'Express projects',
     'Material-UI projects',
     'Tailwind CSS projects',
@@ -45,8 +48,8 @@ export const metadata: Metadata = {
     'serverless architecture'
   ],
   openGraph: {
-    title: 'My Projects | Glen Pais - Full Stack Developer',
-    description: 'Explore my personal projects showcasing React, TypeScript, Next.js, Firebase, and modern web development. From portfolio websites to error handling libraries.',
+    title: 'My Projects | Glen Pais - Full Stack Developer | React, Next.js, Angular, Vue, Node.js',
+    description: 'Explore my personal projects showcasing React, Next.js, Angular, Vue.js, Node.js, TypeScript, Firebase, and modern web development. From portfolio websites to error handling libraries.',
     type: 'website',
     url: 'https://flavglen.dev/projects',
     siteName: 'Glen Pais Portfolio',
@@ -55,15 +58,15 @@ export const metadata: Metadata = {
         url: 'https://flavglen.dev/placeholder.jpg',
         width: 1200,
         height: 630,
-        alt: 'Glen Pais Personal Projects - React, TypeScript, Next.js Developer',
+        alt: 'Glen Pais Personal Projects - React, Next.js, Angular, Vue, Node.js Developer',
       },
     ],
     locale: 'en_US',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'My Projects | Glen Pais - Full Stack Developer',
-    description: 'Explore my personal projects showcasing React, TypeScript, Next.js, Firebase, and modern web development.',
+    title: 'My Projects | Glen Pais - Full Stack Developer | React, Next.js, Angular, Vue, Node.js',
+    description: 'Explore my personal projects showcasing React, Next.js, Angular, Vue.js, Node.js, TypeScript, Firebase, and modern web development.',
     images: ['https://flavglen.dev/placeholder.jpg'],
     creator: '@flavglen',
   },

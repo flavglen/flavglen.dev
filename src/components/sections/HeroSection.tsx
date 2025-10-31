@@ -23,7 +23,10 @@ export function HeroSection() {
           AI-Enhanced Frontend Developer
         </h1>
         <p className="text-xl text-muted-foreground max-w-md font-semibold">
-          Expert Full Stack Developer building intelligent web interfaces with AI-powered development workflows. Available for hire in Canada and India.
+          Expert Full Stack Developer building intelligent web interfaces with AI-powered development workflows. 
+          <span className="block mt-2 text-lg font-bold text-purple-600 dark:text-purple-400">
+            Available for Hire | React, Next.js, Angular, Vue, Node.js | Remote or On-site | Canada & India
+          </span>
         </p>
         <div className="flex gap-4 pt-4 justify-center md:justify-start">
           <Button

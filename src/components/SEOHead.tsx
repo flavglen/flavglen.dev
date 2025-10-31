@@ -46,7 +46,7 @@ export default function SEOHead() {
       <meta name="business:contact_data:locality" content="Toronto" />
       
       {/* Skills and Expertise */}
-      <meta name="keywords" content="React developer , Next.js developer Canada, TypeScript developer Toronto, AI developer Bangalore, Frontend developer Vancouver, Web developer Mumbai, Freelance developer Delhi, Remote developer Canada, Full stack developer India, Cursor AI developer, GitHub Copilot developer, V0.dev developer" />
+      <meta name="keywords" content="React developer, Next.js developer, Angular developer, Vue.js developer, Vue developer, Node.js developer, TypeScript developer Canada, AI developer Bangalore, Frontend developer Vancouver, Backend developer, Full stack developer Toronto, Web developer Mumbai, Freelance developer Delhi, Remote developer Canada, Cursor AI developer, GitHub Copilot developer, V0.dev developer" />
       
       {/* Performance and Security */}
       <meta httpEquiv="X-UA-Compatible" content="IE=edge" />

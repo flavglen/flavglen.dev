@@ -27,6 +27,7 @@ import {
     TableRow,
     TableFooter,
 } from "@/components/ui/table"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Popover, PopoverContent, PopoverTrigger } from "@radix-ui/react-popover"
 import { Calendar } from "./ui/calendar"
 import { ArrowUpDown, CalendarIcon } from "lucide-react"
@@ -113,36 +114,6 @@ export function ExpenseComponent() {
  
     const columns1 = React.useMemo<ColumnDef<Expense>[]>(() => [
         {
-            accessorKey: "docId",
-            header: ({ column }) => (
-                <Button
-                    variant="ghost"
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-                >
-                    Doc ID
-                    <ArrowUpDown />
-                </Button>
-            ),
-            cell: ({ row }) => (
-                <div className="font-mono text-xs text-gray-600 break-all">
-                    {row.getValue("docId")}
-                </div>
-            ),
-        },
-        {
-            accessorKey: "id",
-            header: ({ column }) => (
-                <Button
-                    variant="ghost"
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-                >
-                    ID
-                    <ArrowUpDown />
-                </Button>
-            ),
-            cell: ({ row }) => <div className="lowercase">{row.getValue("id")}</div>,
-        },
-        {
             accessorKey: "place",
             header: ({ column }) => (
                 <Button
@@ -154,6 +125,29 @@ export function ExpenseComponent() {
                 </Button>
             ),
             cell: ({ row }) => <div className="lowercase">{row.getValue("place")}</div>,
+        },
+        {
+            accessorKey: "amount",
+            header: () => <div className="text-right">Amount</div>,
+            cell: ({ row }) => {
+                const amount = parseFloat(row.getValue("amount"));
+                const formatted = new Intl.NumberFormat("en-US", {
+                    style: "currency",
+                    currency: "USD",
+                }).format(amount);
+                return <div className="text-right font-medium">{formatted}</div>;
+            },
+            footer: ({ table }) => {
+                const total = table.getFilteredRowModel().rows.reduce(
+                    (sum, row) => sum + row.original.amount,
+                    0
+                );
+                const formattedTotal = new Intl.NumberFormat("en-US", {
+                    style: "currency",
+                    currency: "USD",
+                }).format(total);
+                return <div className="text-right font-medium">{formattedTotal}</div>;
+            },
         },
         {
             accessorKey: "internalDate",
@@ -186,27 +180,34 @@ export function ExpenseComponent() {
             cell: ({ row }) => <div className="lowercase">{row.getValue("category")}</div>,
         },
         {
-            accessorKey: "amount",
-            header: () => <div className="text-right">Amount</div>,
-            cell: ({ row }) => {
-                const amount = parseFloat(row.getValue("amount"));
-                const formatted = new Intl.NumberFormat("en-US", {
-                    style: "currency",
-                    currency: "USD",
-                }).format(amount);
-                return <div className="text-right font-medium">{formatted}</div>;
-            },
-            footer: ({ table }) => {
-                const total = table.getFilteredRowModel().rows.reduce(
-                    (sum, row) => sum + row.original.amount,
-                    0
-                );
-                const formattedTotal = new Intl.NumberFormat("en-US", {
-                    style: "currency",
-                    currency: "USD",
-                }).format(total);
-                return <div className="text-right font-medium">{formattedTotal}</div>;
-            },
+            accessorKey: "docId",
+            header: ({ column }) => (
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Doc ID
+                    <ArrowUpDown />
+                </Button>
+            ),
+            cell: ({ row }) => (
+                <div className="font-mono text-xs text-gray-600 break-all">
+                    {row.getValue("docId")}
+                </div>
+            ),
+        },
+        {
+            accessorKey: "id",
+            header: ({ column }) => (
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    ID
+                    <ArrowUpDown />
+                </Button>
+            ),
+            cell: ({ row }) => <div className="lowercase">{row.getValue("id")}</div>,
         },
         {
             id: "actions",
@@ -269,9 +270,92 @@ export function ExpenseComponent() {
         }
     }, [selectedDocId])
 
+    // Calculate total expenses and category summaries
+    const totalExpenses = expenses.length;
+    const totalAmount = expenses.reduce((sum, expense) => sum + (expense.amount || 0), 0);
+    
+    // Group expenses by category and get top 4
+    const categorySummary = React.useMemo(() => {
+        const categoryMap = new Map<string, { count: number; total: number; category: string }>();
+        
+        expenses.forEach(expense => {
+            const category = expense.category || "Others";
+            const existing = categoryMap.get(category) || { count: 0, total: 0, category };
+            categoryMap.set(category, {
+                count: existing.count + 1,
+                total: existing.total + (expense.amount || 0),
+                category
+            });
+        });
+        
+        return Array.from(categoryMap.values())
+            .sort((a, b) => b.total - a.total)
+            .slice(0, 4);
+    }, [expenses]);
 
     return (
         <div className="w-full relative">
+            {/* Total Expenses Summary */}
+            <div className="mb-6">
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Total Expenses</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <p className="text-sm text-muted-foreground">Total Count</p>
+                                <p className="text-2xl font-bold">{totalExpenses}</p>
+                            </div>
+                            <div className="text-right">
+                                <p className="text-sm text-muted-foreground">Total Amount</p>
+                                <p className="text-2xl font-bold">
+                                    {new Intl.NumberFormat("en-US", {
+                                        style: "currency",
+                                        currency: "USD",
+                                    }).format(totalAmount)}
+                                </p>
+                            </div>
+                        </div>
+                    </CardContent>
+                </Card>
+            </div>
+
+            {/* Top 4 Categories Cards */}
+            {categorySummary.length > 0 && (
+                <div className="mb-6">
+                    <h2 className="text-lg font-semibold mb-4">Top Categories</h2>
+                    <div className="grid grid-cols-4 gap-2 sm:gap-4">
+                        {categorySummary.map((cat, index) => (
+                            <Card key={cat.category}>
+                                <CardHeader className="pb-2 p-3 sm:p-6">
+                                    <CardTitle className="text-xs sm:text-sm font-medium text-muted-foreground truncate">
+                                        {index + 1}. {cat.category}
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent className="p-3 pt-0 sm:p-6 sm:pt-0">
+                                    <div className="space-y-1 sm:space-y-2">
+                                        <div>
+                                            <p className="text-[10px] sm:text-xs text-muted-foreground">Count</p>
+                                            <p className="text-sm sm:text-xl font-bold">{cat.count}</p>
+                                        </div>
+                                        <div>
+                                            <p className="text-[10px] sm:text-xs text-muted-foreground">Total</p>
+                                            <p className="text-xs sm:text-lg font-semibold truncate">
+                                                {new Intl.NumberFormat("en-US", {
+                                                    style: "currency",
+                                                    currency: "USD",
+                                                }).format(cat.total)}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        ))}
+                    </div>
+                </div>
+            )}
+
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
                 <Popover>
                     <PopoverTrigger asChild>
@@ -319,8 +403,8 @@ export function ExpenseComponent() {
                     className="w-full max-w-sm"
                 />
             </div>
-            <div className="rounded-md border overflow-x-auto">
-                <Table className="min-w-[800px]">
+            <div className="rounded-md border overflow-x-auto w-full">
+                <Table className="min-w-[800px] w-full">
                     <TableHeader>
                         {table.getHeaderGroups().map((headerGroup) => (
                             <TableRow key={headerGroup.id}>

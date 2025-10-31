@@ -44,7 +44,7 @@ export function Header() {
               height={50}
               className={`inline-block ml-2 rounded-full transition-all duration-1000 ${
                 isAnimating 
-                  ? 'animate-bounce scale-110 drop-shadow-lg' 
+                  ? 'animate-[spin_1s_linear] drop-shadow-lg' 
                   : 'hover:scale-105 transition-transform duration-300'
               }`}/>
               <span className="gradient-text">Glen</span>Pais
