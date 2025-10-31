@@ -119,11 +119,15 @@ export function ExpenseComponent() {
                     variant="ghost"
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
-                    docId
+                    Doc ID
                     <ArrowUpDown />
                 </Button>
             ),
-            cell: ({ row }) => <div className="lowercase">{row.getValue("docId")}</div>,
+            cell: ({ row }) => (
+                <div className="font-mono text-xs text-gray-600 break-all">
+                    {row.getValue("docId")}
+                </div>
+            ),
         },
         {
             accessorKey: "id",
