@@ -9,15 +9,23 @@ import { AnalyticsTracker } from "@/components/analytics-tracker";
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://flavglen.dev'),
-  title: "Glen Flavian Pais - AI-Enhanced Frontend Developer | React, Next.js Expert | Canada & India",
-  description: "Expert AI-enhanced frontend developer with 9+ years experience in React, Next.js, TypeScript, and AI-powered development tools. Available for hire in Canada and India. Specializing in modern web applications, e-commerce platforms, and intelligent user interfaces.",
+  title: "Glen Flavian Pais - AI-Enhanced Full Stack Developer | React, Next.js, Angular, Vue, Node.js Expert | Canada & India",
+  description: "Expert AI-enhanced full stack developer with 9+ years experience in React, Next.js, Angular, Vue.js, Node.js, TypeScript, and AI-powered development tools. Available for hire in Canada and India. Specializing in modern web applications, e-commerce platforms, and intelligent user interfaces.",
   keywords: [
     "Glen Pais", "AI developer", "frontend developer", "React developer", "Next.js developer", "TypeScript developer", 
     "Canada developer", "India developer", "freelance developer", "web developer", "full stack developer",
     "cursor ai", "github copilot", "v0.dev", "portfolio", "hire developer", "remote developer",
     "AI-enhanced development", "modern web development", "responsive design", "e-commerce development",
     "Vue.js developer", "Angular developer", "Node.js developer", "Firebase developer", "AWS developer",
-    "Toronto developer", "Vancouver developer", "Mumbai developer", "Bangalore developer", "Delhi developer"
+    "Toronto developer", "Vancouver developer", "Mumbai developer", "Bangalore developer", "Delhi developer",
+    // Recruiter-focused keywords
+    "React developer for hire", "Next.js developer for hire", "full stack developer for hire",
+    "hire React developer", "hire Next.js developer", "hire TypeScript developer",
+    "React developer available", "developer for hire Canada", "developer for hire India",
+    "available for hire", "seeking opportunities", "open to work", "contract developer",
+    "React developer Canada", "React developer India", "Next.js developer Toronto",
+    "Angular developer for hire", "Vue developer for hire", "Node.js developer for hire",
+    "senior React developer", "experienced Next.js developer", "9+ years developer"
   ],
   authors: [{ name: "Glen Flavian Pais" }],
   creator: "Glen Flavian Pais",
@@ -34,8 +42,8 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "Glen Flavian Pais - AI-Enhanced Frontend Developer | React, Next.js Expert",
-    description: "Expert AI-enhanced frontend developer with 9+ years experience in React, Next.js, TypeScript, and AI-powered development tools. Available for hire in Canada and India.",
+    title: "Glen Flavian Pais - AI-Enhanced Full Stack Developer | React, Next.js, Angular, Vue, Node.js Expert",
+    description: "Expert AI-enhanced full stack developer with 9+ years experience in React, Next.js, Angular, Vue.js, Node.js, TypeScript, and AI-powered development tools. Available for hire in Canada and India.",
     url: "https://flavglen.dev/",
     siteName: "Glen Flavian Pais Portfolio",
     images: [
@@ -43,7 +51,7 @@ export const metadata: Metadata = {
         url: "https://flavglen.dev/gp-logo.png",
         width: 1200,
         height: 630,
-        alt: "Glen Flavian Pais - AI-Enhanced Frontend Developer",
+        alt: "Glen Flavian Pais - AI-Enhanced Full Stack Developer | React, Next.js, Angular, Vue, Node.js Expert",
       },
     ],
     locale: "en_CA",
@@ -52,8 +60,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Glen Flavian Pais - AI-Enhanced Frontend Developer | React, Next.js Expert",
-    description: "Expert AI-enhanced frontend developer with 9+ years experience. Available for hire in Canada and India. Specializing in React, Next.js, TypeScript, and modern web development.",
+    title: "Glen Flavian Pais - AI-Enhanced Full Stack Developer | React, Next.js, Angular, Vue, Node.js Expert",
+    description: "Expert AI-enhanced full stack developer with 9+ years experience. Available for hire in Canada and India. Specializing in React, Next.js, Angular, Vue.js, Node.js, TypeScript, and modern web development.",
     images: ["https://flavglen.dev/gp-logo.png"],
     creator: "@flavglen",
     site: "@flavglen"
@@ -66,7 +74,7 @@ export const metadata: Metadata = {
     }
   },
   verification: {
-    google: "your-google-verification-code", // Replace with actual verification code
+    google: "o8bZZCmM7Vq9rykJ7X2ms5a-gle1xSC6MhZMBTl4SOs", // Replace with actual verification code
   },
   category: "Technology",
 };

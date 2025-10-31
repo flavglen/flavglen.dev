@@ -37,8 +37,12 @@ next-env.d.ts
 
 # documentation
 SEO_RECOMMENDATIONS.md
+RECRUITER_SEO_GUIDE.md
 
 # ignore specific README files
 *EXPENSE_*.md
 *FIREBASE_*.md
 *ADMIN_*.md
+
+# Google Apps Script files
+google-apps-script-with-categories.js

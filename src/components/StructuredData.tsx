@@ -7,8 +7,8 @@ export default function StructuredData() {
     "@context": "https://schema.org",
     "@type": "Person",
     "name": "Glen Flavian Pais",
-    "jobTitle": "AI-Enhanced Frontend Developer",
-    "description": "Expert AI-enhanced frontend developer with 9+ years experience in React, Next.js, TypeScript, and AI-powered development tools. Available for hire in Canada and India.",
+    "jobTitle": "AI-Enhanced Full Stack Developer",
+    "description": "Expert AI-enhanced full stack developer with 9+ years experience in React, Next.js, Angular, Vue.js, Node.js, TypeScript, and AI-powered development tools. Available for hire in Canada and India.",
     "url": "https://flavglen.dev",
     "image": "https://flavglen.dev/dp.jpeg",
     "logo": "https://flavglen.dev/gp-logo.png",
@@ -70,7 +70,7 @@ export default function StructuredData() {
       "itemOffered": {
         "@type": "Service",
         "name": "Frontend Development Services",
-        "description": "AI-enhanced frontend development using React, Next.js, TypeScript, and modern AI tools"
+        "description": "AI-enhanced full stack development using React, Next.js, Angular, Vue.js, Node.js, TypeScript, and modern AI tools"
       },
       "areaServed": [
         {
@@ -95,7 +95,7 @@ export default function StructuredData() {
     "@type": "WebSite",
     "name": "Glen Flavian Pais Portfolio",
     "url": "https://flavglen.dev",
-    "description": "Portfolio of Glen Flavian Pais - AI-Enhanced Frontend Developer specializing in React, Next.js, and modern web development",
+    "description": "Portfolio of Glen Flavian Pais - AI-Enhanced Full Stack Developer specializing in React, Next.js, Angular, Vue.js, Node.js, and modern web development",
     "author": {
       "@type": "Person",
       "name": "Glen Flavian Pais"
@@ -111,12 +111,12 @@ export default function StructuredData() {
   const professionalServiceSchema = {
     "@context": "https://schema.org",
     "@type": "ProfessionalService",
-    "name": "Glen Flavian Pais - Frontend Development Services",
-    "description": "AI-enhanced frontend development services specializing in React, Next.js, TypeScript, and modern web technologies",
+    "name": "Glen Flavian Pais - Full Stack Development Services",
+    "description": "AI-enhanced full stack development services specializing in React, Next.js, Angular, Vue.js, Node.js, TypeScript, and modern web technologies",
     "provider": {
       "@type": "Person",
       "name": "Glen Flavian Pais",
-      "jobTitle": "AI-Enhanced Frontend Developer"
+      "jobTitle": "AI-Enhanced Full Stack Developer"
     },
     "url": "https://flavglen.dev",
     "areaServed": [
@@ -143,11 +143,35 @@ export default function StructuredData() {
           }
         },
         {
-          "@type": "Offer", 
+          "@type": "Offer",
           "itemOffered": {
             "@type": "Service",
             "name": "Next.js Development",
             "description": "Full-stack Next.js applications with server-side rendering"
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Angular Development",
+            "description": "Enterprise Angular applications with TypeScript"
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Vue.js Development",
+            "description": "Modern Vue.js applications with Vue 3 and Composition API"
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Node.js Development",
+            "description": "Server-side Node.js applications and APIs"
           }
         },
         {
@@ -160,6 +184,66 @@ export default function StructuredData() {
         }
       ]
     }
+  }
+
+  const jobSeekerSchema = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Glen Flavian Pais",
+    "jobTitle": "AI-Enhanced Full Stack Developer",
+    "description": "Available for hire - Expert full stack developer with 9+ years experience in React, Next.js, Angular, Vue.js, Node.js, and TypeScript",
+    "url": "https://flavglen.dev",
+    "address": [
+      {
+        "@type": "PostalAddress",
+        "addressCountry": "CA",
+        "addressRegion": "Ontario"
+      },
+      {
+        "@type": "PostalAddress",
+        "addressCountry": "IN",
+        "addressRegion": "Karnataka"
+      }
+    ],
+    "seeks": {
+      "@type": "JobPosting",
+      "title": "Full Stack Developer",
+      "description": "Seeking full-time, contract, or freelance opportunities as a React, Next.js, Angular, Vue.js, or Node.js developer",
+      "employmentType": ["FULL_TIME", "CONTRACTOR", "PART_TIME"],
+      "jobLocation": [
+        {
+          "@type": "Place",
+          "address": {
+            "@type": "PostalAddress",
+            "addressCountry": "CA"
+          }
+        },
+        {
+          "@type": "Place",
+          "address": {
+            "@type": "PostalAddress",
+            "addressCountry": "IN"
+          }
+        },
+        {
+          "@type": "Place",
+          "address": {
+            "@type": "PostalAddress",
+            "addressCountry": "REMOTE"
+          }
+        }
+      ],
+      "skills": ["React", "Next.js", "Angular", "Vue.js", "Node.js", "TypeScript", "JavaScript", "Firebase", "AWS"],
+      "baseSalary": {
+        "@type": "MonetaryAmount",
+        "currency": "USD"
+      }
+    },
+    "sameAs": [
+      "https://github.com/flavglen",
+      "https://linkedin.com/in/glen-pais",
+      "https://twitter.com/flavglen"
+    ]
   }
 
   return (
@@ -183,6 +267,13 @@ export default function StructuredData() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(professionalServiceSchema)
+        }}
+      />
+      <Script
+        id="job-seeker-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(jobSeekerSchema)
         }}
       />
     </>

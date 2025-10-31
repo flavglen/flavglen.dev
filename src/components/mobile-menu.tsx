@@ -84,6 +84,10 @@ export function MobileMenu({ links }: MobileMenuProps) {
                 <Link
                   key={link.href}
                   href={link.href}
+                  onClick={() => {
+                    setIsMobileMenuOpen(false)
+                    document.body.style.overflow = ""
+                  }}
                   className="text-xl font-medium text-foreground hover:text-purple-600 transition-colors relative group py-2"
                 >
                   {link.label}
