@@ -7,24 +7,27 @@ import { serverFirebaseCache, CACHE_TTL } from "./firebase-cache-server";
 export async function getExpense(from: string, to: string) {
     // fetch all docs from ai_expenses with caching
     try {
-      const docs = await serverFirebaseCache.getCollectionQuery(
-        "ai_expenses",
-        (query) => query
-          .where('internalDate', '>=', from)
-          .where('internalDate', '<=', to),
-        {
-          ttl: CACHE_TTL.EXPENSES,
-          key: `expenses:${from}:${to}`
-        }
-      );
-
-      const docsWithId = docs.map((doc: any) => {
-        return {...doc, docId: doc.id};
+      // Query Firestore directly to get document IDs along with data
+      // This ensures docId always contains the Firestore document ID
+      const query = db.collection("ai_expenses")
+        .where('internalDate', '>=', from)
+        .where('internalDate', '<=', to);
+      
+      const snapshot = await query.get();
+      
+      // Map documents preserving both the stored id and Firestore document ID
+      const docsWithId = snapshot.docs.map((doc) => {
+        const data = doc.data();
+        return {
+          ...data,
+          id: data.id || doc.id, // Use stored id if exists, otherwise use Firestore doc ID
+          docId: doc.id, // Always use Firestore document ID (not overwritten)
+        };
       });
       
       // map category to each expense if not present
       const expenseFormatted = docsWithId.map((doc: any) => {
-        return  {...doc,...(!doc.category && {category: categorizeExpense(doc.place)}) };
+        return  {...doc };
       });
       return expenseFormatted;  
     } catch (error) {
