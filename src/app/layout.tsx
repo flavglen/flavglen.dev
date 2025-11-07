@@ -83,6 +83,11 @@ export const viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#9333ea" },
+    { media: "(prefers-color-scheme: dark)", color: "#9333ea" },
+  ],
+  manifest: "/manifest.json",
 };
 
 export default function RootLayout({
@@ -94,6 +99,14 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <StructuredData />
+        <link rel="manifest" href="/manifest.json" />
+        <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-title" content="Glen Pais" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="msapplication-TileColor" content="#9333ea" />
+        <meta name="msapplication-config" content="/browserconfig.xml" />
       </head>
       <body>
         <GoogleAnalytics />
