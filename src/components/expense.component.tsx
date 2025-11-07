@@ -28,9 +28,10 @@ import {
     TableFooter,
 } from "@/components/ui/table"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Popover, PopoverContent, PopoverTrigger } from "@radix-ui/react-popover"
+import { Badge } from "@/components/ui/badge"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Calendar } from "./ui/calendar"
-import { ArrowUpDown, CalendarIcon } from "lucide-react"
+import { ArrowUpDown, CalendarIcon, DollarSign, Receipt, TrendingUp, Filter, Trash2, Search, Sparkles, Award } from "lucide-react"
 
 export interface Expense {
     id: string;                 // Unique identifier for the record
@@ -111,6 +112,91 @@ export function ExpenseComponent() {
             });
     }
 
+    // Category color mapping
+    const getCategoryColor = (category: string) => {
+        const colorMap: { [key: string]: { bg: string; border: string; text: string; badge: string } } = {
+            "Food": { 
+                bg: "from-green-500 to-green-600", 
+                border: "border-green-300 dark:border-green-700", 
+                text: "text-green-700 dark:text-green-300",
+                badge: "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 border-green-300 dark:border-green-700"
+            },
+            "Groceries": { 
+                bg: "from-emerald-500 to-emerald-600", 
+                border: "border-emerald-300 dark:border-emerald-700", 
+                text: "text-emerald-700 dark:text-emerald-300",
+                badge: "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 border-emerald-300 dark:border-emerald-700"
+            },
+            "Transport": { 
+                bg: "from-blue-500 to-blue-600", 
+                border: "border-blue-300 dark:border-blue-700", 
+                text: "text-blue-700 dark:text-blue-300",
+                badge: "bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border-blue-300 dark:border-blue-700"
+            },
+            "Shopping": { 
+                bg: "from-purple-500 to-purple-600", 
+                border: "border-purple-300 dark:border-purple-700", 
+                text: "text-purple-700 dark:text-purple-300",
+                badge: "bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 border-purple-300 dark:border-purple-700"
+            },
+            "Entertainment": { 
+                bg: "from-pink-500 to-pink-600", 
+                border: "border-pink-300 dark:border-pink-700", 
+                text: "text-pink-700 dark:text-pink-300",
+                badge: "bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-300 border-pink-300 dark:border-pink-700"
+            },
+            "Utilities": { 
+                bg: "from-yellow-500 to-yellow-600", 
+                border: "border-yellow-300 dark:border-yellow-700", 
+                text: "text-yellow-700 dark:text-yellow-300",
+                badge: "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 border-yellow-300 dark:border-yellow-700"
+            },
+            "Healthcare": { 
+                bg: "from-red-500 to-red-600", 
+                border: "border-red-300 dark:border-red-700", 
+                text: "text-red-700 dark:text-red-300",
+                badge: "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 border-red-300 dark:border-red-700"
+            },
+            "Education": { 
+                bg: "from-indigo-500 to-indigo-600", 
+                border: "border-indigo-300 dark:border-indigo-700", 
+                text: "text-indigo-700 dark:text-indigo-300",
+                badge: "bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 border-indigo-300 dark:border-indigo-700"
+            },
+            "Business": { 
+                bg: "from-cyan-500 to-cyan-600", 
+                border: "border-cyan-300 dark:border-cyan-700", 
+                text: "text-cyan-700 dark:text-cyan-300",
+                badge: "bg-cyan-100 dark:bg-cyan-900/30 text-cyan-700 dark:text-cyan-300 border-cyan-300 dark:border-cyan-700"
+            },
+            "Housing": { 
+                bg: "from-amber-500 to-amber-600", 
+                border: "border-amber-300 dark:border-amber-700", 
+                text: "text-amber-700 dark:text-amber-300",
+                badge: "bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 border-amber-300 dark:border-amber-700"
+            },
+            "Electronics": { 
+                bg: "from-violet-500 to-violet-600", 
+                border: "border-violet-300 dark:border-violet-700", 
+                text: "text-violet-700 dark:text-violet-300",
+                badge: "bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-300 border-violet-300 dark:border-violet-700"
+            },
+            "Drinks": { 
+                bg: "from-teal-500 to-teal-600", 
+                border: "border-teal-300 dark:border-teal-700", 
+                text: "text-teal-700 dark:text-teal-300",
+                badge: "bg-teal-100 dark:bg-teal-900/30 text-teal-700 dark:text-teal-300 border-teal-300 dark:border-teal-700"
+            },
+            "Others": { 
+                bg: "from-gray-500 to-gray-600", 
+                border: "border-gray-300 dark:border-gray-700", 
+                text: "text-gray-700 dark:text-gray-300",
+                badge: "bg-gray-100 dark:bg-gray-900/30 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-700"
+            },
+        };
+        
+        return colorMap[category] || colorMap["Others"];
+    };
  
     const columns1 = React.useMemo<ColumnDef<Expense>[]>(() => [
         {
@@ -119,23 +205,32 @@ export function ExpenseComponent() {
                 <Button
                     variant="ghost"
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                    className="hover:bg-primary/10 hover:text-primary font-semibold h-auto p-0"
                 >
                     Place
-                    <ArrowUpDown />
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             ),
-            cell: ({ row }) => <div className="lowercase">{row.getValue("place")}</div>,
+            cell: ({ row }) => (
+                <div className="font-medium text-foreground">{row.getValue("place")}</div>
+            ),
         },
         {
             accessorKey: "amount",
-            header: () => <div className="text-right">Amount</div>,
+            header: () => (
+                <div className="text-right font-semibold uppercase tracking-wider">Amount</div>
+            ),
             cell: ({ row }) => {
                 const amount = parseFloat(row.getValue("amount"));
                 const formatted = new Intl.NumberFormat("en-US", {
                     style: "currency",
                     currency: "USD",
                 }).format(amount);
-                return <div className="text-right font-medium">{formatted}</div>;
+                return (
+                    <div className="text-right font-semibold text-primary">
+                        {formatted}
+                    </div>
+                );
             },
             footer: ({ table }) => {
                 const total = table.getFilteredRowModel().rows.reduce(
@@ -155,13 +250,14 @@ export function ExpenseComponent() {
                 <Button
                     variant="ghost"
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                    className="hover:bg-primary/10 hover:text-primary font-semibold h-auto p-0"
                 >
                     Date
-                    <ArrowUpDown />
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             ),
             cell: ({ row }) => (
-                <div className="lowercase">
+                <div className="text-sm text-muted-foreground">
                     {new Date(row.getValue("internalDate")).toLocaleString()}
                 </div>
             ),
@@ -172,12 +268,21 @@ export function ExpenseComponent() {
                 <Button
                     variant="ghost"
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                    className="hover:bg-primary/10 hover:text-primary font-semibold h-auto p-0"
                 >
                     Category
-                    <ArrowUpDown />
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             ),
-            cell: ({ row }) => <div className="lowercase">{row.getValue("category")}</div>,
+            cell: ({ row }) => {
+                const category = row.getValue("category") as string;
+                const color = getCategoryColor(category);
+                return (
+                    <Badge variant="outline" className={`font-normal ${color.badge}`}>
+                        {category}
+                    </Badge>
+                );
+            },
         },
         {
             accessorKey: "docId",
@@ -185,13 +290,14 @@ export function ExpenseComponent() {
                 <Button
                     variant="ghost"
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                    className="hover:bg-primary/10 hover:text-primary font-semibold h-auto p-0"
                 >
                     Doc ID
-                    <ArrowUpDown />
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             ),
             cell: ({ row }) => (
-                <div className="font-mono text-xs text-gray-600 break-all">
+                <div className="font-mono text-xs text-muted-foreground break-all max-w-[200px] truncate">
                     {row.getValue("docId")}
                 </div>
             ),
@@ -202,23 +308,32 @@ export function ExpenseComponent() {
                 <Button
                     variant="ghost"
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                    className="hover:bg-primary/10 hover:text-primary font-semibold h-auto p-0"
                 >
                     ID
-                    <ArrowUpDown />
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             ),
-            cell: ({ row }) => <div className="lowercase">{row.getValue("id")}</div>,
+            cell: ({ row }) => (
+                <div className="font-mono text-xs text-muted-foreground">
+                    {row.getValue("id")}
+                </div>
+            ),
         },
         {
             id: "actions",
-            header: () => <span>Action</span>,
+            header: () => (
+                <span className="font-semibold uppercase tracking-wider">Action</span>
+            ),
             cell: ({ row }) => (
                 <div className="flex items-center space-x-2">
                     <Button
                         variant="destructive"
+                        size="sm"
                         onClick={() => { setSelectedDocId(row.getValue("docId"))}}
+                        className="hover:scale-105 transition-transform"
                     >
-                        Delete
+                        <Trash2 className="h-4 w-4" />
                     </Button>
                 </div>
             ),
@@ -293,27 +408,61 @@ export function ExpenseComponent() {
             .slice(0, 4);
     }, [expenses]);
 
+    const filteredExpenses = table.getFilteredRowModel().rows.length;
+    const filteredAmount = table.getFilteredRowModel().rows.reduce(
+        (sum, row) => sum + row.original.amount,
+        0
+    );
+
     return (
-        <div className="w-full relative">
+        <div className="w-full relative space-y-6">
             {/* Total Expenses Summary */}
-            <div className="mb-6">
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Total Expenses</CardTitle>
+            <div>
+                <Card className="border-2 shadow-lg hover:shadow-xl transition-shadow duration-300">
+                    <CardHeader className="pb-4">
+                        <CardTitle className="text-2xl font-bold flex items-center gap-2">
+                            <Sparkles className="h-5 w-5 text-primary" />
+                            Expense Summary
+                        </CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <p className="text-sm text-muted-foreground">Total Count</p>
-                                <p className="text-2xl font-bold">{totalExpenses}</p>
+                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                            <div className="relative p-4 rounded-lg bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-950/30 dark:to-blue-900/20 border border-blue-200 dark:border-blue-800 hover:scale-105 transition-transform duration-200">
+                                <div className="flex items-center justify-between mb-2">
+                                    <Receipt className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                                </div>
+                                <p className="text-sm font-medium text-muted-foreground mb-1">Total Expenses</p>
+                                <p className="text-3xl font-bold text-blue-700 dark:text-blue-300">{totalExpenses}</p>
                             </div>
-                            <div className="text-right">
-                                <p className="text-sm text-muted-foreground">Total Amount</p>
-                                <p className="text-2xl font-bold">
+                            <div className="relative p-4 rounded-lg bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-950/30 dark:to-purple-900/20 border border-purple-200 dark:border-purple-800 hover:scale-105 transition-transform duration-200">
+                                <div className="flex items-center justify-between mb-2">
+                                    <Filter className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                                </div>
+                                <p className="text-sm font-medium text-muted-foreground mb-1">Filtered Expenses</p>
+                                <p className="text-3xl font-bold text-purple-700 dark:text-purple-300">{filteredExpenses}</p>
+                            </div>
+                            <div className="relative p-4 rounded-lg bg-gradient-to-br from-green-50 to-green-100 dark:from-green-950/30 dark:to-green-900/20 border border-green-200 dark:border-green-800 hover:scale-105 transition-transform duration-200">
+                                <div className="flex items-center justify-between mb-2">
+                                    <DollarSign className="h-5 w-5 text-green-600 dark:text-green-400" />
+                                </div>
+                                <p className="text-sm font-medium text-muted-foreground mb-1">Total Amount</p>
+                                <p className="text-2xl font-bold text-green-700 dark:text-green-300">
                                     {new Intl.NumberFormat("en-US", {
                                         style: "currency",
                                         currency: "USD",
                                     }).format(totalAmount)}
+                                </p>
+                            </div>
+                            <div className="relative p-4 rounded-lg bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-950/30 dark:to-orange-900/20 border border-orange-200 dark:border-orange-800 hover:scale-105 transition-transform duration-200">
+                                <div className="flex items-center justify-between mb-2">
+                                    <TrendingUp className="h-5 w-5 text-orange-600 dark:text-orange-400" />
+                                </div>
+                                <p className="text-sm font-medium text-muted-foreground mb-1">Filtered Amount</p>
+                                <p className="text-2xl font-bold text-orange-700 dark:text-orange-300">
+                                    {new Intl.NumberFormat("en-US", {
+                                        style: "currency",
+                                        currency: "USD",
+                                    }).format(filteredAmount)}
                                 </p>
                             </div>
                         </div>
@@ -323,159 +472,231 @@ export function ExpenseComponent() {
 
             {/* Top 4 Categories Cards */}
             {categorySummary.length > 0 && (
-                <div className="mb-6">
-                    <h2 className="text-lg font-semibold mb-4">Top Categories</h2>
-                    <div className="grid grid-cols-4 gap-2 sm:gap-4">
-                        {categorySummary.map((cat, index) => (
-                            <Card key={cat.category}>
-                                <CardHeader className="pb-2 p-3 sm:p-6">
-                                    <CardTitle className="text-xs sm:text-sm font-medium text-muted-foreground truncate">
-                                        {index + 1}. {cat.category}
-                                    </CardTitle>
-                                </CardHeader>
-                                <CardContent className="p-3 pt-0 sm:p-6 sm:pt-0">
-                                    <div className="space-y-1 sm:space-y-2">
-                                        <div>
-                                            <p className="text-[10px] sm:text-xs text-muted-foreground">Count</p>
-                                            <p className="text-sm sm:text-xl font-bold">{cat.count}</p>
+                <div>
+                    <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
+                        <Award className="h-5 w-5 text-primary" />
+                        Top Categories
+                    </h2>
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                        {categorySummary.map((cat, index) => {
+                            const color = getCategoryColor(cat.category);
+                            return (
+                                <Card 
+                                    key={cat.category} 
+                                    className={`border-2 ${color.border} shadow-md hover:shadow-xl transition-all duration-300 hover:scale-105 overflow-hidden relative`}
+                                >
+                                    <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${color.bg}`} />
+                                    <CardHeader className="pb-2 p-4">
+                                        <div className="flex items-center justify-between">
+                                            <div className={`w-8 h-8 rounded-full bg-gradient-to-r ${color.bg} flex items-center justify-center text-white font-bold text-sm shadow-lg`}>
+                                                {index + 1}
+                                            </div>
+                                            <Badge variant="outline" className={`text-xs ${color.badge}`}>
+                                                {cat.category}
+                                            </Badge>
                                         </div>
-                                        <div>
-                                            <p className="text-[10px] sm:text-xs text-muted-foreground">Total</p>
-                                            <p className="text-xs sm:text-lg font-semibold truncate">
-                                                {new Intl.NumberFormat("en-US", {
-                                                    style: "currency",
-                                                    currency: "USD",
-                                                }).format(cat.total)}
-                                            </p>
+                                    </CardHeader>
+                                    <CardContent className="p-4 pt-0">
+                                        <div className="space-y-3">
+                                            <div>
+                                                <p className="text-xs text-muted-foreground mb-1">Transactions</p>
+                                                <p className="text-2xl font-bold">{cat.count}</p>
+                                            </div>
+                                            <div>
+                                                <p className="text-xs text-muted-foreground mb-1">Total Spent</p>
+                                                <p className={`text-xl font-bold ${color.text}`}>
+                                                    {new Intl.NumberFormat("en-US", {
+                                                        style: "currency",
+                                                        currency: "USD",
+                                                    }).format(cat.total)}
+                                                </p>
+                                            </div>
                                         </div>
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        ))}
+                                    </CardContent>
+                                </Card>
+                            );
+                        })}
                     </div>
                 </div>
             )}
 
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
-                <Popover>
-                    <PopoverTrigger asChild>
-                        <Button
-                            id="date"
-                            variant={"outline"}
-                            className={cn("w-full sm:w-[300px] justify-start text-left font-normal", !date && "text-muted-foreground")}
+            <Card className="border-2 shadow-md">
+                <CardContent className="p-4">
+                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+                        <Popover>
+                            <PopoverTrigger asChild>
+                                <Button
+                                    id="date"
+                                    variant={"outline"}
+                                    className={cn(
+                                        "w-full sm:w-[300px] justify-start text-left font-normal border-2 hover:border-primary transition-colors",
+                                        !date && "text-muted-foreground"
+                                    )}
+                                >
+                                    <CalendarIcon className="mr-2 h-4 w-4" />
+                                    {date?.from ? (
+                                        date.to ? (
+                                            <>
+                                                {format(date.from, "LLL dd, y")} - {format(date.to, "LLL dd, y")}
+                                            </>
+                                        ) : (
+                                            format(date.from, "LLL dd, y")
+                                        )
+                                    ) : (
+                                        <span>Pick a date range</span>
+                                    )}
+                                </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-auto p-0 bg-white dark:bg-gray-900 z-40 shadow-xl border-2" align="start">
+                                <Calendar
+                                    initialFocus
+                                    mode="range"
+                                    defaultMonth={date?.from}
+                                    selected={date}
+                                    onSelect={setDate}
+                                    numberOfMonths={2}
+                                />
+                            </PopoverContent>
+                        </Popover>
+                        <Button 
+                            variant="default" 
+                            className="w-full sm:w-auto gap-2 shadow-md hover:shadow-lg transition-shadow" 
+                            onClick={fetchExpenses}
                         >
-                            <CalendarIcon />
-                            {date?.from ? (
-                                date.to ? (
-                                    <>
-                                        {format(date.from, "LLL dd, y")} - {format(date.to, "LLL dd, y")}
-                                    </>
-                                ) : (
-                                    format(date.from, "LLL dd, y")
-                                )
-                            ) : (
-                                <span>Pick a date</span>
-                            )}
+                            <Search className="h-4 w-4" />
+                            Fetch Expenses
                         </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0 bg-white z-40" align="start">
-                        <Calendar
-                            initialFocus
-                            mode="range"
-                            defaultMonth={date?.from}
-                            selected={date}
-                            onSelect={setDate}
-                            numberOfMonths={2}
-                        />
-                    </PopoverContent>
-                </Popover>
-                <Button variant="default" className="w-full sm:w-auto sm:ml-5" onClick={fetchExpenses}>Fetch</Button>
-            </div>
-            <div className="flex items-center py-4">
-                <Input
-                    placeholder="Filter Expenses ..."
-                    value={globalFilter ?? ""}
-                    onChange={(event) => {
-                        table.setGlobalFilter(event.target.value)
-                        //table.getColumn("place")?.setFilterValue(event.target.value)
-                    }
-                    }
-                    className="w-full max-w-sm"
-                />
-            </div>
-            <div className="rounded-md border overflow-x-auto w-full">
-                <Table className="min-w-[800px] w-full">
-                    <TableHeader>
-                        {table.getHeaderGroups().map((headerGroup) => (
-                            <TableRow key={headerGroup.id}>
-                                {headerGroup.headers.map((header) => {
-                                    return (
-                                        <TableHead key={header.id}>
-                                            {header.isPlaceholder
-                                                ? null
-                                                : flexRender(
-                                                    header.column.columnDef.header,
-                                                    header.getContext()
-                                                )}
-                                        </TableHead>
-                                    )
-                                })}
-                            </TableRow>
-                        ))}
-                    </TableHeader>
-                    <TableBody>
-                        {table.getRowModel().rows?.length ? (
-                            table.getRowModel().rows.map((row) => (
-                                <TableRow
-                                    key={row.id}
-                                    data-state={row.getIsSelected() && "selected"}
+                    </div>
+                    <div className="flex items-center mt-4">
+                        <div className="relative w-full max-w-sm">
+                            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                            <Input
+                                placeholder="Search expenses by place, category, or amount..."
+                                value={globalFilter ?? ""}
+                                onChange={(event) => {
+                                    table.setGlobalFilter(event.target.value)
+                                }}
+                                className="w-full pl-10 border-2 focus:border-primary transition-colors"
+                            />
+                        </div>
+                    </div>
+                </CardContent>
+            </Card>
+            <Card className="border-2 shadow-lg overflow-hidden">
+                <div className="rounded-md border-0 overflow-x-auto w-full">
+                    <Table className="min-w-[800px] w-full">
+                        <TableHeader>
+                            {table.getHeaderGroups().map((headerGroup) => (
+                                <TableRow 
+                                    key={headerGroup.id}
+                                    className="bg-gradient-to-r from-primary/10 via-primary/5 to-primary/10 dark:from-primary/20 dark:via-primary/10 dark:to-primary/20 border-b-2 border-primary/20 hover:from-primary/15 hover:via-primary/10 hover:to-primary/15 dark:hover:from-primary/25 dark:hover:via-primary/15 dark:hover:to-primary/25 transition-all duration-200"
                                 >
-                                    {row.getVisibleCells().map((cell) => (
-                                        <TableCell key={cell.id}>
-                                            {flexRender(
-                                                cell.column.columnDef.cell,
-                                                cell.getContext()
-                                            )}
-                                        </TableCell>
-                                    ))}
+                                    {headerGroup.headers.map((header) => {
+                                        return (
+                                            <TableHead 
+                                                key={header.id}
+                                                className="font-bold text-foreground text-sm uppercase tracking-wider py-4 px-4"
+                                            >
+                                                {header.isPlaceholder
+                                                    ? null
+                                                    : flexRender(
+                                                        header.column.columnDef.header,
+                                                        header.getContext()
+                                                    )}
+                                            </TableHead>
+                                        )
+                                    })}
                                 </TableRow>
-                            ))
-                        ) : (
-                            <TableRow>
-                                <TableCell
-                                    colSpan={columns1.length}
-                                    className="h-24 text-center"
-                                >
-                                    No results.
-                                </TableCell>
-                            </TableRow>
-                        )}
-                    </TableBody>
-                    <TableFooter>
-                        {table.getFooterGroups().map((footerGroup) => (
-                            <TableRow key={footerGroup.id}>
-                                {footerGroup.headers.map((header) => (
-                                    <TableCell key={header.id}>
-                                        {header.isPlaceholder
-                                            ? null
-                                            : flexRender(
-                                                header.column.columnDef.footer,
-                                                header.getContext()
-                                            )}
+                            ))}
+                        </TableHeader>
+                        <TableBody>
+                            {table.getRowModel().rows?.length ? (
+                                table.getRowModel().rows.map((row) => (
+                                    <TableRow
+                                        key={row.id}
+                                        data-state={row.getIsSelected() && "selected"}
+                                        className="hover:bg-muted/50 transition-colors cursor-pointer border-b"
+                                    >
+                                        {row.getVisibleCells().map((cell) => (
+                                            <TableCell key={cell.id} className="py-3">
+                                                {flexRender(
+                                                    cell.column.columnDef.cell,
+                                                    cell.getContext()
+                                                )}
+                                            </TableCell>
+                                        ))}
+                                    </TableRow>
+                                ))
+                            ) : (
+                                <TableRow>
+                                    <TableCell
+                                        colSpan={columns1.length}
+                                        className="h-24 text-center"
+                                    >
+                                        <div className="flex flex-col items-center justify-center gap-2">
+                                            <Receipt className="h-8 w-8 text-muted-foreground" />
+                                            <p className="text-muted-foreground">No expenses found.</p>
+                                        </div>
                                     </TableCell>
-                                ))}
-                            </TableRow>
-                        ))}
-                    </TableFooter>
-                </Table>
-            </div>
-            <div className="flex items-center justify-end space-x-2 py-4">
-                <div className="space-x-2">
+                                </TableRow>
+                            )}
+                        </TableBody>
+                        <TableFooter>
+                            {table.getFooterGroups().map((footerGroup) => (
+                                <TableRow 
+                                    key={footerGroup.id}
+                                    className="bg-gradient-to-r from-primary/10 via-primary/5 to-primary/10 dark:from-primary/20 dark:via-primary/10 dark:to-primary/20 border-t-2 border-primary/20"
+                                >
+                                    {footerGroup.headers.map((header) => {
+                                        const hasFooter = header.column.columnDef.footer;
+                                        const isAmountColumn = header.id === "amount";
+                                        return (
+                                            <TableCell 
+                                                key={header.id}
+                                                className={`py-4 px-4 ${isAmountColumn ? "text-right" : ""}`}
+                                            >
+                                                {header.isPlaceholder ? null : hasFooter ? (
+                                                    <div className={`flex items-center gap-2 ${isAmountColumn ? "justify-end" : ""}`}>
+                                                        {isAmountColumn && (
+                                                            <DollarSign className="h-5 w-5 text-primary" />
+                                                        )}
+                                                        <span className="font-bold text-lg text-primary">
+                                                            {flexRender(
+                                                                header.column.columnDef.footer,
+                                                                header.getContext()
+                                                            )}
+                                                        </span>
+                                                    </div>
+                                                ) : (
+                                                    <span className="text-muted-foreground text-sm font-medium">
+                                                        {isAmountColumn ? "Total" : ""}
+                                                    </span>
+                                                )}
+                                            </TableCell>
+                                        )
+                                    })}
+                                </TableRow>
+                            ))}
+                        </TableFooter>
+                    </Table>
+                </div>
+            </Card>
+            <div className="flex items-center justify-between py-4">
+                <div className="text-sm text-muted-foreground">
+                    Showing {table.getState().pagination.pageIndex * table.getState().pagination.pageSize + 1} to{" "}
+                    {Math.min(
+                        (table.getState().pagination.pageIndex + 1) * table.getState().pagination.pageSize,
+                        table.getFilteredRowModel().rows.length
+                    )}{" "}
+                    of {table.getFilteredRowModel().rows.length} expenses
+                </div>
+                <div className="flex items-center space-x-2">
                     <Button
                         variant="outline"
                         size="sm"
                         onClick={() => table.previousPage()}
                         disabled={!table.getCanPreviousPage()}
+                        className="hover:scale-105 transition-transform disabled:opacity-50"
                     >
                         Previous
                     </Button>
@@ -484,6 +705,7 @@ export function ExpenseComponent() {
                         size="sm"
                         onClick={() => table.nextPage()}
                         disabled={!table.getCanNextPage()}
+                        className="hover:scale-105 transition-transform disabled:opacity-50"
                     >
                         Next
                     </Button>
