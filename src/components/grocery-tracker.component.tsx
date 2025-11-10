@@ -6,6 +6,11 @@ import { Input } from "@/components/ui/input"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
 import { 
   Plus, 
   Search, 
@@ -16,7 +21,9 @@ import {
   Sparkles,
   CheckCircle2,
   Circle,
-  X
+  X,
+  Save,
+  Tag
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import type { GroceryItem } from "@/app/api/protected/grocery-items/route"
@@ -32,8 +39,6 @@ export function GroceryTrackerComponent() {
   const [items, setItems] = React.useState<GroceryItem[]>([]);
   const [loading, setLoading] = React.useState(true);
   const [searchQuery, setSearchQuery] = React.useState("");
-  const [selectedCategory, setSelectedCategory] = React.useState<string>("all");
-  const [purchasedFilter, setPurchasedFilter] = React.useState<string>("all");
   const [showAddForm, setShowAddForm] = React.useState(false);
   const [newItem, setNewItem] = React.useState({
     name: "",
@@ -43,29 +48,26 @@ export function GroceryTrackerComponent() {
     notes: "",
   });
   const [weekId, setWeekId] = React.useState("");
+  // Track local changes before saving
+  const [pendingChanges, setPendingChanges] = React.useState<Record<string, boolean>>({});
+  const [saving, setSaving] = React.useState(false);
 
   // Fetch grocery items
   const fetchItems = React.useCallback(async () => {
     try {
       setLoading(true);
-      const params = new URLSearchParams();
-      if (selectedCategory !== "all") {
-        params.append("category", selectedCategory);
-      }
-      if (purchasedFilter !== "all") {
-        params.append("purchased", purchasedFilter === "purchased" ? "true" : "false");
-      }
-      
-      const response = await fetch(`/api/protected/grocery-items?${params.toString()}`);
+      const response = await fetch(`/api/protected/grocery-items`);
       const data = await response.json();
       setItems(data.data || []);
       setWeekId(data.weekId || "");
+      // Clear pending changes when fetching fresh data
+      setPendingChanges({});
     } catch (error) {
       console.error("Failed to fetch grocery items:", error);
     } finally {
       setLoading(false);
     }
-  }, [selectedCategory, purchasedFilter]);
+  }, []);
 
   React.useEffect(() => {
     fetchItems();
@@ -89,22 +91,50 @@ export function GroceryTrackerComponent() {
     }
   };
 
-  // Toggle purchased status
-  const togglePurchased = async (item: GroceryItem) => {
+  // Toggle purchased status (local state only)
+  const togglePurchased = (item: GroceryItem) => {
+    if (!item.id) return;
+    const currentPurchased = pendingChanges[item.id] !== undefined 
+      ? pendingChanges[item.id] 
+      : item.purchased;
+    setPendingChanges(prev => ({
+      ...prev,
+      [item.id!]: !currentPurchased
+    }));
+  };
+
+  // Save all pending changes
+  const handleSaveChanges = async () => {
+    if (Object.keys(pendingChanges).length === 0) return;
+
+    setSaving(true);
     try {
-      const response = await fetch("/api/protected/grocery-items", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          id: item.id,
-          purchased: !item.purchased,
-        }),
-      });
-      if (response.ok) {
+      // Batch update all changed items
+      const updatePromises = Object.entries(pendingChanges).map(([id, purchased]) =>
+        fetch("/api/protected/grocery-items", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            id,
+            purchased,
+          }),
+        })
+      );
+
+      const results = await Promise.all(updatePromises);
+      const allSuccessful = results.every(res => res.ok);
+
+      if (allSuccessful) {
+        setPendingChanges({});
         await fetchItems();
+      } else {
+        alert("Some items failed to save. Please try again.");
       }
     } catch (error) {
-      console.error("Failed to update item:", error);
+      console.error("Failed to save changes:", error);
+      alert("Failed to save changes. Please try again.");
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -168,11 +198,20 @@ export function GroceryTrackerComponent() {
         method: "DELETE",
       });
       if (response.ok) {
+        setPendingChanges({}); // Clear pending changes
         await fetchItems();
       }
     } catch (error) {
       console.error("Failed to reset items:", error);
     }
+  };
+
+  // Get effective purchased status (pending changes override saved status)
+  const getEffectivePurchased = (item: GroceryItem): boolean => {
+    if (!item.id) return item.purchased;
+    return pendingChanges[item.id] !== undefined 
+      ? pendingChanges[item.id] 
+      : item.purchased;
   };
 
   // Filter items based on search query
@@ -182,22 +221,15 @@ export function GroceryTrackerComponent() {
     return matchesSearch;
   });
 
-  // Group items by category
-  const groupedItems = filteredItems.reduce((acc, item) => {
-    if (!acc[item.category]) {
-      acc[item.category] = [];
-    }
-    acc[item.category].push(item);
-    return acc;
-  }, {} as Record<string, GroceryItem[]>);
-
-  // Statistics
+  // Statistics (using effective purchased status)
   const stats = {
     total: items.length,
-    purchased: items.filter((i) => i.purchased).length,
-    remaining: items.filter((i) => !i.purchased).length,
-    progress: items.length > 0 ? Math.round((items.filter((i) => i.purchased).length / items.length) * 100) : 0,
+    purchased: items.filter((i) => getEffectivePurchased(i)).length,
+    remaining: items.filter((i) => !getEffectivePurchased(i)).length,
+    progress: items.length > 0 ? Math.round((items.filter((i) => getEffectivePurchased(i)).length / items.length) * 100) : 0,
   };
+
+  const hasUnsavedChanges = Object.keys(pendingChanges).length > 0;
 
   if (loading) {
     return (
@@ -211,30 +243,46 @@ export function GroceryTrackerComponent() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-3">
       {/* Header with Stats */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
         <div>
-          <h2 className="text-2xl font-bold">Weekly Grocery Tracker</h2>
-          <p className="text-sm text-muted-foreground mt-1">
+          <h2 className="text-xl font-bold">Weekly Grocery Tracker</h2>
+          <p className="text-xs text-muted-foreground">
             Week: {weekId || "Current Week"}
+            {hasUnsavedChanges && (
+              <span className="ml-2 text-orange-600 font-medium">
+                • Unsaved changes
+              </span>
+            )}
           </p>
         </div>
         <div className="flex gap-2 flex-wrap">
+          {hasUnsavedChanges && (
+            <Button 
+              onClick={handleSaveChanges} 
+              disabled={saving}
+              size="sm"
+              className="bg-primary hover:bg-primary/90 h-8"
+            >
+              <Save className="h-3.5 w-3.5 mr-1.5" />
+              {saving ? "Saving..." : "Save Changes"}
+            </Button>
+          )}
           {items.length === 0 && (
-            <Button onClick={initializeDefaults} variant="outline" size="sm">
-              <Sparkles className="h-4 w-4 mr-2" />
+            <Button onClick={initializeDefaults} variant="outline" size="sm" className="h-8">
+              <Sparkles className="h-3.5 w-3.5 mr-1.5" />
               Initialize Default Items
             </Button>
           )}
           {items.length > 0 && (
             <>
-              <Button onClick={() => handleReset(false)} variant="outline" size="sm">
-                <RotateCcw className="h-4 w-4 mr-2" />
+              <Button onClick={() => handleReset(false)} variant="outline" size="sm" className="h-8">
+                <RotateCcw className="h-3.5 w-3.5 mr-1.5" />
                 Reset Purchased
               </Button>
-              <Button onClick={() => handleReset(true)} variant="outline" size="sm">
-                <Trash2 className="h-4 w-4 mr-2" />
+              <Button onClick={() => handleReset(true)} variant="outline" size="sm" className="h-8">
+                <Trash2 className="h-3.5 w-3.5 mr-1.5" />
                 Clear All
               </Button>
             </>
@@ -242,77 +290,16 @@ export function GroceryTrackerComponent() {
         </div>
       </div>
 
-      {/* Statistics Cards */}
-      {items.length > 0 && (
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          <Card>
-            <CardContent className="pt-6">
-              <div className="text-2xl font-bold">{stats.total}</div>
-              <p className="text-xs text-muted-foreground">Total Items</p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="pt-6">
-              <div className="text-2xl font-bold text-green-600">{stats.purchased}</div>
-              <p className="text-xs text-muted-foreground">Purchased</p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="pt-6">
-              <div className="text-2xl font-bold text-orange-600">{stats.remaining}</div>
-              <p className="text-xs text-muted-foreground">Remaining</p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="pt-6">
-              <div className="text-2xl font-bold">{stats.progress}%</div>
-              <p className="text-xs text-muted-foreground">Progress</p>
-            </CardContent>
-          </Card>
-        </div>
-      )}
-
-      {/* Search and Filters */}
-      <Card>
-        <CardContent className="pt-6">
-          <div className="space-y-4">
-            <div className="flex flex-col sm:flex-row gap-4">
-              <div className="flex-1 relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Search items..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10"
-                />
-              </div>
-              <div className="flex gap-2 flex-wrap">
-                <select
-                  value={selectedCategory}
-                  onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="h-9 rounded-md border border-input bg-background px-3 text-sm"
-                >
-                  <option value="all">All Categories</option>
-                  {DEFAULT_CATEGORIES.map((cat) => (
-                    <option key={cat} value={cat}>
-                      {cat}
-                    </option>
-                  ))}
-                </select>
-                <select
-                  value={purchasedFilter}
-                  onChange={(e) => setPurchasedFilter(e.target.value)}
-                  className="h-9 rounded-md border border-input bg-background px-3 text-sm"
-                >
-                  <option value="all">All Items</option>
-                  <option value="purchased">Purchased</option>
-                  <option value="not-purchased">Not Purchased</option>
-                </select>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      {/* Search */}
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+        <Input
+          placeholder="Search items..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="pl-10 h-9"
+        />
+      </div>
 
       {/* Add Item Form */}
       {showAddForm && (
@@ -429,85 +416,124 @@ export function GroceryTrackerComponent() {
           </CardContent>
         </Card>
       ) : (
-        <div className="space-y-6">
-          {Object.entries(groupedItems).map(([category, categoryItems]) => (
-            <Card key={category}>
-              <CardHeader>
-                <CardTitle className="text-lg">{category}</CardTitle>
-                <CardDescription>
-                  {categoryItems.length} item{categoryItems.length !== 1 ? "s" : ""}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  {categoryItems.map((item) => (
-                    <div
-                      key={item.id}
-                      className={cn(
-                        "flex items-start gap-3 p-3 rounded-lg border transition-colors",
-                        item.purchased
-                          ? "bg-muted/50 border-muted"
-                          : "bg-background border-border hover:bg-muted/30"
-                      )}
-                    >
-                      <Checkbox
-                        checked={item.purchased}
-                        onCheckedChange={() => togglePurchased(item)}
-                        className="mt-1"
-                      />
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-start justify-between gap-2">
-                          <div className="flex-1">
-                            <label
-                              className={cn(
-                                "text-base font-medium cursor-pointer block",
-                                item.purchased && "line-through text-muted-foreground"
-                              )}
-                              onClick={() => togglePurchased(item)}
-                            >
-                              {item.name}
-                              {item.quantity && item.quantity > 1 && (
-                                <span className="text-muted-foreground ml-2">
-                                  (x{item.quantity})
-                                </span>
-                              )}
-                            </label>
+        <Card>
+          <CardContent className="p-0">
+            <div className="overflow-x-auto">
+              <div className="min-w-full">
+                {/* Statistics Row */}
+                {items.length > 0 && (
+                  <div className="grid grid-cols-[auto_1fr_80px_60px] gap-3 px-3 py-2 border-b bg-muted/20 text-xs">
+                    <div className="w-8"></div>
+                    <div className="flex items-center gap-4">
+                      <span className="text-muted-foreground">Total: <span className="font-medium text-foreground">{stats.total}</span></span>
+                      <span className="text-muted-foreground">Purchased: <span className="font-medium text-green-600">{stats.purchased}</span></span>
+                      <span className="text-muted-foreground">Remaining: <span className="font-medium text-orange-600">{stats.remaining}</span></span>
+                      <span className="text-muted-foreground">Progress: <span className="font-medium text-foreground">{stats.progress}%</span></span>
+                    </div>
+                    <div></div>
+                    <div></div>
+                  </div>
+                )}
+                {/* Header */}
+                <div className="hidden sm:grid grid-cols-[auto_1fr_80px_60px] gap-3 px-3 py-1.5 border-b bg-muted/30 text-xs font-medium text-muted-foreground">
+                  <div className="w-8"></div>
+                  <div>Item</div>
+                  <div>Priority</div>
+                  <div></div>
+                </div>
+                {/* Items List */}
+                <div className="divide-y">
+                  {filteredItems.map((item) => {
+                    const effectivePurchased = getEffectivePurchased(item);
+                    const hasPendingChange = item.id && pendingChanges[item.id] !== undefined;
+                    return (
+                      <div
+                        key={item.id}
+                        className={cn(
+                          "grid grid-cols-[auto_1fr_80px_60px] gap-2 sm:gap-3 px-2 sm:px-3 py-1 transition-colors hover:bg-muted/20",
+                          effectivePurchased && "bg-muted/30",
+                          hasPendingChange && "ring-1 ring-orange-500/50 ring-inset"
+                        )}
+                      >
+                        <div className="flex items-center">
+                          <Checkbox
+                            checked={effectivePurchased}
+                            onCheckedChange={() => togglePurchased(item)}
+                            className="flex-shrink-0 h-4 w-4"
+                          />
+                        </div>
+                        <div className="flex-1 min-w-0 flex items-center gap-1.5">
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-1.5">
+                              <label
+                                className={cn(
+                                  "text-xs sm:text-sm font-medium cursor-pointer leading-tight flex-1 min-w-0",
+                                  effectivePurchased && "line-through text-muted-foreground"
+                                )}
+                                onClick={() => togglePurchased(item)}
+                              >
+                                {item.name}
+                                {item.quantity && item.quantity > 1 && (
+                                  <span className="text-muted-foreground ml-1 text-xs">
+                                    (x{item.quantity})
+                                  </span>
+                                )}
+                              </label>
+                              <Popover>
+                                <PopoverTrigger asChild>
+                                  <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="h-4 w-4 flex-shrink-0 p-0"
+                                    onClick={(e) => e.stopPropagation()}
+                                  >
+                                    <Tag className="h-3 w-3 text-muted-foreground" />
+                                  </Button>
+                                </PopoverTrigger>
+                                <PopoverContent className="w-auto p-2" side="right" align="start">
+                                  <div className="text-xs font-medium">Category</div>
+                                  <div className="text-sm mt-1">{item.category}</div>
+                                </PopoverContent>
+                              </Popover>
+                            </div>
                             {item.notes && (
-                              <p className="text-sm text-muted-foreground mt-1">
+                              <p className="text-[10px] sm:text-xs text-muted-foreground leading-tight line-clamp-1 mt-0.5">
                                 {item.notes}
                               </p>
                             )}
                           </div>
-                          <div className="flex items-center gap-2">
-                            {item.priority && (
-                              <Badge
-                                variant="outline"
-                                className={cn(
-                                  "text-xs",
-                                  PRIORITY_COLORS[item.priority]
-                                )}
-                              >
-                                {item.priority}
-                              </Badge>
-                            )}
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="h-8 w-8"
-                              onClick={() => handleDeleteItem(item.id!)}
+                        </div>
+                        <div className="flex items-center">
+                          {item.priority && (
+                            <Badge
+                              variant="outline"
+                              className={cn(
+                                "text-[10px] px-1 py-0 h-4",
+                                PRIORITY_COLORS[item.priority]
+                              )}
                             >
-                              <Trash2 className="h-4 w-4 text-destructive" />
-                            </Button>
-                          </div>
+                              {item.priority.charAt(0).toUpperCase()}
+                            </Badge>
+                          )}
+                        </div>
+                        <div className="flex items-center justify-end">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-6 w-6"
+                            onClick={() => handleDeleteItem(item.id!)}
+                          >
+                            <Trash2 className="h-3 w-3 text-destructive" />
+                          </Button>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       )}
 
       {/* Add Item Button */}
