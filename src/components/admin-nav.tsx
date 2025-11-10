@@ -82,12 +82,12 @@ export function AdminNav() {
                 size="sm"
                 asChild
                 className={cn(
-                  "h-auto p-2 sm:p-3 flex flex-col items-start space-y-1 flex-1 sm:flex-none min-w-0",
+                  "h-auto p-2 sm:p-3 flex flex-col items-start space-y-1 basis-[calc(50%-0.25rem)] sm:basis-auto sm:flex-none flex-shrink-0",
                   isActive && "bg-primary text-primary-foreground"
                 )}
               >
-                <Link href={item.href}>
-                  <div className="flex items-center space-x-2 min-w-0">
+                <Link href={item.href} className="w-full">
+                  <div className="flex items-center space-x-2 min-w-0 w-full">
                     <Icon className="h-4 w-4 flex-shrink-0" />
                     <span className="font-medium text-xs sm:text-sm truncate">{item.label}</span>
                   </div>
