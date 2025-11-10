@@ -27,7 +27,10 @@ export function Header() {
     { href: "#skills", label: "Skills" },
     { href: "#contact", label: "Contact" },
     { href: "/gallery", label: "Gallery" },
-    ...(admin ? [{ href: "/admin/expenses", label: "Expenses" }] : [])
+    ...(admin ? [
+      { href: "/admin/expenses", label: "Expenses" },
+      { href: "/admin/grocery-tracker", label: "Grocery Tracker" }
+    ] : [])
   ];
 
   return (

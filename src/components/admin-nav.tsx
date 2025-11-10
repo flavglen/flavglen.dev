@@ -10,7 +10,8 @@ import {
   FileText, 
   Home,
   ChevronRight,
-  PieChart
+  PieChart,
+  ShoppingCart
 } from "lucide-react"
 
 const adminNavItems = [
@@ -19,6 +20,12 @@ const adminNavItems = [
     label: "Expenses",
     description: "Manage expense records",
     icon: FileText
+  },
+  {
+    href: "/admin/grocery-tracker",
+    label: "Grocery Tracker",
+    description: "Weekly grocery shopping list",
+    icon: ShoppingCart
   },
   {
     href: "/admin/expense-summary",
