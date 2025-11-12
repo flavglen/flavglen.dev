@@ -1,5 +1,6 @@
 "use client"
 
+import * as React from "react"
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Menu, X } from "lucide-react"
@@ -12,9 +13,14 @@ interface MobileMenuProps {
     href: string
     label: string
   }[]
+  reportsSubmenu?: {
+    href: string
+    label: string
+    icon?: React.ComponentType<{ className?: string }>
+  }[]
 }
 
-export function MobileMenu({ links }: MobileMenuProps) {
+export function MobileMenu({ links, reportsSubmenu = [] }: MobileMenuProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   useEffect(() => {
@@ -94,6 +100,29 @@ export function MobileMenu({ links }: MobileMenuProps) {
                   <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-pink-600 transition-all duration-300 group-hover:w-full"></span>
                 </Link>
               ))}
+              {reportsSubmenu.length > 0 && (
+                <>
+                  <div className="text-lg font-semibold text-muted-foreground py-2">Reports</div>
+                  {reportsSubmenu.map((item) => {
+                    const Icon = item.icon
+                    return (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        onClick={() => {
+                          setIsMobileMenuOpen(false)
+                          document.body.style.overflow = ""
+                        }}
+                        className="text-lg font-medium text-foreground hover:text-purple-600 transition-colors relative group py-2 pl-4 flex items-center gap-2"
+                      >
+                        {Icon && <Icon className="h-5 w-5" />}
+                        {item.label}
+                        <span className="absolute -bottom-1 left-4 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-pink-600 transition-all duration-300 group-hover:w-full"></span>
+                      </Link>
+                    )
+                  })}
+                </>
+              )}
               
               {/* Theme Toggle for Mobile */}
               <div className="flex items-center justify-center pt-4">

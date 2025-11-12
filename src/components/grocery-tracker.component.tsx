@@ -449,17 +449,13 @@ export function GroceryTrackerComponent() {
                     return (
                       <div
                         key={item.id}
-                        className={cn(
-                          "grid grid-cols-[auto_1fr_80px_60px] gap-2 sm:gap-3 px-2 sm:px-3 py-1 transition-colors hover:bg-muted/20",
-                          effectivePurchased && "bg-muted/30",
-                          hasPendingChange && "ring-1 ring-orange-500/50 ring-inset"
-                        )}
+                        className="grid grid-cols-[auto_1fr_80px_60px] gap-2 sm:gap-3 px-2 sm:px-3 py-1 bg-transparent focus-within:bg-transparent active:bg-transparent"
                       >
                         <div className="flex items-center">
                           <Checkbox
                             checked={effectivePurchased}
                             onCheckedChange={() => togglePurchased(item)}
-                            className="flex-shrink-0 h-4 w-4"
+                            className="flex-shrink-0 h-4 w-4 focus-visible:ring-0 focus-visible:ring-offset-0"
                           />
                         </div>
                         <div className="flex-1 min-w-0 flex items-center gap-1.5">
@@ -467,10 +463,13 @@ export function GroceryTrackerComponent() {
                             <div className="flex items-center gap-1.5">
                               <label
                                 className={cn(
-                                  "text-xs sm:text-sm font-medium cursor-pointer leading-tight flex-1 min-w-0",
+                                  "text-xs sm:text-sm font-medium cursor-pointer leading-tight flex-1 min-w-0 select-none",
                                   effectivePurchased && "line-through text-muted-foreground"
                                 )}
-                                onClick={() => togglePurchased(item)}
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  togglePurchased(item);
+                                }}
                               >
                                 {item.name}
                                 {item.quantity && item.quantity > 1 && (

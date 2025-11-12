@@ -11,7 +11,8 @@ import {
   Home,
   ChevronRight,
   PieChart,
-  ShoppingCart
+  ShoppingCart,
+  BarChart2
 } from "lucide-react"
 
 const adminNavItems = [
@@ -28,22 +29,16 @@ const adminNavItems = [
     icon: ShoppingCart
   },
   {
+    href: "/admin/reports",
+    label: "Reports",
+    description: "Analytics and dashboards",
+    icon: BarChart2
+  },
+  {
     href: "/admin/expense-summary",
     label: "Summary",
     description: "Basic analytics view",
     icon: BarChart3
-  },
-  {
-    href: "/admin/expense-analytics",
-    label: "Analytics (Firebase)",
-    description: "Advanced Firebase analytics",
-    icon: Database
-  },
-  {
-    href: "/admin/expense-dashboard",
-    label: "Dashboard",
-    description: "Visual charts and graphs",
-    icon: PieChart
   }
 ]
 
@@ -64,7 +59,8 @@ export function AdminNav() {
             <>
               <ChevronRight className="h-4 w-4" />
               <span className="text-foreground">
-                {adminNavItems.find(item => item.href === pathname)?.label || "Admin"}
+                {adminNavItems.find(item => item.href === pathname)?.label || 
+                 (pathname.startsWith("/admin/reports") ? "Reports" : "Admin")}
               </span>
             </>
           )}
@@ -73,7 +69,8 @@ export function AdminNav() {
         <div className="flex flex-wrap gap-2">
           {adminNavItems.map((item) => {
             const Icon = item.icon
-            const isActive = pathname === item.href
+            const isActive = pathname === item.href || 
+              (item.href === "/admin/reports" && pathname.startsWith("/admin/reports"))
             
             return (
               <Button
@@ -82,16 +79,16 @@ export function AdminNav() {
                 size="sm"
                 asChild
                 className={cn(
-                  "h-auto p-2 sm:p-3 flex flex-col items-start space-y-1 basis-[calc(50%-0.25rem)] sm:basis-auto sm:flex-none flex-shrink-0",
+                  "h-auto p-2 sm:px-4 sm:py-2 flex flex-col sm:flex-row items-start sm:items-center space-y-1 sm:space-y-0 sm:space-x-2 basis-[calc(50%-0.25rem)] sm:basis-auto sm:flex-initial flex-shrink-0",
                   isActive && "bg-primary text-primary-foreground"
                 )}
               >
-                <Link href={item.href} className="w-full">
-                  <div className="flex items-center space-x-2 min-w-0 w-full">
+                <Link href={item.href} className="w-full sm:w-auto">
+                  <div className="flex items-center space-x-2 min-w-0 w-full sm:w-auto">
                     <Icon className="h-4 w-4 flex-shrink-0" />
                     <span className="font-medium text-xs sm:text-sm truncate">{item.label}</span>
                   </div>
-                  <span className="text-xs opacity-70 hidden sm:block">{item.description}</span>
+                  <span className="text-xs opacity-70 hidden sm:block sm:ml-0">{item.description}</span>
                 </Link>
               </Button>
             )
