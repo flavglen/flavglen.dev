@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/toaster";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import StructuredData from "@/components/StructuredData";
 import { AnalyticsTracker } from "@/components/analytics-tracker";
+import { PWARegister } from "@/components/pwa-register";
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://flavglen.dev'),
@@ -121,6 +122,7 @@ export default function RootLayout({
             </AuthSessionProvider>
          </ThemeProvider>
          <Toaster  />
+         <PWARegister />
       </body>
     </html>
   );
