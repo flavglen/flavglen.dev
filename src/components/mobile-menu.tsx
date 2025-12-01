@@ -3,7 +3,7 @@
 import * as React from "react"
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import { Menu, X } from "lucide-react"
+import { Menu, X, ChevronDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { cn } from "@/lib/utils"
@@ -23,6 +23,7 @@ interface MobileMenuProps {
 export function MobileMenu({ links, reportsSubmenu = [] }: MobileMenuProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
+  const [isAdminMenuOpen, setIsAdminMenuOpen] = useState(false)
   useEffect(() => {
     const checkIfMobile = () => setIsMobile(window.innerWidth < 768)
     checkIfMobile()
@@ -102,25 +103,38 @@ export function MobileMenu({ links, reportsSubmenu = [] }: MobileMenuProps) {
               ))}
               {reportsSubmenu.length > 0 && (
                 <>
-                  <div className="text-lg font-semibold text-muted-foreground py-2">Reports</div>
-                  {reportsSubmenu.map((item) => {
-                    const Icon = item.icon
-                    return (
-                      <Link
-                        key={item.href}
-                        href={item.href}
-                        onClick={() => {
-                          setIsMobileMenuOpen(false)
-                          document.body.style.overflow = ""
-                        }}
-                        className="text-lg font-medium text-foreground hover:text-purple-600 transition-colors relative group py-2 pl-4 flex items-center gap-2"
-                      >
-                        {Icon && <Icon className="h-5 w-5" />}
-                        {item.label}
-                        <span className="absolute -bottom-1 left-4 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-pink-600 transition-all duration-300 group-hover:w-full"></span>
-                      </Link>
-                    )
-                  })}
+                  <button
+                    type="button"
+                    onClick={() => setIsAdminMenuOpen(!isAdminMenuOpen)}
+                    className="text-lg font-semibold text-foreground hover:text-purple-600 transition-colors relative group py-2 flex items-center gap-2 w-full text-left"
+                  >
+                    <span>Admin</span>
+                    <ChevronDown className={cn("h-5 w-5 transition-transform", isAdminMenuOpen && "rotate-180")} />
+                    <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-pink-600 transition-all duration-300 group-hover:w-full"></span>
+                  </button>
+                  {isAdminMenuOpen && (
+                    <div className="flex flex-col gap-2 pl-4">
+                      {reportsSubmenu.map((item) => {
+                        const Icon = item.icon
+                        return (
+                          <Link
+                            key={item.href}
+                            href={item.href}
+                            onClick={() => {
+                              setIsMobileMenuOpen(false)
+                              setIsAdminMenuOpen(false)
+                              document.body.style.overflow = ""
+                            }}
+                            className="text-lg font-medium text-foreground hover:text-purple-600 transition-colors relative group py-2 flex items-center gap-2"
+                          >
+                            {Icon && <Icon className="h-5 w-5" />}
+                            {item.label}
+                            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-pink-600 transition-all duration-300 group-hover:w-full"></span>
+                          </Link>
+                        )
+                      })}
+                    </div>
+                  )}
                 </>
               )}
               
