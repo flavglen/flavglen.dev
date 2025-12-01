@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { cn } from "@/lib/utils"
-import { format, addDays } from "date-fns"
+import { format, addDays, parse, isValid } from "date-fns"
 import type { DateRange } from "react-day-picker"
 import {
     ColumnDef,
@@ -61,6 +61,8 @@ export function ExpenseComponent() {
     const [rowSelection, setRowSelection] = React.useState({})
     const [expenses, setExpenses] = React.useState<Expense[]>([]);
     const [open, setOpen] = React.useState(false)
+    const [dateInput, setDateInput] = React.useState<string>("")
+    const [calendarOpen, setCalendarOpen] = React.useState(false)
 
        
     const fetchExpenses = async () => {
@@ -366,6 +368,39 @@ export function ExpenseComponent() {
         void fetchExpenses();
     }, [])
 
+    // Update date input when date range changes
+    React.useEffect(() => {
+        if (date?.from && date?.to) {
+            setDateInput(`${format(date.from, "MM/dd/yyyy")} - ${format(date.to, "MM/dd/yyyy")}`)
+        } else if (date?.from) {
+            setDateInput(format(date.from, "MM/dd/yyyy"))
+        } else {
+            setDateInput("")
+        }
+    }, [date])
+
+    // Parse manual date entry
+    const handleDateInputChange = (value: string) => {
+        setDateInput(value)
+        
+        // Try to parse date range (format: MM/dd/yyyy - MM/dd/yyyy)
+        const rangeMatch = value.match(/^(\d{1,2}\/\d{1,2}\/\d{4})\s*-\s*(\d{1,2}\/\d{1,2}\/\d{4})$/)
+        if (rangeMatch) {
+            const fromDate = parse(rangeMatch[1], "MM/dd/yyyy", new Date())
+            const toDate = parse(rangeMatch[2], "MM/dd/yyyy", new Date())
+            
+            if (isValid(fromDate) && isValid(toDate) && fromDate <= toDate) {
+                setDate({ from: fromDate, to: toDate })
+            }
+        } else {
+            // Try to parse single date
+            const singleDate = parse(value, "MM/dd/yyyy", new Date())
+            if (isValid(singleDate)) {
+                setDate({ from: singleDate, to: singleDate })
+            }
+        }
+    }
+
 
     const ConfirmDialog = React.useCallback(() => {
         let text = "Press a button!\nEither OK or Cancel.";
@@ -523,41 +558,48 @@ export function ExpenseComponent() {
             <Card className="border-2 shadow-md">
                 <CardContent className="p-4">
                     <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
-                        <Popover>
-                            <PopoverTrigger asChild>
-                                <Button
-                                    id="date"
-                                    variant={"outline"}
-                                    className={cn(
-                                        "w-full sm:w-[300px] justify-start text-left font-normal border-2 hover:border-primary transition-colors",
-                                        !date && "text-muted-foreground"
-                                    )}
-                                >
-                                    <CalendarIcon className="mr-2 h-4 w-4" />
-                                    {date?.from ? (
-                                        date.to ? (
-                                            <>
-                                                {format(date.from, "LLL dd, y")} - {format(date.to, "LLL dd, y")}
-                                            </>
-                                        ) : (
-                                            format(date.from, "LLL dd, y")
-                                        )
-                                    ) : (
-                                        <span>Pick a date range</span>
-                                    )}
-                                </Button>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-auto p-0 bg-white dark:bg-gray-900 z-40 shadow-xl border-2" align="start">
-                                <Calendar
-                                    initialFocus
-                                    mode="range"
-                                    defaultMonth={date?.from}
-                                    selected={date}
-                                    onSelect={setDate}
-                                    numberOfMonths={2}
-                                />
-                            </PopoverContent>
-                        </Popover>
+                        <div className="relative flex-1 sm:flex-initial sm:w-[300px]">
+                            <Input
+                                type="text"
+                                placeholder="MM/dd/yyyy - MM/dd/yyyy or click calendar"
+                                value={dateInput}
+                                onChange={(e) => handleDateInputChange(e.target.value)}
+                                className={cn(
+                                    "w-full pr-10 border-2 hover:border-primary transition-colors",
+                                    !date && "text-muted-foreground"
+                                )}
+                            />
+                            <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
+                                <PopoverTrigger asChild>
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 hover:bg-accent"
+                                        onClick={(e) => {
+                                            e.preventDefault()
+                                            setCalendarOpen(true)
+                                        }}
+                                    >
+                                        <CalendarIcon className="h-4 w-4" />
+                                    </Button>
+                                </PopoverTrigger>
+                                <PopoverContent className="w-auto p-0 bg-white dark:bg-gray-900 z-[100] shadow-xl border-2" align="start">
+                                    <Calendar
+                                        initialFocus
+                                        mode="range"
+                                        defaultMonth={date?.from}
+                                        selected={date}
+                                        onSelect={(range) => {
+                                            setDate(range)
+                                            if (range?.from && range?.to) {
+                                                setCalendarOpen(false)
+                                            }
+                                        }}
+                                        numberOfMonths={2}
+                                    />
+                                </PopoverContent>
+                            </Popover>
+                        </div>
                         <Button 
                             variant="default" 
                             className="w-full sm:w-auto gap-2 shadow-md hover:shadow-lg transition-shadow" 
