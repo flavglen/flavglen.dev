@@ -31,7 +31,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Calendar } from "./ui/calendar"
-import { ArrowUpDown, CalendarIcon, DollarSign, Receipt, TrendingUp, Filter, Trash2, Search, Sparkles, Award } from "lucide-react"
+import { ArrowUpDown, CalendarIcon, DollarSign, Receipt, TrendingUp, Filter, Trash2, Search, Sparkles, Award, AlertTriangle } from "lucide-react"
+import { useBudgetAlerts } from "@/hooks/useBudgetAlerts"
+import { BudgetAlertComponent } from "@/components/budget-alert"
 
 export interface Expense {
     id: string;                 // Unique identifier for the record
@@ -449,111 +451,155 @@ export function ExpenseComponent() {
         0
     );
 
+    // Check for budget alerts
+    const { budgetAlerts, getCategoryBudgetStatus } = useBudgetAlerts(expenses);
+
     return (
         <div className="w-full relative space-y-6">
-            {/* Total Expenses Summary */}
-            <div>
-                <Card className="border-2 shadow-lg hover:shadow-xl transition-shadow duration-300">
-                    <CardHeader className="pb-4">
-                        <CardTitle className="text-2xl font-bold flex items-center gap-2">
-                            <Sparkles className="h-5 w-5 text-primary" />
-                            Expense Summary
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                            <div className="relative p-4 rounded-lg bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-950/30 dark:to-blue-900/20 border border-blue-200 dark:border-blue-800 hover:scale-105 transition-transform duration-200">
-                                <div className="flex items-center justify-between mb-2">
-                                    <Receipt className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+            {/* Budget Alerts */}
+            {budgetAlerts.length > 0 && (
+                <BudgetAlertComponent alerts={budgetAlerts} />
+            )}
+
+            {/* Summary and Top Categories in Single Row */}
+            <div className="flex flex-col lg:flex-row gap-3">
+                {/* Total Expenses Summary */}
+                <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-2.5">
+                        <Sparkles className="h-3.5 w-3.5 text-primary" />
+                        <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Summary</h2>
+                    </div>
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5">
+                        <Card className="border border-blue-200/50 dark:border-blue-800/30 bg-blue-50/30 dark:bg-blue-950/20 shadow-sm hover:shadow-md transition-all duration-200 hover:scale-[1.02] group">
+                            <CardContent className="p-3">
+                                <div className="flex items-center justify-between mb-1.5">
+                                    <Receipt className="h-3.5 w-3.5 text-blue-600 dark:text-blue-400" />
                                 </div>
-                                <p className="text-sm font-medium text-muted-foreground mb-1">Total Expenses</p>
-                                <p className="text-3xl font-bold text-blue-700 dark:text-blue-300">{totalExpenses}</p>
-                            </div>
-                            <div className="relative p-4 rounded-lg bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-950/30 dark:to-purple-900/20 border border-purple-200 dark:border-purple-800 hover:scale-105 transition-transform duration-200">
-                                <div className="flex items-center justify-between mb-2">
-                                    <Filter className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                                <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wide mb-1">Total Expenses</p>
+                                <p className="text-lg font-bold text-blue-700 dark:text-blue-300 tabular-nums">{totalExpenses}</p>
+                            </CardContent>
+                        </Card>
+                        <Card className="border border-purple-200/50 dark:border-purple-800/30 bg-purple-50/30 dark:bg-purple-950/20 shadow-sm hover:shadow-md transition-all duration-200 hover:scale-[1.02] group">
+                            <CardContent className="p-3">
+                                <div className="flex items-center justify-between mb-1.5">
+                                    <Filter className="h-3.5 w-3.5 text-purple-600 dark:text-purple-400" />
                                 </div>
-                                <p className="text-sm font-medium text-muted-foreground mb-1">Filtered Expenses</p>
-                                <p className="text-3xl font-bold text-purple-700 dark:text-purple-300">{filteredExpenses}</p>
-                            </div>
-                            <div className="relative p-4 rounded-lg bg-gradient-to-br from-green-50 to-green-100 dark:from-green-950/30 dark:to-green-900/20 border border-green-200 dark:border-green-800 hover:scale-105 transition-transform duration-200">
-                                <div className="flex items-center justify-between mb-2">
-                                    <DollarSign className="h-5 w-5 text-green-600 dark:text-green-400" />
+                                <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wide mb-1">Filtered</p>
+                                <p className="text-lg font-bold text-purple-700 dark:text-purple-300 tabular-nums">{filteredExpenses}</p>
+                            </CardContent>
+                        </Card>
+                        <Card className="border border-green-200/50 dark:border-green-800/30 bg-green-50/30 dark:bg-green-950/20 shadow-sm hover:shadow-md transition-all duration-200 hover:scale-[1.02] group">
+                            <CardContent className="p-3">
+                                <div className="flex items-center justify-between mb-1.5">
+                                    <DollarSign className="h-3.5 w-3.5 text-green-600 dark:text-green-400" />
                                 </div>
-                                <p className="text-sm font-medium text-muted-foreground mb-1">Total Amount</p>
-                                <p className="text-2xl font-bold text-green-700 dark:text-green-300">
+                                <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wide mb-1">Total Amount</p>
+                                <p className="text-sm font-bold text-green-700 dark:text-green-300 tabular-nums">
                                     {new Intl.NumberFormat("en-US", {
                                         style: "currency",
                                         currency: "USD",
+                                        maximumFractionDigits: 0,
                                     }).format(totalAmount)}
                                 </p>
-                            </div>
-                            <div className="relative p-4 rounded-lg bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-950/30 dark:to-orange-900/20 border border-orange-200 dark:border-orange-800 hover:scale-105 transition-transform duration-200">
-                                <div className="flex items-center justify-between mb-2">
-                                    <TrendingUp className="h-5 w-5 text-orange-600 dark:text-orange-400" />
+                            </CardContent>
+                        </Card>
+                        <Card className="border border-orange-200/50 dark:border-orange-800/30 bg-orange-50/30 dark:bg-orange-950/20 shadow-sm hover:shadow-md transition-all duration-200 hover:scale-[1.02] group">
+                            <CardContent className="p-3">
+                                <div className="flex items-center justify-between mb-1.5">
+                                    <TrendingUp className="h-3.5 w-3.5 text-orange-600 dark:text-orange-400" />
                                 </div>
-                                <p className="text-sm font-medium text-muted-foreground mb-1">Filtered Amount</p>
-                                <p className="text-2xl font-bold text-orange-700 dark:text-orange-300">
+                                <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wide mb-1">Filtered Amount</p>
+                                <p className="text-sm font-bold text-orange-700 dark:text-orange-300 tabular-nums">
                                     {new Intl.NumberFormat("en-US", {
                                         style: "currency",
                                         currency: "USD",
+                                        maximumFractionDigits: 0,
                                     }).format(filteredAmount)}
                                 </p>
-                            </div>
-                        </div>
-                    </CardContent>
-                </Card>
-            </div>
+                            </CardContent>
+                        </Card>
+                    </div>
+                </div>
 
-            {/* Top 4 Categories Cards */}
-            {categorySummary.length > 0 && (
-                <div>
-                    <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
-                        <Award className="h-5 w-5 text-primary" />
-                        Top Categories
-                    </h2>
-                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                {/* Top 4 Categories Cards */}
+                {categorySummary.length > 0 && (
+                    <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-2.5">
+                            <Award className="h-3.5 w-3.5 text-primary" />
+                            <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Top Categories</h2>
+                        </div>
+                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5">
                         {categorySummary.map((cat, index) => {
                             const color = getCategoryColor(cat.category);
+                            const budgetStatus = getCategoryBudgetStatus(cat.category);
                             return (
                                 <Card 
                                     key={cat.category} 
-                                    className={`border-2 ${color.border} shadow-md hover:shadow-xl transition-all duration-300 hover:scale-105 overflow-hidden relative`}
+                                    className={`border ${budgetStatus.isOverBudget ? 'border-destructive/50 bg-destructive/5' : 'border-border/50'} shadow-sm hover:shadow-md transition-all duration-200 hover:scale-[1.02] overflow-hidden relative group`}
                                 >
-                                    <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${color.bg}`} />
-                                    <CardHeader className="pb-2 p-4">
-                                        <div className="flex items-center justify-between">
-                                            <div className={`w-8 h-8 rounded-full bg-gradient-to-r ${color.bg} flex items-center justify-center text-white font-bold text-sm shadow-lg`}>
-                                                {index + 1}
+                                    <div className={`absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r ${budgetStatus.isOverBudget ? 'from-destructive to-destructive/80' : color.bg}`} />
+                                    <CardContent className="p-3">
+                                        <div className="flex items-start justify-between gap-2 mb-2">
+                                            <div className="flex items-center gap-1.5 flex-1 min-w-0">
+                                                <div className={`w-5 h-5 rounded-full bg-gradient-to-r ${budgetStatus.isOverBudget ? 'from-destructive to-destructive/80' : color.bg} flex items-center justify-center text-white font-bold text-[10px] flex-shrink-0`}>
+                                                    {index + 1}
+                                                </div>
+                                                <Badge variant="outline" className={`text-[10px] px-1.5 py-0 h-5 ${budgetStatus.isOverBudget ? 'bg-destructive/10 text-destructive border-destructive/50' : color.badge} truncate`}>
+                                                    {cat.category}
+                                                </Badge>
+                                                {budgetStatus.isOverBudget && (
+                                                    <AlertTriangle className="h-3 w-3 text-destructive flex-shrink-0" />
+                                                )}
                                             </div>
-                                            <Badge variant="outline" className={`text-xs ${color.badge}`}>
-                                                {cat.category}
-                                            </Badge>
                                         </div>
-                                    </CardHeader>
-                                    <CardContent className="p-4 pt-0">
-                                        <div className="space-y-3">
-                                            <div>
-                                                <p className="text-xs text-muted-foreground mb-1">Transactions</p>
-                                                <p className="text-2xl font-bold">{cat.count}</p>
-                                            </div>
-                                            <div>
-                                                <p className="text-xs text-muted-foreground mb-1">Total Spent</p>
-                                                <p className={`text-xl font-bold ${color.text}`}>
+                                        <div className="space-y-1.5">
+                                            <div className="flex items-baseline justify-between gap-1">
+                                                <span className="text-[10px] text-muted-foreground uppercase tracking-wide">Amount</span>
+                                                <p className={`text-sm font-bold ${budgetStatus.isOverBudget ? 'text-destructive' : color.text} tabular-nums`}>
                                                     {new Intl.NumberFormat("en-US", {
                                                         style: "currency",
                                                         currency: "USD",
+                                                        maximumFractionDigits: 0,
                                                     }).format(cat.total)}
                                                 </p>
                                             </div>
+                                            <div className="flex items-center justify-between gap-2 text-[10px]">
+                                                <span className="text-muted-foreground">{cat.count} txns</span>
+                                                {budgetStatus.hasBudget && (
+                                                    <span className={`font-medium tabular-nums ${
+                                                        budgetStatus.isOverBudget 
+                                                            ? 'text-destructive' 
+                                                            : budgetStatus.percentage >= 80 
+                                                            ? 'text-yellow-600 dark:text-yellow-500' 
+                                                            : 'text-muted-foreground'
+                                                    }`}>
+                                                        {budgetStatus.percentage}%
+                                                    </span>
+                                                )}
+                                            </div>
+                                            {budgetStatus.hasBudget && (
+                                                <div className="w-full bg-muted/50 rounded-full h-1 mt-1.5">
+                                                    <div
+                                                        className={`h-1 rounded-full transition-all ${
+                                                            budgetStatus.isOverBudget
+                                                                ? 'bg-destructive'
+                                                                : budgetStatus.percentage >= 80
+                                                                ? 'bg-yellow-500'
+                                                                : 'bg-green-500'
+                                                        }`}
+                                                        style={{ width: `${Math.min(budgetStatus.percentage, 100)}%` }}
+                                                    />
+                                                </div>
+                                            )}
                                         </div>
                                     </CardContent>
                                 </Card>
                             );
                         })}
+                        </div>
                     </div>
-                </div>
-            )}
+                )}
+            </div>
 
             <Card className="border-2 shadow-md">
                 <CardContent className="p-4">

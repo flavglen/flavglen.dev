@@ -39,6 +39,5 @@ export function configureFirebaseLogging() {
  * @returns boolean - true if logging is enabled, false if disabled
  */
 export function isMiddlewareLoggingEnabled(): boolean {
-  //return process.env.MIDDLEWARE_DISABLE_LOGS !== 'true';
-  return false
+  return process.env.MIDDLEWARE_DISABLE_LOGS !== 'true';
 }
