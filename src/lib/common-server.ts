@@ -31,12 +31,25 @@ export async function saveLog(log: Log, success: boolean = true) {
 /**
  * Configure Firebase logging based on environment variable
  * Call this function before initializing Firebase Admin SDK
+ * Server-only function
  */
 export function configureFirebaseLogging() {
+  // Only run on server side
+  if (typeof window !== 'undefined') {
+    return;
+  }
+
   if (process.env.FIREBASE_DISABLE_LOGS === 'true') {
-    // Disable Firebase logs
-    const admin = require('firebase-admin');
-    admin.setLogLevel('silent');
+    try {
+      // Disable Firebase logs
+      const admin = require('firebase-admin');
+      if (admin && typeof admin.setLogLevel === 'function') {
+        admin.setLogLevel('silent');
+      }
+    } catch (error) {
+      // Silently fail if firebase-admin is not available
+      console.warn('Could not configure Firebase logging:', error);
+    }
   }
 }
 
