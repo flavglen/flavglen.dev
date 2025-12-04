@@ -1,6 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
 import { startOfMonth, endOfMonth } from "date-fns";
-import { Expense } from "@/components/expense.component";
 
 export interface BudgetAlert {
   category: string;
@@ -10,7 +9,14 @@ export interface BudgetAlert {
   percentage: number;
 }
 
-export function useBudgetAlerts(expenses: Expense[]) {
+// Minimal expense interface - only fields needed for budget calculations
+export interface BudgetExpense {
+  amount: number;
+  category?: string;
+  internalDate?: string;
+}
+
+export function useBudgetAlerts(expenses: BudgetExpense[]) {
   const [budgets, setBudgets] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(true);
 
