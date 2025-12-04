@@ -48,7 +48,7 @@ export function BudgetAlertComponent({ alerts, onDismiss }: BudgetAlertComponent
                 <div className="flex items-center gap-2">
                   <TrendingUp className="h-4 w-4" />
                   <span>
-                    You've spent{" "}
+                    You&apos;ve spent{" "}
                     <strong className="font-semibold">
                       {new Intl.NumberFormat("en-US", {
                         style: "currency",
