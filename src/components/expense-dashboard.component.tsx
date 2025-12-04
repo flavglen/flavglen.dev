@@ -15,6 +15,8 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "@radix-ui/react-popover"
 import { Calendar } from "./ui/calendar"
 import { CalendarIcon, RefreshCw, Database, TrendingUp, DollarSign, BarChart3, PieChart, FileText } from "lucide-react"
+import { useBudgetAlerts } from "@/hooks/useBudgetAlerts"
+import { BudgetAlertComponent } from "@/components/budget-alert"
 import { PeriodData, PeriodAnalytics } from "@/lib/expense-periods"
 import { clientCache, CACHE_TTL } from "@/lib/client-cache"
 import {
@@ -322,6 +324,9 @@ export function ExpenseDashboardComponent() {
     const totalMonthAmount = currentMonthExpenses.reduce((sum, e) => sum + e.amount, 0);
     const totalTransactions = currentMonthExpenses.length;
     const averageTransaction = totalTransactions > 0 ? totalMonthAmount / totalTransactions : 0;
+
+    // Check for budget alerts
+    const { budgetAlerts } = useBudgetAlerts(currentMonthExpenses);
 
     return (
         <div className="w-full space-y-6">
@@ -743,6 +748,11 @@ export function ExpenseDashboardComponent() {
                             <span>{reportLoading ? "Loading..." : "Refresh"}</span>
                         </Button>
                     </div>
+
+                    {/* Budget Alerts */}
+                    {budgetAlerts.length > 0 && (
+                        <BudgetAlertComponent alerts={budgetAlerts} />
+                    )}
 
                     {/* Summary Cards */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

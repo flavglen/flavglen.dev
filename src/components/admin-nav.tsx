@@ -12,7 +12,8 @@ import {
   ChevronRight,
   PieChart,
   ShoppingCart,
-  BarChart2
+  BarChart2,
+  Wallet
 } from "lucide-react"
 
 const adminNavItems = [
@@ -27,6 +28,12 @@ const adminNavItems = [
     label: "Grocery Tracker",
     description: "Weekly grocery shopping list",
     icon: ShoppingCart
+  },
+  {
+    href: "/admin/budget-settings",
+    label: "Budget Settings",
+    description: "Set category budgets",
+    icon: Wallet
   },
   {
     href: "/admin/reports",

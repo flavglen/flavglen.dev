@@ -1,5 +1,5 @@
 import admin from "firebase-admin";
-import { configureFirebaseLogging } from "./common";
+import { configureFirebaseLogging } from "./common-server";
 
 // Configure Firebase logging based on environment variable
 configureFirebaseLogging();
