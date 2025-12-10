@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { AlertCircle, Shield, CheckCircle, XCircle, Clock, User, Globe } from 'lucide-react';
+import { AlertCircle, Shield, CheckCircle, XCircle, Clock, User, Globe, ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface SecurityLog {
   id: string;
@@ -35,6 +35,9 @@ export default function SecurityDashboard() {
   const [logs, setLogs] = useState<SecurityLog[]>([]);
   const [stats, setStats] = useState<SecurityStats | null>(null);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [total, setTotal] = useState(0);
   const [filters, setFilters] = useState({
     eventType: '',
     level: '',
@@ -42,7 +45,7 @@ export default function SecurityDashboard() {
     limit: '50'
   });
 
-  const fetchLogs = async () => {
+  const fetchLogs = async (page: number = currentPage) => {
     try {
       setLoading(true);
       const queryParams = new URLSearchParams();
@@ -50,6 +53,8 @@ export default function SecurityDashboard() {
       if (filters.eventType) queryParams.set('eventType', filters.eventType);
       if (filters.level) queryParams.set('level', filters.level);
       if (filters.success) queryParams.set('success', filters.success);
+      queryParams.set('page', page.toString());
+      queryParams.set('limit', filters.limit);
       
       const response = await fetch(`/api/admin/security-logs?${queryParams.toString()}`);
       
@@ -60,6 +65,11 @@ export default function SecurityDashboard() {
       const data = await response.json();
       setLogs(data.logs);
       setStats(data.stats);
+      if (data.pagination) {
+        setCurrentPage(data.pagination.page);
+        setTotalPages(data.pagination.totalPages);
+        setTotal(data.pagination.total);
+      }
     } catch (error) {
       console.error('Error fetching security logs:', error);
     } finally {
@@ -68,8 +78,13 @@ export default function SecurityDashboard() {
   };
 
   useEffect(() => {
-    fetchLogs();
-  }, [filters]);
+    setCurrentPage(1); // Reset to first page when filters change
+  }, [filters.eventType, filters.level, filters.success, filters.limit]);
+
+  useEffect(() => {
+    fetchLogs(currentPage);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPage, filters.eventType, filters.level, filters.success, filters.limit]);
 
   const getLevelColor = (level: string) => {
     switch (level) {
@@ -128,67 +143,67 @@ export default function SecurityDashboard() {
   }
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
-      <div className="flex justify-between items-center">
+    <div className="container mx-auto p-4 sm:p-6 space-y-4 sm:space-y-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold">Security Dashboard</h1>
-          <p className="text-muted-foreground">Monitor security events and access attempts</p>
+          <h1 className="text-2xl sm:text-3xl font-bold">Security Dashboard</h1>
+          <p className="text-sm sm:text-base text-muted-foreground">Monitor security events and access attempts</p>
         </div>
-        <Button onClick={cleanupOldLogs} variant="outline">
+        <Button onClick={cleanupOldLogs} variant="outline" className="w-full sm:w-auto">
           Cleanup Old Logs
         </Button>
       </div>
 
       {/* Stats Cards */}
       {stats && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Events</CardTitle>
-              <Shield className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-xs sm:text-sm font-medium">Total Events</CardTitle>
+              <Shield className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{stats.totalEvents}</div>
+              <div className="text-xl sm:text-2xl font-bold">{stats.totalEvents}</div>
             </CardContent>
           </Card>
           
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Failed Attempts</CardTitle>
-              <XCircle className="h-4 w-4 text-red-500" />
+              <CardTitle className="text-xs sm:text-sm font-medium">Failed Attempts</CardTitle>
+              <XCircle className="h-3 w-3 sm:h-4 sm:w-4 text-red-500" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-red-500">{stats.failedAttempts}</div>
+              <div className="text-xl sm:text-2xl font-bold text-red-500">{stats.failedAttempts}</div>
             </CardContent>
           </Card>
           
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Successful</CardTitle>
-              <CheckCircle className="h-4 w-4 text-green-500" />
+              <CardTitle className="text-xs sm:text-sm font-medium">Successful</CardTitle>
+              <CheckCircle className="h-3 w-3 sm:h-4 sm:w-4 text-green-500" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-green-500">{stats.successfulAttempts}</div>
+              <div className="text-xl sm:text-2xl font-bold text-green-500">{stats.successfulAttempts}</div>
             </CardContent>
           </Card>
           
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Critical Events</CardTitle>
-              <AlertCircle className="h-4 w-4 text-red-500" />
+              <CardTitle className="text-xs sm:text-sm font-medium">Critical Events</CardTitle>
+              <AlertCircle className="h-3 w-3 sm:h-4 sm:w-4 text-red-500" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-red-500">{stats.criticalEvents}</div>
+              <div className="text-xl sm:text-2xl font-bold text-red-500">{stats.criticalEvents}</div>
             </CardContent>
           </Card>
           
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Suspicious (24h)</CardTitle>
-              <AlertCircle className="h-4 w-4 text-orange-500" />
+              <CardTitle className="text-xs sm:text-sm font-medium">Suspicious (24h)</CardTitle>
+              <AlertCircle className="h-3 w-3 sm:h-4 sm:w-4 text-orange-500" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-orange-500">{stats.recentSuspiciousActivity}</div>
+              <div className="text-xl sm:text-2xl font-bold text-orange-500">{stats.recentSuspiciousActivity}</div>
             </CardContent>
           </Card>
         </div>
@@ -200,7 +215,7 @@ export default function SecurityDashboard() {
           <CardTitle>Filters</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div>
               <label className="text-sm font-medium">Event Type</label>
               <select
@@ -269,31 +284,36 @@ export default function SecurityDashboard() {
         <CardHeader>
           <CardTitle>Security Logs</CardTitle>
           <CardDescription>
-            Recent security events and access attempts ({logs.length} logs)
+            Recent security events and access attempts
+            {total > 0 && (
+              <span className="ml-1">
+                (Page {currentPage} of {totalPages}, {total} total)
+              </span>
+            )}
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             {logs.map((log) => (
-              <div key={log.id} className="border rounded-lg p-4 space-y-2">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
+              <div key={log.id} className="border rounded-lg p-3 sm:p-4 space-y-2 sm:space-y-3">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-4">
+                  <div className="flex flex-wrap items-center gap-2">
                     {getEventIcon(log.eventType)}
-                    <span className="font-medium">{log.eventType.replace(/_/g, ' ')}</span>
-                    <Badge variant={getLevelColor(log.level) as any}>
+                    <span className="font-medium text-sm sm:text-base break-words">{log.eventType.replace(/_/g, ' ')}</span>
+                    <Badge variant={getLevelColor(log.level) as any} className="text-xs">
                       {log.level}
                     </Badge>
-                    <Badge variant={log.success ? 'default' : 'destructive'}>
+                    <Badge variant={log.success ? 'default' : 'destructive'} className="text-xs">
                       {log.success ? 'SUCCESS' : 'FAILED'}
                     </Badge>
                   </div>
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Clock className="h-4 w-4" />
-                    {formatTimestamp(log.timestamp)}
+                  <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground">
+                    <Clock className="h-3 w-3 sm:h-4 sm:w-4" />
+                    <span className="whitespace-nowrap">{formatTimestamp(log.timestamp)}</span>
                   </div>
                 </div>
                 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 text-xs sm:text-sm">
                   <div>
                     <span className="font-medium">Path:</span> {log.path}
                   </div>
@@ -315,8 +335,8 @@ export default function SecurityDashboard() {
                     </div>
                   )}
                   {log.reason && (
-                    <div className="md:col-span-2">
-                      <span className="font-medium">Reason:</span> {log.reason}
+                    <div className="sm:col-span-2 lg:col-span-3">
+                      <span className="font-medium">Reason:</span> <span className="break-words">{log.reason}</span>
                     </div>
                   )}
                 </div>
@@ -329,6 +349,64 @@ export default function SecurityDashboard() {
               </div>
             )}
           </div>
+          
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t mt-4">
+              <div className="text-sm text-muted-foreground">
+                Showing {((currentPage - 1) * parseInt(filters.limit)) + 1} to {Math.min(currentPage * parseInt(filters.limit), total)} of {total} logs
+              </div>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                  disabled={currentPage === 1 || loading}
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                  <span className="hidden sm:inline">Previous</span>
+                </Button>
+                
+                <div className="flex items-center gap-1">
+                  {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                    let pageNum: number;
+                    if (totalPages <= 5) {
+                      pageNum = i + 1;
+                    } else if (currentPage <= 3) {
+                      pageNum = i + 1;
+                    } else if (currentPage >= totalPages - 2) {
+                      pageNum = totalPages - 4 + i;
+                    } else {
+                      pageNum = currentPage - 2 + i;
+                    }
+                    
+                    return (
+                      <Button
+                        key={pageNum}
+                        variant={currentPage === pageNum ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setCurrentPage(pageNum)}
+                        disabled={loading}
+                        className="min-w-[2.5rem]"
+                      >
+                        {pageNum}
+                      </Button>
+                    );
+                  })}
+                </div>
+                
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                  disabled={currentPage === totalPages || loading}
+                >
+                  <span className="hidden sm:inline">Next</span>
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>

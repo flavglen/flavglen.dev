@@ -19,7 +19,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
-    // Parse query parameters for filtering
+    // Parse query parameters for filtering and pagination
     const { searchParams } = new URL(req.url);
     const filters: any = {};
 
@@ -45,15 +45,46 @@ export async function GET(req: NextRequest) {
       filters.endDate = searchParams.get('endDate');
     }
 
-    // Get security logs
-    const logs = await firebaseServer.getSecurityLogs(filters);
-    const stats = { totalEvents: logs.length, failedAttempts: 0, successfulAttempts: 0, criticalEvents: 0, recentSuspiciousActivity: 0 };
+    // Pagination parameters
+    const page = parseInt(searchParams.get('page') || '1');
+    const limit = parseInt(searchParams.get('limit') || '50');
+    filters.page = page;
+    filters.limit = limit;
+
+    // Get security logs with pagination
+    const result = await firebaseServer.getSecurityLogs({ ...filters, getTotal: true });
+    const { logs, total, totalPages } = result;
+    
+    // Get all logs for stats calculation (without pagination, limited to 1000 for performance)
+    const statsFilters: any = {};
+    if (filters.eventType) statsFilters.eventType = filters.eventType;
+    if (filters.level) statsFilters.level = filters.level;
+    if (filters.userEmail) statsFilters.userEmail = filters.userEmail;
+    if (filters.success !== undefined) statsFilters.success = filters.success;
+    
+    const statsResult = await firebaseServer.getSecurityLogs({ ...statsFilters, page: 1, limit: 1000, getTotal: false });
+    const allLogsData = Array.isArray(statsResult) ? statsResult : (statsResult.logs || []);
+    
+    const stats = {
+      totalEvents: total,
+      failedAttempts: allLogsData.filter((log: any) => !log.success).length,
+      successfulAttempts: allLogsData.filter((log: any) => log.success).length,
+      criticalEvents: allLogsData.filter((log: any) => log.level === 'CRITICAL').length,
+      recentSuspiciousActivity: allLogsData.filter((log: any) => 
+        log.eventType === 'SUSPICIOUS_ACTIVITY' && 
+        new Date(log.timestamp) > new Date(Date.now() - 24 * 60 * 60 * 1000)
+      ).length
+    };
 
     return NextResponse.json({
       logs,
       stats,
-      filters,
-      total: logs.length
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages
+      }
     });
 
   } catch (error) {

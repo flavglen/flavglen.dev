@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { Github, Linkedin, ChevronDown, PieChart, Database, Receipt, ShoppingCart } from "lucide-react"
+import { Github, Linkedin, ChevronDown, PieChart, Database, Receipt, ShoppingCart, LayoutDashboard } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { MobileMenu } from "@/components/mobile-menu"
 import { useIsAdmin } from "@/hooks/useIsAdmin"
@@ -44,9 +44,10 @@ export function Header() {
   ];
 
   const adminSubmenu = [
+    { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
     { href: "/admin/expenses", label: "Expenses", icon: Receipt },
     { href: "/admin/grocery-tracker", label: "Grocery Tracker", icon: ShoppingCart },
-    { href: "/admin/reports/dashboard", label: "Dashboard", icon: PieChart },
+    { href: "/admin/reports/dashboard", label: "Reports Dashboard", icon: PieChart },
     { href: "/admin/reports/analytics", label: "Analytics", icon: Database }
   ];
 
@@ -95,49 +96,17 @@ export function Header() {
           ))}
           {admin && (
             <div className="relative">
-              <button
-                type="button"
-                onClick={() => setAdminMenuOpen(!adminMenuOpen)}
+              <Link
+                href="/admin"
                 className={cn(
-                  "px-4 py-2 text-sm font-medium transition-all duration-200 rounded-lg hover:bg-primary/5 flex items-center gap-1 cursor-pointer border-none bg-transparent",
+                  "px-4 py-2 text-sm font-medium transition-all duration-200 rounded-lg hover:bg-primary/5 flex items-center gap-1",
                   pathname.startsWith("/admin") 
                     ? "text-foreground" 
                     : "text-muted-foreground hover:text-foreground"
                 )}
               >
                 Admin
-                <ChevronDown className={cn("h-4 w-4 ml-1 transition-transform", adminMenuOpen && "rotate-180")} />
-              </button>
-              {adminMenuOpen && (
-                <>
-                  <div 
-                    className="fixed inset-0 z-[9998]" 
-                    onClick={() => setAdminMenuOpen(false)}
-                  />
-                  <div className="absolute left-0 top-full mt-1 w-56 rounded-md border bg-popover p-1 text-popover-foreground shadow-md z-[9999]">
-                    <div className="flex flex-col">
-                      {adminSubmenu.map((item) => {
-                        const Icon = item.icon
-                        const isActive = pathname === item.href
-                        return (
-                          <Link
-                            key={item.href}
-                            href={item.href}
-                            onClick={() => setAdminMenuOpen(false)}
-                            className={cn(
-                              "flex items-center gap-2 px-2 py-1.5 text-sm rounded-sm hover:bg-accent transition-colors cursor-pointer",
-                              isActive && "bg-accent"
-                            )}
-                          >
-                            <Icon className="h-4 w-4" />
-                            <span>{item.label}</span>
-                          </Link>
-                        )
-                      })}
-                    </div>
-                  </div>
-                </>
-              )}
+              </Link>
             </div>
           )}
         </nav>
