@@ -103,12 +103,23 @@ export function MobileMenu({ links, reportsSubmenu = [] }: MobileMenuProps) {
               ))}
               {reportsSubmenu.length > 0 && (
                 <>
+                  <Link
+                    href="/admin"
+                    onClick={() => {
+                      setIsMobileMenuOpen(false)
+                      document.body.style.overflow = ""
+                    }}
+                    className="text-xl font-medium text-foreground hover:text-purple-600 transition-colors relative group py-2"
+                  >
+                    Admin Dashboard
+                    <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-pink-600 transition-all duration-300 group-hover:w-full"></span>
+                  </Link>
                   <button
                     type="button"
                     onClick={() => setIsAdminMenuOpen(!isAdminMenuOpen)}
                     className="text-lg font-semibold text-foreground hover:text-purple-600 transition-colors relative group py-2 flex items-center gap-2 w-full text-left"
                   >
-                    <span>Admin</span>
+                    <span>More Admin</span>
                     <ChevronDown className={cn("h-5 w-5 transition-transform", isAdminMenuOpen && "rotate-180")} />
                     <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-pink-600 transition-all duration-300 group-hover:w-full"></span>
                   </button>
