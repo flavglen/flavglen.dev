@@ -29,7 +29,7 @@ import {
 } from "@/components/ui/table"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Popover, PopoverContent, PopoverTrigger } from "@radix-ui/react-popover"
 import { Calendar } from "./ui/calendar"
 import { ArrowUpDown, CalendarIcon, DollarSign, Receipt, TrendingUp, Filter, Trash2, Search, Sparkles, Award, AlertTriangle } from "lucide-react"
 import { useBudgetAlerts } from "@/hooks/useBudgetAlerts"
@@ -64,7 +64,6 @@ export function ExpenseComponent() {
     const [expenses, setExpenses] = React.useState<Expense[]>([]);
     const [open, setOpen] = React.useState(false)
     const [dateInput, setDateInput] = React.useState<string>("")
-    const [calendarOpen, setCalendarOpen] = React.useState(false)
 
        
     const fetchExpenses = async () => {
@@ -604,43 +603,35 @@ export function ExpenseComponent() {
             <Card className="border-2 shadow-md">
                 <CardContent className="p-4">
                     <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
-                        <div className="relative flex-1 sm:flex-initial sm:w-[300px]">
-                            <Input
-                                type="text"
-                                placeholder="MM/dd/yyyy - MM/dd/yyyy or click calendar"
-                                value={dateInput}
-                                onChange={(e) => handleDateInputChange(e.target.value)}
-                                className={cn(
-                                    "w-full pr-10 border-2 hover:border-primary transition-colors",
-                                    !date && "text-muted-foreground"
-                                )}
-                            />
-                            <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
+                        <div className="w-full sm:w-[300px]">
+                            <Popover>
                                 <PopoverTrigger asChild>
                                     <Button
-                                        variant="ghost"
-                                        size="icon"
-                                        className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 hover:bg-accent"
-                                        onClick={(e) => {
-                                            e.preventDefault()
-                                            setCalendarOpen(true)
-                                        }}
+                                        id="date"
+                                        variant={"outline"}
+                                        className={cn("w-full justify-start text-left font-normal", !date && "text-muted-foreground")}
                                     >
-                                        <CalendarIcon className="h-4 w-4" />
+                                        <CalendarIcon />
+                                        {date?.from ? (
+                                            date.to ? (
+                                                <>
+                                                    {format(date.from, "LLL dd, y")} - {format(date.to, "LLL dd, y")}
+                                                </>
+                                            ) : (
+                                                format(date.from, "LLL dd, y")
+                                            )
+                                        ) : (
+                                            <span>Pick a date range</span>
+                                        )}
                                     </Button>
                                 </PopoverTrigger>
-                                <PopoverContent className="w-auto p-0 bg-white dark:bg-gray-900 z-[100] shadow-xl border-2" align="start">
+                                <PopoverContent className="w-auto p-0 bg-white dark:bg-gray-900 z-40 rounded-md border shadow-md" align="start">
                                     <Calendar
                                         initialFocus
                                         mode="range"
                                         defaultMonth={date?.from}
                                         selected={date}
-                                        onSelect={(range) => {
-                                            setDate(range)
-                                            if (range?.from && range?.to) {
-                                                setCalendarOpen(false)
-                                            }
-                                        }}
+                                        onSelect={setDate}
                                         numberOfMonths={2}
                                     />
                                 </PopoverContent>
