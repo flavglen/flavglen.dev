@@ -18,7 +18,7 @@ interface BlogPost {
 // GET - Fetch a single blog post by ID (for admin)
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Verify admin access
@@ -36,7 +36,7 @@ export async function GET(
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
-    const id = params.id;
+    const { id } = await params;
     const doc = await db.collection('blog_posts').doc(id).get();
 
     if (!doc.exists) {
@@ -64,7 +64,7 @@ export async function GET(
 // PUT - Update a blog post
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Verify admin access
@@ -82,7 +82,7 @@ export async function PUT(
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
-    const id = params.id;
+    const { id } = await params;
     const body = await req.json();
     const { title, content, excerpt, imageUrl, published } = body;
 
@@ -139,7 +139,7 @@ export async function PUT(
 // DELETE - Delete a blog post
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Verify admin access
@@ -157,7 +157,7 @@ export async function DELETE(
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
-    const id = params.id;
+    const { id } = await params;
     const docRef = db.collection('blog_posts').doc(id);
     const doc = await docRef.get();
 

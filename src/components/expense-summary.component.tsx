@@ -65,11 +65,16 @@ export interface SegregatedExpenses {
 }
 
 export function ExpenseSummaryComponent() {
+    const [mounted, setMounted] = React.useState(false)
     const [selectedDocId, setSelectedDocId] = React.useState<string | null>(null);
     const [date, setDate] = React.useState<DateRange | undefined>({
         from: subDays(new Date(), 365), // Last year by default
         to: new Date(),
     })
+
+    React.useEffect(() => {
+        setMounted(true)
+    }, [])
     const [expenses, setExpenses] = React.useState<Expense[]>([]);
     const [segregatedData, setSegregatedData] = React.useState<SegregatedExpenses | null>(null);
     const [loading, setLoading] = React.useState(false);
@@ -342,38 +347,50 @@ export function ExpenseSummaryComponent() {
         <div className="w-full space-y-6">
             {/* Date Range Selector */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
-                <Popover>
-                    <PopoverTrigger asChild>
-                        <Button
-                            id="date"
-                            variant={"outline"}
-                            className={cn("w-full sm:w-[300px] justify-start text-left font-normal", !date && "text-muted-foreground")}
-                        >
-                            <CalendarIcon />
-                            {date?.from ? (
-                                date.to ? (
-                                    <>
-                                        {format(date.from, "LLL dd, y")} - {format(date.to, "LLL dd, y")}
-                                    </>
+                {mounted ? (
+                    <Popover>
+                        <PopoverTrigger asChild>
+                            <Button
+                                id="date"
+                                variant={"outline"}
+                                className={cn("w-full sm:w-[300px] justify-start text-left font-normal", !date && "text-muted-foreground")}
+                            >
+                                <CalendarIcon />
+                                {date?.from ? (
+                                    date.to ? (
+                                        <>
+                                            {format(date.from, "LLL dd, y")} - {format(date.to, "LLL dd, y")}
+                                        </>
+                                    ) : (
+                                        format(date.from, "LLL dd, y")
+                                    )
                                 ) : (
-                                    format(date.from, "LLL dd, y")
-                                )
-                            ) : (
-                                <span>Pick a date range</span>
-                            )}
-                        </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0 bg-white z-40" align="start">
-                        <Calendar
-                            initialFocus
-                            mode="range"
-                            defaultMonth={date?.from}
-                            selected={date}
-                            onSelect={setDate}
-                            numberOfMonths={2}
-                        />
-                    </PopoverContent>
-                </Popover>
+                                    <span>Pick a date range</span>
+                                )}
+                            </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0 bg-white z-40" align="start">
+                            <Calendar
+                                initialFocus
+                                mode="range"
+                                defaultMonth={date?.from}
+                                selected={date}
+                                onSelect={setDate}
+                                numberOfMonths={2}
+                            />
+                        </PopoverContent>
+                    </Popover>
+                ) : (
+                    <Button
+                        id="date"
+                        variant={"outline"}
+                        className={cn("w-full sm:w-[300px] justify-start text-left font-normal", !date && "text-muted-foreground")}
+                        disabled
+                    >
+                        <CalendarIcon />
+                        <span>Pick a date range</span>
+                    </Button>
+                )}
                 <Button variant="default" onClick={fetchExpenses} disabled={loading} className="w-full sm:w-auto">
                     {loading ? "Loading..." : "Fetch Data"}
                 </Button>

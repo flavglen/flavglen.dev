@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input'; // Importing Input component from
 import { Textarea } from '@/components/ui/textarea';
 
 interface SkillPageProps {
-    params: { slug?: string };
+    params?: Promise<{ slug?: string[] }>;
   }
 
   

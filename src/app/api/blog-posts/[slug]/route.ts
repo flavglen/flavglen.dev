@@ -17,10 +17,10 @@ interface BlogPost {
 // GET - Fetch a single published blog post by slug (public route)
 export async function GET(
   req: NextRequest,
-  { params }: { params: { slug: string } }
+  { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
-    const slug = params.slug;
+    const { slug } = await params;
 
     // Fetch by slug first (slug is unique, so this is efficient)
     const snapshot = await db.collection('blog_posts')
