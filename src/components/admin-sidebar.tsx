@@ -17,7 +17,8 @@ import {
   Shield,
   TrendingUp,
   X,
-  RefreshCw
+  RefreshCw,
+  BookOpen
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
@@ -75,6 +76,12 @@ const adminNavItems = [
     label: "Migrate Categories",
     icon: RefreshCw,
     description: "Update expense categories"
+  },
+  {
+    href: "/admin/blog",
+    label: "Blog Posts",
+    icon: BookOpen,
+    description: "Create and manage posts"
   },
 ]
 

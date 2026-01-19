@@ -1,4 +1,11 @@
 import withPWA from 'next-pwa';
+import webpack from 'webpack';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import fs from 'fs';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -61,6 +68,54 @@ const nextConfig = {
       'node:net': false,
       'node:tls': false,
     };
+
+    // Exclude react-quill and quill from server-side builds
+    if (isServer) {
+      config.externals = config.externals || [];
+      config.externals.push({
+        'react-quill': 'commonjs react-quill',
+        'quill': 'commonjs quill',
+      });
+      
+      // Use IgnorePlugin to prevent webpack from processing react-quill on server
+      config.plugins = config.plugins || [];
+      config.plugins.push(
+        new webpack.IgnorePlugin({
+          resourceRegExp: /^react-quill$/,
+        }),
+        new webpack.IgnorePlugin({
+          resourceRegExp: /^quill$/,
+        }),
+        // Replace CSS imports from react-quill/quill with empty module
+        new webpack.NormalModuleReplacementPlugin(
+          /react-quill\/dist\/quill\.snow\.css$/,
+          path.resolve(__dirname, 'empty-module.js')
+        ),
+        new webpack.NormalModuleReplacementPlugin(
+          /quill\/dist\/quill\.snow\.css$/,
+          path.resolve(__dirname, 'empty-module.js')
+        ),
+        // Create the CSS file that ReactQuill tries to access during build
+        {
+          apply: (compiler) => {
+            compiler.hooks.beforeCompile.tap('CreateQuillCSS', () => {
+              const cssPath = path.join(process.cwd(), '.next', 'browser', 'default-stylesheet.css');
+              const cssDir = path.dirname(cssPath);
+              try {
+                if (!fs.existsSync(cssDir)) {
+                  fs.mkdirSync(cssDir, { recursive: true });
+                }
+                if (!fs.existsSync(cssPath)) {
+                  fs.writeFileSync(cssPath, '/* Empty stylesheet for ReactQuill */');
+                }
+              } catch (e) {
+                // Ignore errors
+              }
+            });
+          }
+        }
+      );
+    }
     
     return config;
   },
