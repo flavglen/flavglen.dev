@@ -4,5 +4,6 @@
         "path": "/api/gmail",
         "schedule": "0 15 * * *"
       }
-    ]
+    ],
+    "installCommand": "npm install --legacy-peer-deps"
   }

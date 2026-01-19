@@ -50,7 +50,8 @@ export async function middleware(req: NextRequest) {
     const xClientIP = req.headers.get('x-client-ip');
     
     // Use the first non-localhost IP found
-    const ipSources = [forwardedFor, realIP, cfConnectingIP, xClientIP, req.ip];
+    // Note: req.ip is not available in Next.js 16, use headers instead
+    const ipSources = [forwardedFor, realIP, cfConnectingIP, xClientIP];
     
     for (const ip of ipSources) {
       if (ip && !isLocalhostIP(ip)) {
@@ -60,7 +61,8 @@ export async function middleware(req: NextRequest) {
     }
     
     // Fallback to localhost indicators
-    return req.ip || 'localhost';
+    // Note: req.ip is not available in Next.js 16
+    return 'localhost';
   };
   
   const isLocalhostIP = (ip: string): boolean => {
@@ -73,7 +75,7 @@ export async function middleware(req: NextRequest) {
   // Debug logging for IP detection (remove in production)
   if (process.env.NODE_ENV === 'development') {
     console.log('IP Detection Debug:', {
-      reqIP: req.ip,
+      // Note: req.ip is not available in Next.js 16
       forwardedFor: req.headers.get('x-forwarded-for'),
       realIP: req.headers.get('x-real-ip'),
       cfConnectingIP: req.headers.get('cf-connecting-ip'),

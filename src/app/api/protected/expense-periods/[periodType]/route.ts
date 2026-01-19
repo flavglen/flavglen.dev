@@ -3,21 +3,22 @@ import { expensePeriodService } from "@/lib/expense-periods"
 
 export async function GET(
     req: Request,
-    { params }: { params: { periodType: string } }
+    { params }: { params: Promise<{ periodType: string }> }
 ) {
     try {
         const { searchParams } = new URL(req.url);
         const startDate = searchParams.get('startDate');
         const endDate = searchParams.get('endDate');
         
-        const periodType = params.periodType as 'weekly' | 'monthly' | 'yearly';
+        const { periodType } = await params;
+        const typedPeriodType = periodType as 'weekly' | 'monthly' | 'yearly';
         
-        if (!['weekly', 'monthly', 'yearly'].includes(periodType)) {
+        if (!['weekly', 'monthly', 'yearly'].includes(typedPeriodType)) {
             return NextResponse.json({ error: "Invalid period type" }, { status: 400 });
         }
         
         const periodData = await expensePeriodService.getPeriodData(
-            periodType,
+            typedPeriodType,
             startDate || '2020-01-01',
             endDate || new Date().toISOString()
         );

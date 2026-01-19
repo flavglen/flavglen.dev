@@ -35,10 +35,15 @@ interface MigrationResult {
 }
 
 export function MigrateCategoriesComponent() {
+  const [mounted, setMounted] = React.useState(false)
   const [date, setDate] = React.useState<DateRange | undefined>({
     from: addDays(new Date(), -new Date().getDate()),
     to: new Date(),
   })
+
+  React.useEffect(() => {
+    setMounted(true)
+  }, [])
   const [collectionName, setCollectionName] = React.useState("ai_expenses")
   const [dryRun, setDryRun] = React.useState(true)
   const [syncPeriodData, setSyncPeriodData] = React.useState(true)
@@ -203,38 +208,50 @@ export function MigrateCategoriesComponent() {
           <div className="space-y-2">
             <Label>Date Range</Label>
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    id="date"
-                    variant={"outline"}
-                    className={cn("w-full sm:w-[300px] justify-start text-left font-normal", !date && "text-muted-foreground")}
-                  >
-                    <CalendarIcon />
-                    {date?.from ? (
-                      date.to ? (
-                        <>
-                          {format(date.from, "LLL dd, y")} - {format(date.to, "LLL dd, y")}
-                        </>
+              {mounted ? (
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      id="date"
+                      variant={"outline"}
+                      className={cn("w-full sm:w-[300px] justify-start text-left font-normal", !date && "text-muted-foreground")}
+                    >
+                      <CalendarIcon />
+                      {date?.from ? (
+                        date.to ? (
+                          <>
+                            {format(date.from, "LLL dd, y")} - {format(date.to, "LLL dd, y")}
+                          </>
+                        ) : (
+                          format(date.from, "LLL dd, y")
+                        )
                       ) : (
-                        format(date.from, "LLL dd, y")
-                      )
-                    ) : (
-                      <span>Pick a date range</span>
-                    )}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0 bg-white z-40" align="start">
-                  <Calendar
-                    initialFocus
-                    mode="range"
-                    defaultMonth={date?.from}
-                    selected={date}
-                    onSelect={setDate}
-                    numberOfMonths={2}
-                  />
-                </PopoverContent>
-              </Popover>
+                        <span>Pick a date range</span>
+                      )}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0 bg-white z-40" align="start">
+                    <Calendar
+                      initialFocus
+                      mode="range"
+                      defaultMonth={date?.from}
+                      selected={date}
+                      onSelect={setDate}
+                      numberOfMonths={2}
+                    />
+                  </PopoverContent>
+                </Popover>
+              ) : (
+                <Button
+                  id="date"
+                  variant={"outline"}
+                  className={cn("w-full sm:w-[300px] justify-start text-left font-normal", !date && "text-muted-foreground")}
+                  disabled
+                >
+                  <CalendarIcon />
+                  <span>Pick a date range</span>
+                </Button>
+              )}
             </div>
             <p className="text-sm text-muted-foreground">
               Select the date range for expenses to migrate. If not specified, all expenses will be migrated.
