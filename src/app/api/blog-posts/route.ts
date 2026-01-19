@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/firebase-server";
 
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
 export interface BlogPost {
   id?: string;
   title: string;

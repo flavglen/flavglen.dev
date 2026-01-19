@@ -1,5 +1,10 @@
 "use client"
 
+export const dynamic = 'force-dynamic'
+export const dynamicParams = true
+export const revalidate = 0
+export const fetchCache = 'force-no-store'
+
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -9,6 +14,7 @@ import { format } from "date-fns"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { Header } from "@/components/sections/Header"
 import Footer from "@/components/footer"
+import { getAuthorDisplayName } from "@/lib/utils"
 
 interface BlogPost {
   id: string
@@ -175,7 +181,7 @@ export default function BlogPage() {
                       </time>
                     )}
                     {post.author && (
-                      <span className="ml-2">by {post.author}</span>
+                      <span className="ml-2">by {getAuthorDisplayName(post.author)}</span>
                     )}
                   </CardDescription>
                 </CardHeader>

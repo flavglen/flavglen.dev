@@ -1,5 +1,10 @@
 "use client"
 
+export const dynamic = 'force-dynamic'
+export const dynamicParams = true
+export const revalidate = 0
+export const fetchCache = 'force-no-store'
+
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
@@ -11,12 +16,9 @@ import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
 import { format } from "date-fns"
 import { Plus, Edit, Trash2, Eye, EyeOff } from "lucide-react"
-import dynamic from "next/dynamic"
 import DOMPurify from "isomorphic-dompurify"
-
-// Dynamically import ReactQuill to avoid SSR issues
-const ReactQuill = dynamic(() => import("react-quill"), { ssr: false })
-import "react-quill/dist/quill.snow.css"
+import { RichTextEditor } from "@/components/rich-text-editor"
+import { getAuthorDisplayName } from "@/lib/utils"
 
 interface BlogPost {
   id: string
@@ -48,26 +50,6 @@ export default function AdminBlogPage() {
   const [imageUrl, setImageUrl] = useState("")
   const [published, setPublished] = useState(false)
 
-  const quillModules = {
-    toolbar: [
-      [{ 'header': [1, 2, 3, false] }],
-      ['bold', 'italic', 'underline', 'strike'],
-      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-      [{ 'color': [] }, { 'background': [] }],
-      ['link', 'image'],
-      ['blockquote', 'code-block'],
-      ['clean']
-    ],
-  }
-
-  const quillFormats = [
-    'header',
-    'bold', 'italic', 'underline', 'strike',
-    'list', 'bullet',
-    'color', 'background',
-    'link', 'image',
-    'blockquote', 'code-block'
-  ]
 
   const fetchPosts = async () => {
     setLoading(true)
@@ -305,14 +287,10 @@ export default function AdminBlogPage() {
               <div className="space-y-2">
                 <Label htmlFor="content">Content *</Label>
                 <div className="min-h-[300px]">
-                  <ReactQuill
-                    theme="snow"
+                  <RichTextEditor
                     value={content}
                     onChange={setContent}
-                    modules={quillModules}
-                    formats={quillFormats}
                     placeholder="Write your blog post content here..."
-                    className="bg-background"
                   />
                 </div>
               </div>
@@ -394,7 +372,7 @@ export default function AdminBlogPage() {
                       {post.createdAt && (
                         <span>Created: {format(new Date(post.createdAt), "MMM d, yyyy")}</span>
                       )}
-                      {post.author && <span>By: {post.author}</span>}
+                      {post.author && <span>By: {getAuthorDisplayName(post.author)}</span>}
                     </div>
                   </div>
                   <div className="flex items-center gap-2 ml-4">

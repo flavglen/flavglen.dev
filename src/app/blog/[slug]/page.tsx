@@ -1,5 +1,8 @@
 "use client"
 
+export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
+
 import { useState, useEffect } from "react"
 import { useParams } from "next/navigation"
 import Link from "next/link"
@@ -10,6 +13,7 @@ import { format } from "date-fns"
 import { ArrowLeft } from "lucide-react"
 import { Header } from "@/components/sections/Header"
 import Footer from "@/components/footer"
+import { getAuthorDisplayName } from "@/lib/utils"
 
 interface BlogPost {
   id: string
@@ -128,7 +132,7 @@ export default function BlogPostPage() {
               </time>
             )}
             {post.author && (
-              <span>by {post.author}</span>
+              <span>by {getAuthorDisplayName(post.author)}</span>
             )}
           </div>
 
