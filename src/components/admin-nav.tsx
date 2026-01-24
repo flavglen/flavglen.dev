@@ -55,22 +55,35 @@ export function AdminNav() {
   return (
     <div className="border-b bg-background/95 backdrop-blur">
       <div className="container py-4">
-        <div className="flex items-center space-x-2 text-sm text-muted-foreground mb-4">
-          <Link href="/" className="flex items-center hover:text-foreground transition-colors">
-            <Home className="h-4 w-4 mr-1" />
-            Home
-          </Link>
-          <ChevronRight className="h-4 w-4" />
-          <span>Admin</span>
-          {pathname !== "/admin" && (
-            <>
-              <ChevronRight className="h-4 w-4" />
-              <span className="text-foreground">
-                {adminNavItems.find(item => item.href === pathname)?.label || 
-                 (pathname.startsWith("/admin/reports") ? "Reports" : "Admin")}
-              </span>
-            </>
-          )}
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+            <Link href="/" className="flex items-center hover:text-foreground transition-colors">
+              <Home className="h-4 w-4 mr-1" />
+              Home
+            </Link>
+            <ChevronRight className="h-4 w-4" />
+            <span>Admin</span>
+            {pathname !== "/admin" && (
+              <>
+                <ChevronRight className="h-4 w-4" />
+                <span className="text-foreground">
+                  {adminNavItems.find(item => item.href === pathname)?.label || 
+                   (pathname.startsWith("/admin/reports") ? "Reports" : "Admin")}
+                </span>
+              </>
+            )}
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            asChild
+            className="flex items-center space-x-2"
+          >
+            <Link href="/">
+              <Home className="h-4 w-4" />
+              <span>Back to Homepage</span>
+            </Link>
+          </Button>
         </div>
         
         <div className="flex flex-wrap gap-2">

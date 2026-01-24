@@ -13,11 +13,11 @@ export function Counter({ end, duration = 2000, suffix = "", prefix = "" }: Coun
   const [count, setCount] = useState(0)
 
   useEffect(() => {
-    let startTime: number
+    let startTime: number | undefined
     let animationFrame: number
 
     const countUp = (timestamp: number) => {
-      if (!startTime) startTime = timestamp
+      if (startTime === undefined) startTime = timestamp
       const progress = timestamp - startTime
       const percentage = Math.min(progress / duration, 1)
 
@@ -30,7 +30,11 @@ export function Counter({ end, duration = 2000, suffix = "", prefix = "" }: Coun
 
     animationFrame = requestAnimationFrame(countUp)
 
-    return () => cancelAnimationFrame(animationFrame)
+    return () => {
+      if (animationFrame) {
+        cancelAnimationFrame(animationFrame)
+      }
+    }
   }, [end, duration])
 
   return (

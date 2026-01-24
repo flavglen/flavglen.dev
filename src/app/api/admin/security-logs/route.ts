@@ -23,26 +23,39 @@ export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const filters: any = {};
 
-    if (searchParams.get('eventType')) {
-      filters.eventType = searchParams.get('eventType');
+    const eventType = searchParams.get('eventType');
+    const level = searchParams.get('level');
+    const userEmail = searchParams.get('userEmail');
+    const path = searchParams.get('path');
+    const successParam = searchParams.get('success');
+    const startDate = searchParams.get('startDate');
+    const endDate = searchParams.get('endDate');
+
+    if (eventType) {
+      filters.eventType = eventType;
     }
-    if (searchParams.get('level')) {
-      filters.level = searchParams.get('level');
+    if (level) {
+      filters.level = level; // Ensure level is passed correctly
     }
-    if (searchParams.get('userEmail')) {
-      filters.userEmail = searchParams.get('userEmail');
+    if (userEmail) {
+      filters.userEmail = userEmail;
     }
-    if (searchParams.get('path')) {
-      filters.path = searchParams.get('path');
+    if (path) {
+      filters.path = path;
     }
-    if (searchParams.get('success') !== null) {
-      filters.success = searchParams.get('success') === 'true';
+    if (successParam !== null && successParam !== '') {
+      filters.success = successParam === 'true';
     }
-    if (searchParams.get('startDate')) {
-      filters.startDate = searchParams.get('startDate');
+    if (startDate) {
+      filters.startDate = startDate;
     }
-    if (searchParams.get('endDate')) {
-      filters.endDate = searchParams.get('endDate');
+    if (endDate) {
+      filters.endDate = endDate;
+    }
+    
+    // Log filters for debugging
+    if (level) {
+      console.log('[Security Logs API] Filtering by level:', level);
     }
 
     // Pagination parameters

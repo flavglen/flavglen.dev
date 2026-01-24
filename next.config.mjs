@@ -5,8 +5,7 @@ const nextConfig = {
   // Configure Turbopack (empty config to silence warning about webpack config from next-pwa)
   turbopack: {},
   // External packages for server components (moved from experimental in Next.js 16)
-  // Exclude react-quill and quill from server builds (they're client-only)
-  serverExternalPackages: ['firebase-admin', 'react-quill', 'quill'],
+  serverExternalPackages: ['firebase-admin'],
   images: {
     remotePatterns: [
       {

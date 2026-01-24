@@ -3,6 +3,7 @@
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import Image from "next/image"
 import { Badge } from "@/components/ui/badge"
 import { Github, ExternalLink, ChevronDown, ChevronUp } from "lucide-react"
 import { useState } from "react"
@@ -23,10 +24,13 @@ export function ProjectCard({ project }: { project: any }) {
     <Card className="h-full flex flex-col overflow-hidden group border-none shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-white/50 to-gray-50/50 dark:from-gray-900/50 dark:to-gray-800/50 backdrop-blur-sm">
       {/* Image Section - Fixed Height */}
       <div className="relative h-48 overflow-hidden">
-        <img
-          src={project.image || "placeholder.svg"}
+        <Image
+          src={project.image || "/placeholder.svg"}
           alt={project.title}
+          width={400}
+          height={192}
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+          loading="lazy"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center p-3">
           <div className="flex gap-2">
