@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -50,20 +50,47 @@ export default function SecurityDashboard() {
       setLoading(true);
       const queryParams = new URLSearchParams();
       
-      if (filters.eventType) queryParams.set('eventType', filters.eventType);
-      if (filters.level) queryParams.set('level', filters.level);
-      if (filters.success) queryParams.set('success', filters.success);
+      // Add filters only if they have values
+      if (filters.eventType) {
+        queryParams.set('eventType', filters.eventType);
+        console.log('[SecurityDashboard] Filtering by eventType:', filters.eventType);
+      }
+      if (filters.level) {
+        queryParams.set('level', filters.level);
+        console.log('[SecurityDashboard] Filtering by level:', filters.level);
+      }
+      if (filters.success) {
+        queryParams.set('success', filters.success);
+        console.log('[SecurityDashboard] Filtering by success:', filters.success);
+      }
       queryParams.set('page', page.toString());
       queryParams.set('limit', filters.limit);
       
-      const response = await fetch(`/api/admin/security-logs?${queryParams.toString()}`);
+      // Add cache-busting parameter to ensure fresh data
+      queryParams.set('_t', Date.now().toString());
+      
+      const url = `/api/admin/security-logs?${queryParams.toString()}`;
+      console.log('[SecurityDashboard] Fetching from:', url);
+      
+      const response = await fetch(url, {
+        cache: 'no-store', // Disable browser caching
+        headers: {
+          'Cache-Control': 'no-cache',
+        },
+      });
       
       if (!response.ok) {
         throw new Error('Failed to fetch security logs');
       }
       
       const data = await response.json();
-      setLogs(data.logs);
+      console.log('[SecurityDashboard] Received data:', {
+        logsCount: data.logs?.length || 0,
+        total: data.pagination?.total || 0,
+        filters: { eventType: filters.eventType, level: filters.level, success: filters.success }
+      });
+      
+      setLogs(data.logs || []);
       setStats(data.stats);
       if (data.pagination) {
         setCurrentPage(data.pagination.page);
@@ -71,17 +98,33 @@ export default function SecurityDashboard() {
         setTotal(data.pagination.total);
       }
     } catch (error) {
-      console.error('Error fetching security logs:', error);
+      console.error('[SecurityDashboard] Error fetching security logs:', error);
     } finally {
       setLoading(false);
     }
   };
 
+  // Track previous filter values to detect changes
+  const prevFiltersRef = useRef(filters);
+
   useEffect(() => {
-    setCurrentPage(1); // Reset to first page when filters change
+    // Check if any filter has changed
+    const filtersChanged = 
+      prevFiltersRef.current.eventType !== filters.eventType ||
+      prevFiltersRef.current.level !== filters.level ||
+      prevFiltersRef.current.success !== filters.success ||
+      prevFiltersRef.current.limit !== filters.limit;
+
+    if (filtersChanged) {
+      // Update ref and reset to page 1
+      prevFiltersRef.current = filters;
+      setCurrentPage(1);
+    }
   }, [filters.eventType, filters.level, filters.success, filters.limit]);
 
   useEffect(() => {
+    // Always fetch when page or filters change
+    // Use the current filters state (which is always up-to-date)
     fetchLogs(currentPage);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage, filters.eventType, filters.level, filters.success, filters.limit]);

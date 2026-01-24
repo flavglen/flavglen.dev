@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import { Github, Linkedin, Mail, Sparkles, ArrowUp } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { SocialLinks } from "@/components/shared/social-links"
@@ -31,12 +32,13 @@ const Footer = () => {
           <div className="md:col-span-4 space-y-4">
             <div className="flex items-center gap-2">
               <div className="relative">
-                <img
+                <Image
                   src="/gp-logo.png"
                   alt="Logo"
                   width={50}
                   height={50}
                   className="rounded-full shadow-md"
+                  loading="lazy"
                 />
                 <Sparkles className="absolute -top-1 -right-1 h-4 w-4 text-primary animate-pulse" />
               </div>

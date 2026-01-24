@@ -1,4 +1,5 @@
 import Link from "next/link"
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { AnimateInView } from "@/components/animate-in-view"
@@ -46,10 +47,13 @@ export function HeroSection() {
           {/* Main photo container - smaller and cleaner */}
           <div className="relative w-64 h-64 md:w-80 md:h-80 overflow-hidden rounded-2xl shadow-xl group-hover:shadow-2xl transition-all duration-500 group-hover:scale-105">
             {/* Photo */}
-            <img
+            <Image
               src="/dp.jpeg"
               alt="Glen Pais - AI-Enhanced Frontend Developer"
+              width={320}
+              height={320}
               className="object-cover w-full h-full transition-transform duration-700 group-hover:scale-110"
+              priority
             />
             
             {/* Simple corner accent - top-left */}

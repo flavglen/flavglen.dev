@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import { Github, Linkedin, ChevronDown, PieChart, Database, Receipt, ShoppingCart, LayoutDashboard } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { MobileMenu } from "@/components/mobile-menu"
@@ -68,12 +69,13 @@ export function Header() {
             className="flex items-center gap-2 group"
           >
             <div className="relative">
-              <img
+              <Image
                 src="/gp-logo.png"
                 alt="Logo"
                 width={50}
                 height={50}
                 className="inline-block rounded-full transition-transform duration-300 shadow-md group-hover:scale-110"
+                priority
               />
             </div>
             <span className="gradient-text bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 bg-clip-text text-transparent bg-[length:200%_auto] animate-gradient">

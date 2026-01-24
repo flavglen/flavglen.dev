@@ -59,56 +59,124 @@ export class FirebaseServer {
   async getSecurityLogs(filters: any = {}) {
     try {
       const { page = 1, limit = 50, getTotal = false, ...queryFilters } = filters;
-      const cacheKey = `security_logs:${JSON.stringify(filters)}`;
       
+      // Log filters for debugging
+      console.log('[getSecurityLogs] Filters:', JSON.stringify(queryFilters));
+      
+      // For filtered queries, disable cache completely to ensure fresh data
+      const hasFilters = !!(queryFilters.eventType || queryFilters.level || queryFilters.userEmail || queryFilters.success !== undefined);
+      
+      // Direct query execution for filtered queries (no cache)
+      if (hasFilters) {
+        let query: admin.firestore.Query<admin.firestore.DocumentData> = db.collection('security_logs');
+        
+        // Apply where filters FIRST (before orderBy)
+        // This is important for Firestore query optimization
+        if (queryFilters.eventType) {
+          console.log('[getSecurityLogs] Filtering by eventType:', queryFilters.eventType);
+          query = query.where('eventType', '==', queryFilters.eventType);
+        }
+        if (queryFilters.level) {
+          console.log('[getSecurityLogs] Filtering by level:', queryFilters.level);
+          query = query.where('level', '==', queryFilters.level);
+        }
+        if (queryFilters.userEmail) {
+          query = query.where('userEmail', '==', queryFilters.userEmail);
+        }
+        if (queryFilters.success !== undefined) {
+          query = query.where('success', '==', queryFilters.success);
+        }
+        
+        // Try with orderBy first
+        let snapshot;
+        let allLogs: any[] = [];
+        let querySucceeded = false;
+        
+        try {
+          query = query.orderBy('timestamp', 'desc');
+          snapshot = await query.limit(1000).get();
+          allLogs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+          querySucceeded = true;
+          console.log(`[getSecurityLogs] Query succeeded, found ${allLogs.length} logs`);
+        } catch (queryError: any) {
+          console.error('[getSecurityLogs] Query with orderBy failed:', queryError.message);
+          // If query fails (e.g., missing composite index), try without orderBy
+          if (queryError.code === 'failed-precondition' || queryError.message?.includes('index')) {
+            console.warn('[getSecurityLogs] Trying fallback query without orderBy');
+            // Fallback: fetch with filters but no orderBy, then sort in memory
+            let fallbackQuery: admin.firestore.Query<admin.firestore.DocumentData> = db.collection('security_logs');
+            if (queryFilters.eventType) {
+              fallbackQuery = fallbackQuery.where('eventType', '==', queryFilters.eventType);
+            }
+            if (queryFilters.level) {
+              fallbackQuery = fallbackQuery.where('level', '==', queryFilters.level);
+            }
+            if (queryFilters.userEmail) {
+              fallbackQuery = fallbackQuery.where('userEmail', '==', queryFilters.userEmail);
+            }
+            if (queryFilters.success !== undefined) {
+              fallbackQuery = fallbackQuery.where('success', '==', queryFilters.success);
+            }
+            snapshot = await fallbackQuery.limit(1000).get();
+            allLogs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            
+            // Sort by timestamp in memory
+            allLogs.sort((a: any, b: any) => {
+              const timeA = new Date(a.timestamp || 0).getTime();
+              const timeB = new Date(b.timestamp || 0).getTime();
+              return timeB - timeA; // Descending
+            });
+            console.log(`[getSecurityLogs] Fallback query succeeded, found ${allLogs.length} logs`);
+          } else {
+            throw queryError;
+          }
+        }
+        
+        // Get total count
+        let total = allLogs.length;
+        if (allLogs.length < 1000) {
+          total = allLogs.length;
+        } else {
+          // If we got 1000, the actual total might be more
+          // For filtered queries, we'll use the fetched count
+          total = allLogs.length;
+        }
+        
+        // Calculate pagination
+        const startIndex = (page - 1) * limit;
+        const endIndex = startIndex + limit;
+        const logs = allLogs.slice(startIndex, endIndex);
+        
+        console.log(`[getSecurityLogs] Returning ${logs.length} logs for page ${page}, total: ${total}`);
+        
+        return {
+          logs,
+          total,
+          page,
+          limit,
+          totalPages: Math.ceil(total / limit)
+        };
+      }
+      
+      // For non-filtered queries, use cache
+      const cacheKey = `security_logs:${JSON.stringify(filters)}`;
       return await serverFirebaseCache.get(
         'security_logs',
         async () => {
           let query = db.collection('security_logs').orderBy('timestamp', 'desc');
-          
-          // Apply filters
-          if (queryFilters.eventType) {
-            query = query.where('eventType', '==', queryFilters.eventType);
-          }
-          if (queryFilters.level) {
-            query = query.where('level', '==', queryFilters.level);
-          }
-          if (queryFilters.userEmail) {
-            query = query.where('userEmail', '==', queryFilters.userEmail);
-          }
-          if (queryFilters.success !== undefined) {
-            query = query.where('success', '==', queryFilters.success);
-          }
-          
-          // Get total count if requested (for first page or when getTotal is true)
-          let total = 0;
-          if (getTotal || page === 1) {
-            const countSnapshot = await query.get();
-            total = countSnapshot.docs.length;
-          }
-          
-          // For pagination, we need to skip documents
-          // Since Firestore doesn't support offset, we'll fetch and slice
-          // For better performance, we can use cursor-based pagination in the future
-          const snapshot = await query.limit(1000).get(); // Get up to 1000 for pagination
+          const snapshot = await query.limit(1000).get();
           const allLogs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
           
-          // Calculate pagination
           const startIndex = (page - 1) * limit;
           const endIndex = startIndex + limit;
           const logs = allLogs.slice(startIndex, endIndex);
           
-          // Update total if we got all logs
-          if (total === 0 && allLogs.length < 1000) {
-            total = allLogs.length;
-          }
-          
           return {
             logs,
-            total: total || allLogs.length,
+            total: allLogs.length,
             page,
             limit,
-            totalPages: Math.ceil((total || allLogs.length) / limit)
+            totalPages: Math.ceil(allLogs.length / limit)
           };
         },
         {
@@ -117,7 +185,7 @@ export class FirebaseServer {
         }
       );
     } catch (error) {
-      console.error('Failed to get security logs:', error);
+      console.error('[getSecurityLogs] Failed to get security logs:', error);
       return { logs: [], total: 0, page: 1, limit: 50, totalPages: 0 };
     }
   }
