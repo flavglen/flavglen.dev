@@ -42,7 +42,8 @@ export function Header() {
     { href: "#skills", label: "Skills" },
     { href: "#contact", label: "Contact" },
     { href: "/gallery", label: "Gallery" },
-    { href: "/blog", label: "Blog" }
+    { href: "/blog", label: "Blog" },
+    { href: "/tools", label: "Tools" }
   ];
 
   const adminSubmenu = [
