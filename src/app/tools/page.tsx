@@ -2,7 +2,7 @@ import { Metadata } from "next"
 import { Header } from "@/components/sections/Header"
 import Footer from "@/components/footer"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Wrench, Calculator, Code, FileText, Image as ImageIcon, Palette, Film } from "lucide-react"
+import { Wrench, Calculator, Code, FileText, Image as ImageIcon, Palette, Film, FileCode } from "lucide-react"
 import Link from "next/link"
 
 export const metadata: Metadata = {
@@ -17,6 +17,14 @@ const tools = [
     description: "Discover movies from around the world. Filter by country, year, rating, and more using the IMDB API.",
     icon: Film,
     href: "/tools/movie-finder",
+    comingSoon: false,
+  },
+  {
+    id: "json-to-ts",
+    title: "JSON to TypeScript",
+    description: "Convert JSON objects to TypeScript interfaces and types. Generate type definitions instantly from your JSON data.",
+    icon: FileCode,
+    href: "/tools/json-to-ts",
     comingSoon: false,
   },
 ]
