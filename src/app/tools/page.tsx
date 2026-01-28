@@ -2,7 +2,8 @@ import { Metadata } from "next"
 import { Header } from "@/components/sections/Header"
 import Footer from "@/components/footer"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Wrench, Calculator, Code, FileText, Image as ImageIcon, Palette, Film, FileCode } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Wrench, Calculator, Code, FileText, Image as ImageIcon, Palette, Film, FileCode, ArrowLeft, Home } from "lucide-react"
 import Link from "next/link"
 
 export const metadata: Metadata = {
@@ -36,6 +37,16 @@ export default function ToolsPage() {
       
       <main className="container py-8 md:py-12 flex-1">
         <div className="max-w-6xl mx-auto">
+          {/* Go Back Button */}
+          <div className="mb-6">
+            <Link href="/">
+              <Button variant="ghost" className="gap-2">
+                <ArrowLeft className="h-4 w-4" />
+                Back to Home
+              </Button>
+            </Link>
+          </div>
+
           {/* Header Section */}
           <div className="text-center mb-12">
             <h1 className="text-4xl md:text-5xl font-bold mb-4 font-montserrat">
