@@ -15,6 +15,10 @@ const ProjectsSection = dynamic(() => import("@/components/sections/ProjectsSect
   loading: () => <div className="py-6 sm:py-8 md:py-12" />,
 })
 
+const ToolsSection = dynamic(() => import("@/components/sections/ToolsSection").then(mod => ({ default: mod.ToolsSection })), {
+  loading: () => <div className="py-6 sm:py-8 md:py-12" />,
+})
+
 // SkillsSection uses framer-motion which is heavy - definitely lazy load
 const SkillsSection = dynamic(() => import("@/components/sections/SkillsSection").then(mod => ({ default: mod.SkillsSection })), {
   loading: () => <div className="py-6 sm:py-8 md:py-12 lg:py-16 xl:py-20" />,
@@ -41,6 +45,10 @@ export default function Portfolio() {
         
         <Suspense fallback={<div className="py-6 sm:py-8 md:py-12" />}>
           <ProjectsSection />
+        </Suspense>
+        
+        <Suspense fallback={<div className="py-6 sm:py-8 md:py-12" />}>
+          <ToolsSection />
         </Suspense>
         
         <Suspense fallback={<div className="py-6 sm:py-8 md:py-12 lg:py-16 xl:py-20" />}>
