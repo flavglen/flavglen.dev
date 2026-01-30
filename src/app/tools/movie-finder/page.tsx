@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { ReactSelect, SelectOption } from "@/components/ui/react-select"
-import { Film, Search, Star, Calendar, Clock, Globe, Loader2, ArrowLeft } from "lucide-react"
+import { Film, Search, Star, Calendar, Clock, Loader2, ArrowLeft, ChevronDown, ChevronUp } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { Badge } from "@/components/ui/badge"
@@ -37,6 +37,8 @@ export default function MovieFinderPage() {
   const [movies, setMovies] = useState<Movie[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [quickFiltersOpen, setQuickFiltersOpen] = useState(true)
+  const [filtersOpen, setFiltersOpen] = useState(false)
   const [filters, setFilters] = useState({
     types: "MOVIE",
     countryCodes: "",
@@ -169,6 +171,65 @@ export default function MovieFinderPage() {
     { value: "Western", label: "Western" },
   ]
 
+  type PresetFilter = {
+    id: string
+    label: string
+    countryCodes: string
+    languageCodes: string
+    genres: string
+    minAggregateRating: string
+    sortBy: string
+  }
+
+  const predefinedPresets: PresetFilter[] = [
+    { id: "us-action", label: "Top US · English · Action · 7+", countryCodes: "US", languageCodes: "en", genres: "Action", minAggregateRating: "7", sortBy: "SORT_BY_POPULARITY" },
+    { id: "us-comedy", label: "Top US · English · Comedy · 7+", countryCodes: "US", languageCodes: "en", genres: "Comedy", minAggregateRating: "7", sortBy: "SORT_BY_POPULARITY" },
+    { id: "us-drama", label: "Top US · English · Drama · 7+", countryCodes: "US", languageCodes: "en", genres: "Drama", minAggregateRating: "7", sortBy: "SORT_BY_POPULARITY" },
+    { id: "us-scifi", label: "Top US · English · Sci-Fi · 7+", countryCodes: "US", languageCodes: "en", genres: "Sci-Fi", minAggregateRating: "7", sortBy: "SORT_BY_POPULARITY" },
+    { id: "gb-thriller", label: "Top UK · English · Thriller · 7+", countryCodes: "GB", languageCodes: "en", genres: "Thriller", minAggregateRating: "7", sortBy: "SORT_BY_POPULARITY" },
+    { id: "in-hindi-drama", label: "Top India · Hindi · Drama · 7+", countryCodes: "IN", languageCodes: "hi", genres: "Drama", minAggregateRating: "7", sortBy: "SORT_BY_POPULARITY" },
+    { id: "in-hindi-action", label: "Top India · Hindi · Action · 7+", countryCodes: "IN", languageCodes: "hi", genres: "Action", minAggregateRating: "7", sortBy: "SORT_BY_POPULARITY" },
+    { id: "kr-korean-drama", label: "Top Korea · Korean · Drama · 7+", countryCodes: "KR", languageCodes: "ko", genres: "Drama", minAggregateRating: "7", sortBy: "SORT_BY_POPULARITY" },
+    { id: "kr-korean-thriller", label: "Top Korea · Korean · Thriller · 7+", countryCodes: "KR", languageCodes: "ko", genres: "Thriller", minAggregateRating: "7", sortBy: "SORT_BY_POPULARITY" },
+    { id: "jp-japanese-animation", label: "Top Japan · Japanese · Animation · 7+", countryCodes: "JP", languageCodes: "ja", genres: "Animation", minAggregateRating: "7", sortBy: "SORT_BY_POPULARITY" },
+    { id: "fr-french-drama", label: "Top France · French · Drama · 7+", countryCodes: "FR", languageCodes: "fr", genres: "Drama", minAggregateRating: "7", sortBy: "SORT_BY_POPULARITY" },
+    { id: "de-german-thriller", label: "Top Germany · German · Thriller · 7+", countryCodes: "DE", languageCodes: "de", genres: "Thriller", minAggregateRating: "7", sortBy: "SORT_BY_POPULARITY" },
+    { id: "es-spanish-drama", label: "Top Spain · Spanish · Drama · 7+", countryCodes: "ES", languageCodes: "es", genres: "Drama", minAggregateRating: "7", sortBy: "SORT_BY_POPULARITY" },
+    { id: "br-portuguese-drama", label: "Top Brazil · Portuguese · Drama · 7+", countryCodes: "BR", languageCodes: "pt", genres: "Drama", minAggregateRating: "7", sortBy: "SORT_BY_POPULARITY" },
+    { id: "in-tamil-action", label: "Top India · Tamil · Action · 7+", countryCodes: "IN", languageCodes: "ta", genres: "Action", minAggregateRating: "7", sortBy: "SORT_BY_POPULARITY" },
+    { id: "in-malayalam-drama", label: "Top India · Malayalam · Drama · 7+", countryCodes: "IN", languageCodes: "ml", genres: "Drama", minAggregateRating: "7", sortBy: "SORT_BY_POPULARITY" },
+  ]
+
+  const applyPreset = (preset: PresetFilter) => {
+    const nextFilters = {
+      ...filters,
+      countryCodes: preset.countryCodes,
+      languageCodes: preset.languageCodes,
+      genres: preset.genres,
+      minAggregateRating: preset.minAggregateRating,
+      sortBy: preset.sortBy,
+    }
+    setFilters(nextFilters)
+    setError(null)
+    setLoading(true)
+    const params = new URLSearchParams()
+    params.set("types", nextFilters.types)
+    if (nextFilters.countryCodes) params.set("countryCodes", nextFilters.countryCodes)
+    if (nextFilters.languageCodes) params.set("languageCodes", nextFilters.languageCodes)
+    if (nextFilters.genres) params.set("genres", nextFilters.genres)
+    if (nextFilters.minAggregateRating) params.set("minAggregateRating", nextFilters.minAggregateRating)
+    params.set("sortBy", nextFilters.sortBy)
+    params.set("limit", nextFilters.limit)
+    fetch(`https://api.imdbapi.dev/titles?${params.toString()}`)
+      .then((res) => (res.ok ? res.json() : Promise.reject(new Error("Failed to fetch movies"))))
+      .then((data) => setMovies(data.titles || []))
+      .catch((err) => {
+        setError(err instanceof Error ? err.message : "An error occurred")
+        setMovies([])
+      })
+      .finally(() => setLoading(false))
+  }
+
   const countryOptions: SelectOption[] = [
     { value: "US", label: "United States (US)" },
     { value: "GB", label: "United Kingdom (GB)" },
@@ -252,13 +313,65 @@ export default function MovieFinderPage() {
             </p>
           </div>
 
+          {/* Predefined Quick Filters */}
+          <Card className="mb-6">
+            <CardHeader
+              className="cursor-pointer select-none hover:bg-muted/50 rounded-t-lg transition-colors"
+              onClick={() => setQuickFiltersOpen((o) => !o)}
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="text-lg">Quick filters</CardTitle>
+                  <CardDescription>
+                    One-click presets: top [country] movies in [language], [genre], IMDB 7+
+                  </CardDescription>
+                </div>
+                {quickFiltersOpen ? (
+                  <ChevronUp className="h-5 w-5 text-muted-foreground shrink-0" />
+                ) : (
+                  <ChevronDown className="h-5 w-5 text-muted-foreground shrink-0" />
+                )}
+              </div>
+            </CardHeader>
+            {quickFiltersOpen && (
+              <CardContent>
+                <div className="flex flex-wrap gap-2">
+                  {predefinedPresets.map((preset) => (
+                    <Button
+                      key={preset.id}
+                      variant="outline"
+                      size="sm"
+                      className="text-xs font-normal whitespace-nowrap"
+                      onClick={() => applyPreset(preset)}
+                    >
+                      {preset.label}
+                    </Button>
+                  ))}
+                </div>
+              </CardContent>
+            )}
+          </Card>
+
           {/* Search Filters */}
           <Card className="mb-8">
-            <CardHeader>
-              <CardTitle>Search Filters</CardTitle>
-              <CardDescription>Customize your movie search with these filters</CardDescription>
+            <CardHeader
+              className="cursor-pointer select-none hover:bg-muted/50 rounded-t-lg transition-colors"
+              onClick={() => setFiltersOpen((o) => !o)}
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle>Search Filters</CardTitle>
+                  <CardDescription>Customize your movie search with these filters</CardDescription>
+                </div>
+                {filtersOpen ? (
+                  <ChevronUp className="h-5 w-5 text-muted-foreground shrink-0" />
+                ) : (
+                  <ChevronDown className="h-5 w-5 text-muted-foreground shrink-0" />
+                )}
+              </div>
             </CardHeader>
-            <CardContent>
+            {filtersOpen && (
+              <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {/* Type */}
                 <div className="space-y-2">
@@ -409,6 +522,7 @@ export default function MovieFinderPage() {
                 )}
               </Button>
             </CardContent>
+            )}
           </Card>
 
           {/* Error Message */}
