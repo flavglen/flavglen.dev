@@ -1,17 +1,31 @@
-import { Metadata } from "next"
+"use client"
+
+import { useState } from "react"
 import { Header } from "@/components/sections/Header"
 import Footer from "@/components/footer"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Wrench, Calculator, Code, FileText, Image as ImageIcon, Palette, Film, FileCode, ArrowLeft, Home } from "lucide-react"
+import { Film, FileCode, ArrowLeft, GitCompare, Code, Sparkles } from "lucide-react"
 import Link from "next/link"
+import { cn } from "@/lib/utils"
 
-export const metadata: Metadata = {
-  title: "Public Tools - Glen Pais",
-  description: "Free public tools and utilities for developers and creators",
-}
+export type ToolCategory = "all" | "developer" | "fun"
 
-const tools = [
+const CATEGORIES: { value: ToolCategory; label: string; icon: typeof Code }[] = [
+  { value: "all", label: "All", icon: Code },
+  { value: "developer", label: "Developer", icon: Code },
+  { value: "fun", label: "Fun", icon: Sparkles },
+]
+
+const tools: Array<{
+  id: string
+  title: string
+  description: string
+  icon: typeof Film
+  href: string
+  comingSoon: boolean
+  category: "developer" | "fun"
+}> = [
   {
     id: "movie-finder",
     title: "Movie Finder",
@@ -19,6 +33,7 @@ const tools = [
     icon: Film,
     href: "/tools/movie-finder",
     comingSoon: false,
+    category: "fun",
   },
   {
     id: "json-to-ts",
@@ -27,14 +42,29 @@ const tools = [
     icon: FileCode,
     href: "/tools/json-to-ts",
     comingSoon: false,
+    category: "developer",
+  },
+  {
+    id: "json-compare",
+    title: "JSON Compare",
+    description: "Compare two JSON objects and see differences. See what was added, removed, or changed between two JSON blobs.",
+    icon: GitCompare,
+    href: "/tools/json-compare",
+    comingSoon: false,
+    category: "developer",
   },
 ]
 
 export default function ToolsPage() {
+  const [category, setCategory] = useState<ToolCategory>("all")
+
+  const filteredTools =
+    category === "all" ? tools : tools.filter((tool) => tool.category === category)
+
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <Header />
-      
+
       <main className="container py-8 md:py-12 flex-1">
         <div className="max-w-6xl mx-auto">
           {/* Go Back Button */}
@@ -48,21 +78,44 @@ export default function ToolsPage() {
           </div>
 
           {/* Header Section */}
-          <div className="text-center mb-12">
+          <div className="text-center mb-8">
             <h1 className="text-4xl md:text-5xl font-bold mb-4 font-montserrat">
               <span className="gradient-text bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 bg-clip-text text-transparent">
                 Public Tools
               </span>
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Free tools and utilities for developers, designers, and creators. 
+              Free tools and utilities for developers, designers, and creators.
               All tools are open to everyone - no login required.
             </p>
           </div>
 
+          {/* Category Filter */}
+          <div className="flex flex-wrap justify-center gap-2 mb-10">
+            {CATEGORIES.map((cat) => {
+              const Icon = cat.icon
+              return (
+                <Button
+                  key={cat.value}
+                  variant={category === cat.value ? "default" : "outline"}
+                  size="sm"
+                  className={cn(
+                    "gap-2",
+                    category === cat.value &&
+                      "bg-gradient-to-r from-purple-600 to-pink-600 hover:opacity-90"
+                  )}
+                  onClick={() => setCategory(cat.value)}
+                >
+                  <Icon className="h-4 w-4" />
+                  {cat.label}
+                </Button>
+              )
+            })}
+          </div>
+
           {/* Tools Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {tools.map((tool) => {
+            {filteredTools.map((tool) => {
               const Icon = tool.icon
               return (
                 <Card 
