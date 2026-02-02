@@ -2,7 +2,7 @@
 
 import { AnimateInView } from "@/components/animate-in-view"
 import { ToolCard } from "@/components/tool-card"
-import { Film, FileCode } from "lucide-react"
+import { Film, FileCode, GitCompare } from "lucide-react"
 
 const tools = [
   {
@@ -21,6 +21,15 @@ const tools = [
     icon: FileCode,
     href: "/tools/json-to-ts",
     image: "/tools/json-to-ts-og.png",
+    comingSoon: false,
+  },
+  {
+    id: "json-compare",
+    title: "JSON Compare",
+    description: "Compare two JSON objects and see differences. See what was added, removed, or changed between two JSON blobs.",
+    icon: GitCompare,
+    href: "/tools/json-compare",
+    image: "/placeholder.svg",
     comingSoon: false,
   },
 ]
