@@ -5,7 +5,7 @@ import { Header } from "@/components/sections/Header"
 import Footer from "@/components/footer"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Film, FileCode, ArrowLeft, GitCompare, Code, Sparkles } from "lucide-react"
+import { Film, FileCode, ArrowLeft, GitCompare, Code, Sparkles, Terminal } from "lucide-react"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
 
@@ -50,6 +50,15 @@ const tools: Array<{
     description: "Compare two JSON objects and see differences. See what was added, removed, or changed between two JSON blobs.",
     icon: GitCompare,
     href: "/tools/json-compare",
+    comingSoon: false,
+    category: "developer",
+  },
+  {
+    id: "api-code-gen",
+    title: "API Code Generator",
+    description: "Generate cURL and fetch() code from any API URL. Select REST method, enter URL and body, get ready-to-use code.",
+    icon: Terminal,
+    href: "/tools/api-code-gen",
     comingSoon: false,
     category: "developer",
   },
