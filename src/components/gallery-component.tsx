@@ -120,7 +120,10 @@ export function GalleryComponent() {
         setHasMore(!!searchData.next_page)
         
         if (isLoadMore) {
-          setPhotos(prev => [...prev, ...pexelsPhotos])
+          setPhotos(prev => {
+            const existingIds = new Set(prev.map(p => p.id))
+            return [...prev, ...pexelsPhotos.filter(p => !existingIds.has(p.id))]
+          })
           trackGalleryLoadMore(photos.length + pexelsPhotos.length)
         } else {
           setPhotos(pexelsPhotos)
@@ -159,7 +162,10 @@ export function GalleryComponent() {
       setHasMore(!!data.next_page)
       
       if (isLoadMore) {
-        setPhotos(prev => [...prev, ...pexelsPhotos])
+        setPhotos(prev => {
+          const existingIds = new Set(prev.map(p => p.id))
+          return [...prev, ...pexelsPhotos.filter(p => !existingIds.has(p.id))]
+        })
         trackGalleryLoadMore(photos.length + pexelsPhotos.length)
       } else {
         setPhotos(pexelsPhotos)

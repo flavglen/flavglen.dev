@@ -70,6 +70,16 @@ export const projects = [
     github: "https://github.com/flavglen/melissa-portfolio",
   },
   {
+    id: 9,
+    title: "Smart Expense Tracker",
+    description: "A full-stack expense tracking application built with Next.js, Firebase, and TypeScript. Features include real-time expense logging, category management, budget alerts, analytics dashboards with charts, Google authentication, role-based access, and Firebase caching for optimized performance.",
+    image: "/smart-exp-tracker.webp",
+    category: "personal",
+    technologies: ["Next.js", "TypeScript", "Firebase", "React", "Tailwind CSS", "Chart.js", "Google Auth", "Firestore", "Vercel"],
+    demo: "",
+    github: "https://github.com/flavglen/flavglen.dev",
+  },
+  {
     id: 8,
     title: "Axios Error Handling",
     description: "A React application demonstrating centralized error handling with Axios interceptors and Material-UI snackbars. Features comprehensive error types handling, automatic error display, and modern UI built with React, TypeScript, Tailwind CSS, and Material-UI.",

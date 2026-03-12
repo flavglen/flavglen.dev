@@ -29,13 +29,21 @@ export function HeroSection() {
             Available for Hire | React, Next.js, Angular, Vue, Node.js | Remote or On-site | Canada & India
           </span>
         </p>
-        <div className="flex gap-4 pt-4 justify-center md:justify-start">
+        <div className="flex gap-4 pt-4 justify-center md:justify-start flex-wrap">
           <Button
             size="lg"
             className="bg-gradient-to-r from-purple-600 to-pink-600 hover:opacity-90 transition-opacity"
             asChild
           >
             <Link href="#projects">View My Work</Link>
+          </Button>
+          <Button
+            size="lg"
+            variant="outline"
+            className="border-purple-500/50 hover:border-purple-500 hover:bg-purple-500/10 transition-colors"
+            asChild
+          >
+            <Link href="/resume">View Resume</Link>
           </Button>
         </div>
       </AnimateInView>

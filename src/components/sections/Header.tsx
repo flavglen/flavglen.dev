@@ -37,10 +37,10 @@ export function Header() {
   }, []);
 
   const navLinks = [
-    { href: "#about", label: "About" },
-    { href: "#projects", label: "Projects" },
-    { href: "#skills", label: "Skills" },
-    { href: "#contact", label: "Contact" },
+    { href: "/about", label: "About" },
+    { href: "/projects", label: "Projects" },
+    { href: "/skills", label: "Skills" },
+    { href: "/contact", label: "Contact" },
     { href: "/gallery", label: "Gallery" },
     { href: "/blog", label: "Blog" },
     { href: "/tools", label: "Tools" }
