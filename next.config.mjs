@@ -77,6 +77,24 @@ const nextConfig = {
           },
         ],
       },
+      {
+        // Allow the PDF to be embedded on the same origin (overrides the global DENY)
+        source: '/resume-flavglen.dev.pdf',
+        headers: [
+          {
+            key: 'X-Frame-Options',
+            value: 'SAMEORIGIN',
+          },
+          {
+            key: 'Content-Type',
+            value: 'application/pdf',
+          },
+          {
+            key: 'Content-Disposition',
+            value: 'inline',
+          },
+        ],
+      },
     ];
   },
   // Redirects for SEO
