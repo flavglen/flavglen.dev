@@ -42,7 +42,7 @@ export function GalleryComponent() {
   const [viewMode] = useState<'masonry'>('masonry')
   const [hoveredPhoto, setHoveredPhoto] = useState<string | null>(null)
   const observerRef = useRef<IntersectionObserver | null>(null)
-  const [nextPageUrl, setNextPageUrl] = useState<string | null>(null)
+  const [currentPage, setCurrentPage] = useState(1)
   const [hasMore, setHasMore] = useState(true)
   
   // Analytics hooks
@@ -58,20 +58,15 @@ export function GalleryComponent() {
       
       // Load from Pexels API (collections)
       const PEXELS_API_KEY = process.env.NEXT_PUBLIC_PEXELS_API_KEY
-      const PEXELS_COLLECTION_ID = process.env.NEXT_PUBLIC_PEXELS_COLLECTION_ID || "ggcylaq"
-      const SEARCH_QUERY = "nature landscape photography"
+      const PEXELS_COLLECTION_ID = 'ggcylaq'
+      const PER_PAGE = 15
       
       if (!PEXELS_API_KEY) {
         throw new Error("Pexels API key not configured")
       }
 
-      // Use nextPageUrl if available for pagination, otherwise use initial URL
-      let apiUrl: string
-      if (isLoadMore && nextPageUrl) {
-        apiUrl = nextPageUrl
-      } else {
-        apiUrl = `https://api.pexels.com/v1/collections/${PEXELS_COLLECTION_ID}?per_page=15`
-      }
+      const page = isLoadMore ? currentPage + 1 : 1
+      const apiUrl = `https://api.pexels.com/v1/collections/${PEXELS_COLLECTION_ID}?page=${page}&per_page=${PER_PAGE}`
 
       const response = await fetch(apiUrl, {
         headers: {
@@ -79,57 +74,8 @@ export function GalleryComponent() {
         }
       })
 
-      // If collection fails, fallback to search
       if (!response.ok) {
-        console.warn(`Collection failed (${response.status}), falling back to search`)
-        const searchUrl = `https://api.pexels.com/v1/search?query=${encodeURIComponent(SEARCH_QUERY)}&per_page=20&orientation=landscape`
-        const searchResponse = await fetch(searchUrl, {
-          headers: {
-            'Authorization': PEXELS_API_KEY
-          }
-        })
-        
-        if (!searchResponse.ok) {
-          throw new Error(`HTTP error! status: ${searchResponse.status}`)
-        }
-        
-        const searchData = await searchResponse.json()
-        const searchPhotosArray = searchData.media || searchData.photos
-        if (!searchPhotosArray) {
-          throw new Error('Invalid response from Pexels API')
-        }
-
-        const pexelsPhotos: Photo[] = searchPhotosArray.map((photo: any) => ({
-          id: photo.id.toString(),
-          title: photo.alt || "Beautiful Photo",
-          description: `Photographed by ${photo.photographer}`,
-          url: photo.src.large2x || photo.src.large,
-          thumbnail: photo.src.large, // Use higher quality for thumbnails
-          dateTaken: new Date().toISOString().split('T')[0],
-          location: "",
-          tags: [SEARCH_QUERY, "photography", "pexels"],
-          photographer: photo.photographer,
-          photographerUrl: photo.photographer_url,
-          alt: photo.alt || "Beautiful photo",
-          width: photo.width,
-          height: photo.height
-        }))
-        
-        // Update pagination state
-        setNextPageUrl(searchData.next_page || null)
-        setHasMore(!!searchData.next_page)
-        
-        if (isLoadMore) {
-          setPhotos(prev => {
-            const existingIds = new Set(prev.map(p => p.id))
-            return [...prev, ...pexelsPhotos.filter(p => !existingIds.has(p.id))]
-          })
-          trackGalleryLoadMore(photos.length + pexelsPhotos.length)
-        } else {
-          setPhotos(pexelsPhotos)
-          trackGalleryEvent('photos_loaded', undefined, `Loaded ${pexelsPhotos.length} photos`)
-        }
-        return
+        throw new Error(`HTTP error! status: ${response.status}`)
       }
 
       const data = await response.json()
@@ -158,8 +104,10 @@ export function GalleryComponent() {
       }))
       
       // Update pagination state
-      setNextPageUrl(data.next_page || null)
-      setHasMore(!!data.next_page)
+      const totalResults = data.total_results ?? 0
+      const nextPage = isLoadMore ? currentPage + 1 : 1
+      setCurrentPage(nextPage)
+      setHasMore(nextPage * PER_PAGE < totalResults)
       
       if (isLoadMore) {
         setPhotos(prev => {
@@ -208,10 +156,10 @@ export function GalleryComponent() {
 
   // Load more photos function
   const loadMore = useCallback(() => {
-    if (hasMore && !loadingMore && nextPageUrl) {
+    if (hasMore && !loadingMore) {
       fetchPhotos(true)
     }
-  }, [hasMore, loadingMore, nextPageUrl])
+  }, [hasMore, loadingMore])
 
   // Helper functions
 
