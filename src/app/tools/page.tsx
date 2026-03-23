@@ -5,7 +5,7 @@ import { Header } from "@/components/sections/Header"
 import Footer from "@/components/footer"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Film, FileCode, ArrowLeft, GitCompare, Code, Sparkles, Terminal } from "lucide-react"
+import { Film, FileCode, ArrowLeft, GitCompare, Code, Sparkles, Terminal, QrCode } from "lucide-react"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
 
@@ -59,6 +59,15 @@ const tools: Array<{
     description: "Generate cURL and fetch() code from any API URL. Select REST method, enter URL and body, get ready-to-use code.",
     icon: Terminal,
     href: "/tools/api-code-gen",
+    comingSoon: false,
+    category: "developer",
+  },
+  {
+    id: "qr-code-generator",
+    title: "QR Code Generator",
+    description: "Generate QR codes for URLs, text, emails, phone numbers, SMS, and Wi-Fi. Customize colors, size, and download as PNG.",
+    icon: QrCode,
+    href: "/tools/qr-code-generator",
     comingSoon: false,
     category: "developer",
   },
