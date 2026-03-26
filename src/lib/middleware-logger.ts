@@ -51,7 +51,7 @@ export async function logSecurityEvent(data: SecurityLogData): Promise<void> {
 export async function logInvalidToken(path: string, method: string, userEmail?: string, ipAddress?: string, userAgent?: string) {
   await logSecurityEvent({
     eventType: 'INVALID_TOKEN',
-    level: 'WARN',
+    level: 'CRITICAL',
     path,
     method,
     success: false,

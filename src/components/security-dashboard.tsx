@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -105,28 +105,10 @@ export default function SecurityDashboard() {
   };
 
   // Track previous filter values to detect changes
-  const prevFiltersRef = useRef(filters);
 
   useEffect(() => {
-    // Check if any filter has changed
-    const filtersChanged = 
-      prevFiltersRef.current.eventType !== filters.eventType ||
-      prevFiltersRef.current.level !== filters.level ||
-      prevFiltersRef.current.success !== filters.success ||
-      prevFiltersRef.current.limit !== filters.limit;
-
-    if (filtersChanged) {
-      // Update ref and reset to page 1
-      prevFiltersRef.current = filters;
-      setCurrentPage(1);
-    }
-  }, [filters.eventType, filters.level, filters.success, filters.limit]);
-
-  useEffect(() => {
-    // Always fetch when page or filters change
-    // Use the current filters state (which is always up-to-date)
     fetchLogs(currentPage);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage, filters.eventType, filters.level, filters.success, filters.limit]);
 
   const getLevelColor = (level: string) => {
@@ -263,7 +245,7 @@ export default function SecurityDashboard() {
               <label className="text-sm font-medium">Event Type</label>
               <select
                 value={filters.eventType}
-                onChange={(e) => setFilters({...filters, eventType: e.target.value})}
+                onChange={(e) => { setCurrentPage(1); setFilters({...filters, eventType: e.target.value}); }}
                 className="w-full p-2 border rounded"
               >
                 <option value="">All Events</option>
@@ -281,7 +263,7 @@ export default function SecurityDashboard() {
               <label className="text-sm font-medium">Level</label>
               <select
                 value={filters.level}
-                onChange={(e) => setFilters({...filters, level: e.target.value})}
+                onChange={(e) => { setCurrentPage(1); setFilters({...filters, level: e.target.value}); }}
                 className="w-full p-2 border rounded"
               >
                 <option value="">All Levels</option>
@@ -296,7 +278,7 @@ export default function SecurityDashboard() {
               <label className="text-sm font-medium">Success</label>
               <select
                 value={filters.success}
-                onChange={(e) => setFilters({...filters, success: e.target.value})}
+                onChange={(e) => { setCurrentPage(1); setFilters({...filters, success: e.target.value}); }}
                 className="w-full p-2 border rounded"
               >
                 <option value="">All</option>
@@ -309,7 +291,7 @@ export default function SecurityDashboard() {
               <label className="text-sm font-medium">Limit</label>
               <select
                 value={filters.limit}
-                onChange={(e) => setFilters({...filters, limit: e.target.value})}
+                onChange={(e) => { setCurrentPage(1); setFilters({...filters, limit: e.target.value}); }}
                 className="w-full p-2 border rounded"
               >
                 <option value="25">25</option>

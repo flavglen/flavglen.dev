@@ -34,8 +34,7 @@ export async function GET() {
         console.error("Test error:", error);
         return NextResponse.json({ 
             success: false, 
-            error: error instanceof Error ? error.message : "Unknown error",
-            stack: error instanceof Error ? error.stack : undefined
+            error: "Test operation failed"
         }, { status: 500 });
     }
 }
