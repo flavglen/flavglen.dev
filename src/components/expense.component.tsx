@@ -68,6 +68,8 @@ export function ExpenseComponent() {
     const [rowSelection, setRowSelection] = React.useState({})
     const [expenses, setExpenses] = React.useState<Expense[]>([]);
     const [open, setOpen] = React.useState(false)
+    const [activeCategory, setActiveCategory] = React.useState("All")
+    const [alertsExpanded, setAlertsExpanded] = React.useState(false)
     const [dateInput, setDateInput] = React.useState<string>("")
 
        
@@ -338,7 +340,7 @@ export function ExpenseComponent() {
                     <Button
                         variant="destructive"
                         size="sm"
-                        onClick={() => { setSelectedDocId(row.getValue("docId"))}}
+                        onClick={() => { setSelectedDocId(row.getValue("docId")); }}
                         className="hover:scale-105 transition-transform"
                     >
                         <Trash2 className="h-4 w-4" />
@@ -407,21 +409,16 @@ export function ExpenseComponent() {
         }
     }
 
-
     const ConfirmDialog = React.useCallback(() => {
-        let text = "Press a button!\nEither OK or Cancel.";
-        if (confirm(text) == true) {
+        if (confirm("Confirm to Delete?\nEither OK or Cancel.") === true) {
             deleteRow(selectedDocId);
         } else {
-            console.log("You pressed Not OK!");
             setSelectedDocId(null);
         }
-    },[selectedDocId])
+    }, [selectedDocId])
 
-    
     React.useEffect(() => {
-        if(selectedDocId) {
-            console.log("Selected docId:", selectedDocId);
+        if (selectedDocId) {
             ConfirmDialog()
         }
     }, [selectedDocId])
@@ -449,6 +446,16 @@ export function ExpenseComponent() {
             .slice(0, 4);
     }, [expenses]);
 
+    const uniqueCategories = React.useMemo(() => {
+        const cats = Array.from(new Set(expenses.map(e => e.category || "Others"))).sort();
+        return ["All", ...cats];
+    }, [expenses]);
+
+    const handleCategoryFilter = (category: string) => {
+        setActiveCategory(category);
+        table.getColumn("category")?.setFilterValue(category === "All" ? undefined : category);
+    };
+
     const filteredExpenses = table.getFilteredRowModel().rows.length;
     const filteredAmount = table.getFilteredRowModel().rows.reduce(
         (sum, row) => sum + row.original.amount,
@@ -462,7 +469,30 @@ export function ExpenseComponent() {
         <div className="w-full relative space-y-6">
             {/* Budget Alerts */}
             {budgetAlerts.length > 0 && (
-                <BudgetAlertComponent alerts={budgetAlerts} />
+                <div className="border-2 rounded-lg overflow-hidden">
+                    <button
+                        onClick={() => setAlertsExpanded((prev) => !prev)}
+                        className="w-full flex items-center justify-between px-4 py-2.5 bg-destructive/5 hover:bg-destructive/10 transition-colors text-left"
+                    >
+                        <div className="flex items-center gap-2">
+                            <AlertTriangle className="h-4 w-4 text-destructive" />
+                            <span className="text-sm font-semibold text-destructive">
+                                Budget Alerts
+                            </span>
+                            <span className="inline-flex items-center justify-center h-5 min-w-5 px-1.5 rounded-full bg-destructive text-destructive-foreground text-[10px] font-bold">
+                                {budgetAlerts.length}
+                            </span>
+                        </div>
+                        <span className="text-xs text-muted-foreground">
+                            {alertsExpanded ? "Hide" : "Show"}
+                        </span>
+                    </button>
+                    {alertsExpanded && (
+                        <div className="p-4">
+                            <BudgetAlertComponent alerts={budgetAlerts} />
+                        </div>
+                    )}
+                </div>
             )}
 
             {/* Summary and Top Categories in Single Row */}
@@ -676,6 +706,30 @@ export function ExpenseComponent() {
                             />
                         </div>
                     </div>
+                    {uniqueCategories.length > 1 && (
+                        <div className="flex flex-wrap gap-2 mt-4">
+                            {uniqueCategories.map((cat) => {
+                                const isActive = activeCategory === cat;
+                                const color = cat === "All" ? null : getCategoryColor(cat);
+                                return (
+                                    <button
+                                        key={cat}
+                                        onClick={() => handleCategoryFilter(cat)}
+                                        className={cn(
+                                            "inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border transition-all duration-150",
+                                            isActive
+                                                ? cat === "All"
+                                                    ? "bg-primary text-primary-foreground border-primary shadow-sm"
+                                                    : `${color?.badge} border-transparent shadow-sm scale-105`
+                                                : "bg-muted/50 text-muted-foreground border-border hover:bg-muted hover:text-foreground"
+                                        )}
+                                    >
+                                        {cat}
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    )}
                 </CardContent>
             </Card>
             <Card className="border-2 shadow-lg overflow-hidden">

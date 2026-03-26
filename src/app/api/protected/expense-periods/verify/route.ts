@@ -42,8 +42,7 @@ export async function GET() {
         console.error("Verification error:", error);
         return NextResponse.json({ 
             success: false, 
-            error: error instanceof Error ? error.message : "Unknown error",
-            stack: error instanceof Error ? error.stack : undefined
+            error: "Verification operation failed"
         }, { status: 500 });
     }
 }

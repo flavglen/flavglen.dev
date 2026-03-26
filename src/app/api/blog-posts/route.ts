@@ -21,8 +21,8 @@ export interface BlogPost {
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
-    const page = parseInt(searchParams.get('page') || '1');
-    const limit = parseInt(searchParams.get('limit') || '10');
+    const page = Math.max(1, parseInt(searchParams.get('page') || '1'));
+    const limit = Math.min(100, Math.max(1, parseInt(searchParams.get('limit') || '10')));
 
     // Fetch all blog posts and filter/sort in memory to avoid index requirement
     // This works well for blogs with reasonable number of posts
@@ -63,10 +63,7 @@ export async function GET(req: NextRequest) {
   } catch (error) {
     console.error("Failed to fetch blog posts:", error);
     return NextResponse.json(
-      { 
-        error: "Failed to fetch blog posts",
-        details: error instanceof Error ? error.message : "Unknown error"
-      },
+      { error: "Failed to fetch blog posts" },
       { status: 500 }
     );
   }

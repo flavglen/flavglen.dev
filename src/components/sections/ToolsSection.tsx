@@ -2,7 +2,7 @@
 
 import { AnimateInView } from "@/components/animate-in-view"
 import { ToolCard } from "@/components/tool-card"
-import { Film, FileCode, GitCompare } from "lucide-react"
+import { Film, FileCode, GitCompare, QrCode } from "lucide-react"
 
 const tools = [
   {
@@ -29,6 +29,15 @@ const tools = [
     description: "Compare two JSON objects and see differences. See what was added, removed, or changed between two JSON blobs.",
     icon: GitCompare,
     href: "/tools/json-compare",
+    image: "/placeholder.svg",
+    comingSoon: false,
+  },
+  {
+    id: "qr-code-generator",
+    title: "QR Code Generator",
+    description: "Generate QR codes for URLs, text, emails, phone numbers, SMS, and Wi-Fi. Customize colors, size, and download as PNG.",
+    icon: QrCode,
+    href: "/tools/qr-code-generator",
     image: "/placeholder.svg",
     comingSoon: false,
   },

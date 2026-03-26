@@ -34,7 +34,9 @@ const authOptions = {
 
       // Usually we would do a database lookup here to get the user's role
       if(user?.email && process.env.ROLE_ADMIN_EMAIL) {
-        if(process.env.ROLE_ADMIN_EMAIL.includes(user.email)) {
+        const normalizedEmail = user.email.toLowerCase().trim();
+        const adminEmails = process.env.ROLE_ADMIN_EMAIL.split(',').map(e => e.toLowerCase().trim());
+        if(adminEmails.includes(normalizedEmail)) {
           token.role = "admin";
         }
       }

@@ -115,7 +115,7 @@ export default function RootLayout({
             <AuthSessionProvider>
               <AnalyticsTracker pageName="Portfolio">
                 {/* <Sidebar /> */}
-                <main className="flex-1 p-4">
+                <main className="flex-1">
                     {children}
                 </main>
               </AnalyticsTracker>

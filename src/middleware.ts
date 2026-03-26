@@ -33,6 +33,25 @@ function createSecureRedirect(path: string, req: NextRequest): NextResponse {
   return NextResponse.redirect(new URL(path, origin));
 }
 
+// Known exploit/scan probe patterns — these are never legitimate paths in this app
+const SUSPICIOUS_PATH_PATTERNS: RegExp[] = [
+  /\.php$/i,                              // Any PHP file
+  /wp-admin|wp-login|wp-content/i,        // WordPress exploit probes
+  /jquery-file-upload/i,                  // jQuery File Upload RCE probe
+  /phpmyadmin|pma\//i,                    // phpMyAdmin probes
+  /\.env(\.|$)/i,                         // .env file exposure
+  /\/etc\/passwd/i,                       // Unix passwd traversal
+  /\.\.\//,                               // Path traversal
+  /eval\(|base64_decode|shell_exec/i,     // Code injection attempts
+  /xmlrpc\.php/i,                         // WordPress XML-RPC
+  /alfacgiapi|alfa\.php/i,                // Alfa Shell probes
+  /timestep|boaform|cgi-bin/i,            // Router/CGI exploit probes
+];
+
+function isSuspiciousPath(pathname: string): boolean {
+  return SUSPICIOUS_PATH_PATTERNS.some(pattern => pattern.test(pathname));
+}
+
 export async function middleware(req: NextRequest) {
   const pathname = sanitizePathname(req.nextUrl.pathname);
   const method = req.method;
@@ -71,7 +90,20 @@ export async function middleware(req: NextRequest) {
   
   const ipAddress = getClientIP(req);
   const userAgent = req.headers.get('user-agent') || 'unknown';
-  
+
+  // SECURITY: Detect and log exploit/scan probe paths as CRITICAL before any auth checks
+  if (isSuspiciousPath(pathname)) {
+    await logSuspiciousActivity(
+      pathname,
+      method,
+      'Exploit or vulnerability scan probe detected',
+      ipAddress,
+      userAgent,
+      { detectedPattern: SUSPICIOUS_PATH_PATTERNS.find(p => p.test(pathname))?.source }
+    );
+    return new NextResponse(null, { status: 404 });
+  }
+
   // Debug logging for IP detection (remove in production)
   if (process.env.NODE_ENV === 'development') {
     console.log('IP Detection Debug:', {
