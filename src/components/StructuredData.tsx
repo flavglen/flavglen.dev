@@ -7,11 +7,14 @@ export default function StructuredData() {
     "@context": "https://schema.org",
     "@type": "Person",
     "name": "Glen Flavian Pais",
-    "jobTitle": "AI-Enhanced Full Stack Developer",
-    "description": "Expert AI-enhanced full stack developer with 9+ years experience in React, Next.js, Angular, Vue.js, Node.js, TypeScript, and AI-powered development tools. Available for hire in Canada and India.",
+    "givenName": "Glen",
+    "familyName": "Pais",
+    "jobTitle": "Senior Full Stack Developer",
+    "description": "Senior Full Stack Developer with 9+ years of experience at Loblaws. Expert in React, Next.js, Angular, Vue.js, Node.js, and TypeScript. Actively seeking full-time and contract opportunities in Canada and India.",
     "url": "https://flavglen.dev",
     "image": "https://flavglen.dev/dp.jpeg",
     "logo": "https://flavglen.dev/gp-logo.png",
+    "email": "mailto:flavglen@gmail.com",
     "sameAs": [
       "https://github.com/flavglen",
       "https://linkedin.com/in/glen-pais",
@@ -24,7 +27,7 @@ export default function StructuredData() {
         "addressRegion": "Ontario"
       },
       {
-        "@type": "PostalAddress", 
+        "@type": "PostalAddress",
         "addressCountry": "IN",
         "addressRegion": "Karnataka"
       }
@@ -47,46 +50,43 @@ export default function StructuredData() {
         "name": "Mangalore University"
       }
     },
+    "hasOccupation": {
+      "@type": "Occupation",
+      "name": "Senior Full Stack Developer",
+      "description": "Design and build web applications using React, Next.js, Angular, Vue.js, Node.js, and TypeScript. AI-enhanced development using GitHub Copilot and Cursor.",
+      "occupationLocation": [
+        { "@type": "Country", "name": "Canada" },
+        { "@type": "Country", "name": "India" }
+      ],
+      "skills": "React, Next.js, Angular, Vue.js, Node.js, TypeScript, JavaScript, Firebase, AWS, GraphQL, Docker, Tailwind CSS, GitHub Copilot, Cursor AI"
+    },
     "knowsAbout": [
-      "React",
-      "Next.js", 
-      "TypeScript",
-      "JavaScript",
-      "Node.js",
-      "Angular",
-      "Vue.js",
-      "AI Development",
-      "Frontend Development",
-      "Web Development",
-      "E-commerce Development",
-      "Firebase",
-      "AWS",
-      "GitHub Copilot",
-      "Cursor AI",
-      "V0.dev"
+      "React", "Next.js", "TypeScript", "JavaScript", "Node.js",
+      "Angular", "Vue.js", "AI Development", "Frontend Development",
+      "Full Stack Development", "Web Development", "E-commerce Development",
+      "Firebase", "AWS", "Docker", "GraphQL", "Tailwind CSS",
+      "GitHub Copilot", "Cursor AI", "V0.dev", "Microfrontend Architecture",
+      "Performance Optimization", "Test-Driven Development"
     ],
+    "worksFor": {
+      "@type": "Organization",
+      "name": "Loblaws",
+      "url": "https://www.loblaws.ca",
+      "address": { "@type": "PostalAddress", "addressCountry": "CA" }
+    },
     "offers": {
       "@type": "Offer",
       "itemOffered": {
         "@type": "Service",
-        "name": "Frontend Development Services",
-        "description": "AI-enhanced full stack development using React, Next.js, Angular, Vue.js, Node.js, TypeScript, and modern AI tools"
+        "name": "Full Stack Development Services",
+        "description": "Senior full stack development using React, Next.js, Angular, Vue.js, Node.js, TypeScript, and AI-enhanced workflows"
       },
       "areaServed": [
-        {
-          "@type": "Country",
-          "name": "Canada"
-        },
-        {
-          "@type": "Country", 
-          "name": "India"
-        }
+        { "@type": "Country", "name": "Canada" },
+        { "@type": "Country", "name": "India" },
+        { "@type": "AdministrativeArea", "name": "Remote" }
       ],
       "availability": "https://schema.org/InStock"
-    },
-    "worksFor": {
-      "@type": "Organization",
-      "name": "Freelance Developer"
     }
   }
 
@@ -95,7 +95,7 @@ export default function StructuredData() {
     "@type": "WebSite",
     "name": "Glen Flavian Pais Portfolio",
     "url": "https://flavglen.dev",
-    "description": "Portfolio of Glen Flavian Pais - AI-Enhanced Full Stack Developer specializing in React, Next.js, Angular, Vue.js, Node.js, and modern web development",
+    "description": "Portfolio of Glen Flavian Pais - Senior Full Stack Developer specializing in React, Next.js, Angular, Vue.js, Node.js, and TypeScript. Open to work in Canada and India.",
     "author": {
       "@type": "Person",
       "name": "Glen Flavian Pais"
@@ -112,22 +112,16 @@ export default function StructuredData() {
     "@context": "https://schema.org",
     "@type": "ProfessionalService",
     "name": "Glen Flavian Pais - Full Stack Development Services",
-    "description": "AI-enhanced full stack development services specializing in React, Next.js, Angular, Vue.js, Node.js, TypeScript, and modern web technologies",
+    "description": "Senior full stack development services specializing in React, Next.js, Angular, Vue.js, Node.js, TypeScript, and modern web technologies. Available for full-time, contract, and freelance work.",
     "provider": {
       "@type": "Person",
       "name": "Glen Flavian Pais",
-      "jobTitle": "AI-Enhanced Full Stack Developer"
+      "jobTitle": "Senior Full Stack Developer"
     },
     "url": "https://flavglen.dev",
     "areaServed": [
-      {
-        "@type": "Country",
-        "name": "Canada"
-      },
-      {
-        "@type": "Country",
-        "name": "India"
-      }
+      { "@type": "Country", "name": "Canada" },
+      { "@type": "Country", "name": "India" }
     ],
     "serviceType": "Web Development",
     "hasOfferCatalog": {
@@ -136,107 +130,57 @@ export default function StructuredData() {
       "itemListElement": [
         {
           "@type": "Offer",
-          "itemOffered": {
-            "@type": "Service",
-            "name": "React Development",
-            "description": "Custom React applications and components"
-          }
+          "itemOffered": { "@type": "Service", "name": "React Development", "description": "Custom React applications and components" }
         },
         {
           "@type": "Offer",
-          "itemOffered": {
-            "@type": "Service",
-            "name": "Next.js Development",
-            "description": "Full-stack Next.js applications with server-side rendering"
-          }
+          "itemOffered": { "@type": "Service", "name": "Next.js Development", "description": "Full-stack Next.js applications with server-side rendering and static generation" }
         },
         {
           "@type": "Offer",
-          "itemOffered": {
-            "@type": "Service",
-            "name": "Angular Development",
-            "description": "Enterprise Angular applications with TypeScript"
-          }
+          "itemOffered": { "@type": "Service", "name": "Angular Development", "description": "Enterprise Angular applications with TypeScript" }
         },
         {
           "@type": "Offer",
-          "itemOffered": {
-            "@type": "Service",
-            "name": "Vue.js Development",
-            "description": "Modern Vue.js applications with Vue 3 and Composition API"
-          }
+          "itemOffered": { "@type": "Service", "name": "Vue.js Development", "description": "Modern Vue.js applications with Vue 3 and Composition API" }
         },
         {
           "@type": "Offer",
-          "itemOffered": {
-            "@type": "Service",
-            "name": "Node.js Development",
-            "description": "Server-side Node.js applications and APIs"
-          }
+          "itemOffered": { "@type": "Service", "name": "Node.js Development", "description": "Server-side Node.js applications and RESTful APIs" }
         },
         {
           "@type": "Offer",
-          "itemOffered": {
-            "@type": "Service", 
-            "name": "AI-Enhanced Development",
-            "description": "Development using AI tools like Cursor, GitHub Copilot, and V0.dev"
-          }
+          "itemOffered": { "@type": "Service", "name": "AI-Enhanced Development", "description": "Accelerated development using AI tools like Cursor, GitHub Copilot, and V0.dev" }
         }
       ]
     }
   }
 
-  const jobSeekerSchema = {
+  // Candidate schema — signals active job seeking to search engines and recruiters
+  const candidateSchema = {
     "@context": "https://schema.org",
     "@type": "Person",
     "name": "Glen Flavian Pais",
-    "jobTitle": "AI-Enhanced Full Stack Developer",
-    "description": "Available for hire - Expert full stack developer with 9+ years experience in React, Next.js, Angular, Vue.js, Node.js, and TypeScript",
+    "jobTitle": "Senior Full Stack Developer",
+    "description": "Senior Full Stack Developer actively seeking full-time, contract, and remote opportunities in Canada and India. 9+ years of experience in React, Next.js, Angular, Vue.js, Node.js, and TypeScript.",
     "url": "https://flavglen.dev",
     "address": [
-      {
-        "@type": "PostalAddress",
-        "addressCountry": "CA",
-        "addressRegion": "Ontario"
-      },
-      {
-        "@type": "PostalAddress",
-        "addressCountry": "IN",
-        "addressRegion": "Karnataka"
-      }
+      { "@type": "PostalAddress", "addressCountry": "CA", "addressRegion": "Ontario" },
+      { "@type": "PostalAddress", "addressCountry": "IN", "addressRegion": "Karnataka" }
     ],
     "seeks": {
-      "@type": "JobPosting",
-      "title": "Full Stack Developer",
-      "description": "Seeking full-time, contract, or freelance opportunities as a React, Next.js, Angular, Vue.js, or Node.js developer",
-      "employmentType": ["FULL_TIME", "CONTRACTOR", "PART_TIME"],
-      "jobLocation": [
-        {
-          "@type": "Place",
-          "address": {
-            "@type": "PostalAddress",
-            "addressCountry": "CA"
-          }
-        },
-        {
-          "@type": "Place",
-          "address": {
-            "@type": "PostalAddress",
-            "addressCountry": "IN"
-          }
-        },
-        {
-          "@type": "Place",
-          "address": {
-            "@type": "PostalAddress",
-            "addressCountry": "REMOTE"
-          }
-        }
-      ],
-      "skills": ["React", "Next.js", "Angular", "Vue.js", "Node.js", "TypeScript", "JavaScript", "Firebase", "AWS"],
-      "baseSalary": {
-        "@type": "MonetaryAmount",
-        "currency": "USD"
+      "@type": "Demand",
+      "name": "Full Stack Developer Position",
+      "description": "Seeking full-time, contract, or freelance opportunities as a React, Next.js, Angular, Vue.js, or Node.js developer. Open to remote, hybrid, or on-site roles in Canada and India.",
+      "itemOffered": {
+        "@type": "Occupation",
+        "name": "Senior Full Stack Developer",
+        "skills": "React, Next.js, Angular, Vue.js, Node.js, TypeScript, JavaScript, Firebase, AWS, GraphQL, Docker",
+        "occupationLocation": [
+          { "@type": "Country", "name": "Canada" },
+          { "@type": "Country", "name": "India" },
+          { "@type": "AdministrativeArea", "name": "Remote" }
+        ]
       }
     },
     "sameAs": [
@@ -251,30 +195,22 @@ export default function StructuredData() {
       <Script
         id="person-schema"
         type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(personSchema)
-        }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }}
       />
       <Script
         id="website-schema"
         type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(websiteSchema)
-        }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
       />
       <Script
         id="professional-service-schema"
         type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(professionalServiceSchema)
-        }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(professionalServiceSchema) }}
       />
       <Script
-        id="job-seeker-schema"
+        id="candidate-schema"
         type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(jobSeekerSchema)
-        }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(candidateSchema) }}
       />
     </>
   )
