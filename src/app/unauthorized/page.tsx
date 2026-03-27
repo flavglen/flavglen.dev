@@ -36,12 +36,6 @@ export default function UnauthorizedPage() {
                 Go Home
               </Link>
             </Button>
-            <Button variant="outline" asChild className="flex-1">
-              <Link href="/api/auth/login" className="flex items-center gap-2">
-                <LogIn className="h-4 w-4" />
-                Sign In
-              </Link>
-            </Button>
           </div>
 
           {/* Additional Help */}

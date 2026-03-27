@@ -189,7 +189,7 @@ export async function middleware(req: NextRequest) {
   }
 
   // SECURITY FIX: Enhanced admin route protection
-  if (pathname.startsWith('/admin/')) {
+  if (pathname === '/admin' || pathname.startsWith('/admin/')) {
     const isAdmin = isAdminEmail(token.email, adminEmails);
     
     if (!isAdmin) {
@@ -254,5 +254,5 @@ export async function middleware(req: NextRequest) {
 
 // Apply middleware only to specific API routes
 export const config = {
-  matcher: ["/api/protected/:path*", "/admin/:path*"],
+  matcher: ["/api/protected/:path*", "/admin", "/admin/:path*"],
 };
