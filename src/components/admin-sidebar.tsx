@@ -18,7 +18,8 @@ import {
   TrendingUp,
   X,
   RefreshCw,
-  BookOpen
+  BookOpen,
+  Code2
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
@@ -82,6 +83,12 @@ const adminNavItems = [
     label: "Blog Posts",
     icon: BookOpen,
     description: "Create and manage posts"
+  },
+  {
+    href: "/admin/interview-helper",
+    label: "Interview Helper",
+    icon: Code2,
+    description: "Coding question bank"
   },
 ]
 
